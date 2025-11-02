@@ -14,6 +14,9 @@ Se define las tbl_ para indicar que son tablas transaccionales, es decir que SI 
 USE umDb
 GO
 
+
+-- YA REALIZADO
+
 CREATE TABLE [dbo].[cls_estados]
 (
 	[Id_Estado] INT PRIMARY KEY IDENTITY(1,1), -- Identificador único de cada registro.
@@ -25,8 +28,10 @@ CREATE TABLE [dbo].[cls_estados]
 	[Id_Transaccion] INT, -- Ultima transacción hecha sobre dicho registro.
 	[Activo] BIT NOT NULL -- Para el manejo de Soft Delete, indica si el registro esta activo o no.
 )
+GO
 
 
+/* LUIS KENNETH -- Este SP debe tener Tipo de Transacciones para AGREGAR - ACTUALIZAR - FILTRAR POR ID TIPO CATALOGO - LISTAR ULTIMOS 10 TIPOS CATALOGOS*/ 
 CREATE TABLE [dbo].[cls_tipos_catalogos] -- Tabla de los tipos de catalogos del sistema.
 (
 	[Id_Tipo_Catalogo] INT PRIMARY KEY IDENTITY(1,1),
@@ -38,8 +43,9 @@ CREATE TABLE [dbo].[cls_tipos_catalogos] -- Tabla de los tipos de catalogos del 
 	[Id_Transaccion] INT,
 	[Activo] BIT NOT NULL
 )
-GO
+GO 
 
+/* FERNANDO MOISES -- Este SP debe tener Tipo de Transacicones para AGREGAR - ACTUALIZAR - FILTRAR POR ID CATALOGO - FILTRAR POR ID TIPO CATALOGO */
 CREATE TABLE [dbo].[cls_catalogos] -- Tabla de catalogos estaticos del sistema, es hija de tipos de catalogos
 (
 	[Id_Catalogo] INT PRIMARY KEY IDENTITY(1,1),
@@ -54,7 +60,7 @@ CREATE TABLE [dbo].[cls_catalogos] -- Tabla de catalogos estaticos del sistema, 
 )
 GO
 
-
+/* JUSTIN ZAHIR */
 CREATE TABLE [dbo].[tbl_personas] -- Tabla para definir la información de una persona.
 (
 	[Id_Persona] INT PRIMARY KEY IDENTITY(1,1),
@@ -77,6 +83,7 @@ CREATE TABLE [dbo].[tbl_personas] -- Tabla para definir la información de una pe
 )
 GO
 
+/* JUSTIN ZAHIR */
 CREATE TABLE [dbo].[tbl_usuarios] -- Tabla para definir a los usuarios.
 (
 	[Id_Usuario] INT PRIMARY KEY IDENTITY(1,1),
@@ -94,6 +101,7 @@ CREATE TABLE [dbo].[tbl_usuarios] -- Tabla para definir a los usuarios.
 )
 GO
 
+/* JANRIS NARETH -- Este SP debe tener tipo de transacciones para AGREGAR - ACTUALIZAR - FILTRAR POR ID TIPO PROGRAMA - FILTRAR POR ID BECA PROGRAMA - FILTRAR POR NOMBRE */
 CREATE TABLE [dbo].[cls_becas_programas]
 (
     [Id_Beca_Programa] INT IDENTITY(1,1) PRIMARY KEY,
@@ -108,6 +116,8 @@ CREATE TABLE [dbo].[cls_becas_programas]
     [Id_Transaccion] INT NULL
 );
 GO
+
+/* JUSTIN ZAHIR */
 
 CREATE TABLE [dbo].[cls_becas_criterios]
 (
@@ -125,6 +135,8 @@ CREATE TABLE [dbo].[cls_becas_criterios]
 );
 GO
 
+/* JOSE JOEL Este sp DEBE TENER TIPO DE TRANSACCIONES PARA AGREGAR - ACTUALIZAR - FILTRAR POR ID SOLICITUD BECA - FILTRAR POR ID BECA PROGRAMA - FILTRAR POR ESTDUAINTE */
+
 CREATE TABLE [dbo].[tbl_solicitudes_becas]
 (
 	[Id_Solicitud_Beca] INT PRIMARY KEY IDENTITY(1,1),
@@ -138,6 +150,7 @@ CREATE TABLE [dbo].[tbl_solicitudes_becas]
 )
 GO
 
+/* HAREL AMARILIS Este SP debe tener tipo de transacciones para agregar-actualizar-filtrar por id materia - filtrar por codigo materia - filtrar por nombre-materioa */
 CREATE TABLE [dbo].[cls_materias] 
 (
 	[Id_Materia] INT PRIMARY KEY IDENTITY(1,1),
@@ -151,6 +164,8 @@ CREATE TABLE [dbo].[cls_materias]
 	[Activo] BIT NOT NULL
 )
 GO
+
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_sanciones_academicas]
 (
@@ -168,6 +183,7 @@ CREATE TABLE [dbo].[tbl_sanciones_academicas]
 	[Id_Estado] INT REFERENCES dbo.cls_estados(Id_Estado)
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_periodos_academicos] -- Tabla para definir los periodos
 (
@@ -184,6 +200,7 @@ CREATE TABLE [dbo].[tbl_periodos_academicos] -- Tabla para definir los periodos
     [Id_Estado] INT REFERENCES dbo.cls_estados (Id_Estado)
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_becas_convocatorias]
 (
@@ -201,6 +218,7 @@ CREATE TABLE [dbo].[tbl_becas_convocatorias]
     [Id_Estado] INT REFERENCES cls_estados(Id_Estado)
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[cls_materias_periodos] -- Tabla para definir que materias van dentro de que periodo
 (
@@ -215,6 +233,7 @@ CREATE TABLE [dbo].[cls_materias_periodos] -- Tabla para definir que materias va
     [Activo] BIT NOT NULL
 )
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_secciones] -- Tabla para definri las secciones a las cuales un docente esta asignado y que materia se imparte.
 (
@@ -231,6 +250,7 @@ CREATE TABLE [dbo].[tbl_secciones] -- Tabla para definri las secciones a las cua
     [Activo] BIT NOT NULL
 )
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_grupos]
 (
@@ -245,6 +265,7 @@ CREATE TABLE [dbo].[tbl_grupos]
 	[Activo] BIT NOT NULL
 )
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[cls_grupos_secciones]
 (
@@ -259,6 +280,7 @@ CREATE TABLE [dbo].[cls_grupos_secciones]
 	[Activo] BIT NOT NULL
 )
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_inscripciones]
 (
@@ -273,6 +295,7 @@ CREATE TABLE [dbo].[tbl_inscripciones]
     [Activo] BIT NOT NULL
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_grupos_inscripciones]
 (
@@ -287,6 +310,7 @@ CREATE TABLE [dbo].[tbl_grupos_inscripciones]
 	[Activo] BIT NOT NULL
 )
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[cls_evaluaciones_modelos]
 (
@@ -309,6 +333,7 @@ CREATE TABLE [dbo].[cls_evaluaciones_modelos]
     [Activo] BIT NOT NULL
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_evaluaciones_instancias]
 (
@@ -326,6 +351,7 @@ CREATE TABLE [dbo].[tbl_evaluaciones_instancias]
     [Id_Estado] INT NOT NULL REFERENCES dbo.cls_estados(Id_Estado)
 );
 GO
+/* JUSTIN ZAHIR*/
 
 CREATE TABLE [dbo].[tbl_evaluaciones_alumnos]
 (
@@ -345,7 +371,7 @@ CREATE TABLE [dbo].[tbl_evaluaciones_alumnos]
 GO
 
 
-
+/* ALAN ALFONSO */
 CREATE TABLE [dbo].[tbl_contactos] -- Tabla para definir los contactos de las personas.
 (
 	[Id_Contacto] INT PRIMARY KEY IDENTITY(1,1),
@@ -362,7 +388,7 @@ CREATE TABLE [dbo].[tbl_contactos] -- Tabla para definir los contactos de las pe
 )
 GO
 
-
+/* ANGEL JOSUE */
 CREATE TABLE [dbo].[cls_roles] -- Tabla para definir los roles del sistema.
 (
 	[Id_Rol] INT PRIMARY KEY IDENTITY(1,1),
@@ -377,7 +403,7 @@ CREATE TABLE [dbo].[cls_roles] -- Tabla para definir los roles del sistema.
 GO
 
 
-
+/* JOSE JOEL */
 CREATE TABLE [dbo].[cls_tipos_transacciones] -- Tabla para definir los tipos de transacciones disponibles en el sistema (Agregar persona, Actualizar persona, Agregar nota etc)
 (
 	[Id_Tipo_Transaccion] INT PRIMARY KEY IDENTITY(1,1),
@@ -390,6 +416,8 @@ CREATE TABLE [dbo].[cls_tipos_transacciones] -- Tabla para definir los tipos de 
 	[Activo] BIT NOT NULL
 )
 GO
+
+/* ALAN ALFONSO */
 
 CREATE TABLE [dbo].[cls_transacciones_roles] -- Tabla para definir que rol tiene alcance a que tipo de transacción.
 (
@@ -405,6 +433,8 @@ CREATE TABLE [dbo].[cls_transacciones_roles] -- Tabla para definir que rol tiene
 )
 GO
 
+/* LEONARDO 7665 8465 -- SP DEBE TENER TIPO DE TRANSACCION PARA AGREGAR - ACTUALIZAR - FILTRAR POR ID TRANSACCION ESTADO - FILTRAR POR ID TIPO TRANSACCION - FILTRAR POR ID ESTADO */
+
 CREATE TABLE [dbo].[cls_transacciones_estados] -- Tabla para definir que tipo de transacción tiene alcance a que estado. por ejemplo AGREGAR PERSONA tiene alcance al estado ACTIVO / PENDIENTE
 (
 	[Id_Transaccion_Estado] INT PRIMARY KEY IDENTITY(1,1),
@@ -419,7 +449,7 @@ CREATE TABLE [dbo].[cls_transacciones_estados] -- Tabla para definir que tipo de
 )
 GO
 
-
+/* JOSE JOEL */
 CREATE TABLE [dbo].[cls_usuarios_roles] -- Tabla para definir que usuarios tiene que rol.
 (
 	[Id_Usuario_Rol] INT PRIMARY KEY IDENTITY(1,1),
@@ -434,6 +464,7 @@ CREATE TABLE [dbo].[cls_usuarios_roles] -- Tabla para definir que usuarios tiene
 )
 GO
 
+/* KENNETH2.0 8417 7991 ESTE SP DEBE TENER TIPO DE TRANSACCION PARA AGREGAR - ACTUALIZAR - FILTRAR POR ID MENU - FILTRAR POR MENU */
 CREATE TABLE[dbo].[cls_menus] -- Tabla de Menus disponibles del sistema
 (
 	[Id_Menu] INT PRIMARY KEY IDENTITY(1,1),
@@ -447,6 +478,7 @@ CREATE TABLE[dbo].[cls_menus] -- Tabla de Menus disponibles del sistema
 )
 GO
 
+/* ALAN ALFONSO */
 CREATE TABLE[dbo].[cls_menus_roles] -- Tabla para definir que rol tiene acceso a que menú.
 (
 	[Id_Menu_Rol] INT PRIMARY KEY IDENTITY(1,1),
@@ -461,7 +493,7 @@ CREATE TABLE[dbo].[cls_menus_roles] -- Tabla para definir que rol tiene acceso a
 )
 GO
 
-
+-- YA REALIZADO
 CREATE TABLE [dbo].[tbl_transacciones] -- Tabla de Logs para tablas transaccionales.
 (
 	[Id_Transaccion] INT PRIMARY KEY IDENTITY(1,1),
@@ -479,6 +511,7 @@ CREATE TABLE [dbo].[tbl_transacciones] -- Tabla de Logs para tablas transacciona
 )
 GO
 
+-- YA REALIZADO
 CREATE TABLE [dbo].[log_errores_sql] -- Tabla de Logs de Errores que ocurran en T-SQL
 (
 	[Id_Error] INT PRIMARY KEY IDENTITY(1,1),

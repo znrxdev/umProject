@@ -32,7 +32,7 @@ BEGIN
 	IF(@Permiso = 1)
 		BEGIN
 			/* FILTRAR ESTADOS ID */
-			IF(@Tipo_Transaccion = 1)
+			IF(@Tipo_Transaccion = 3)
 				BEGIN
 					IF ISNULL(@Id_Estado, 0) = 0
 						BEGIN
@@ -42,7 +42,7 @@ BEGIN
 					ELSE IF NOT EXISTS (SELECT 1 FROM cls_estados (NOLOCK) WHERE Id_Estado = @Id_Estado)
 						BEGIN
 							SET @o_Num = -1;
-							SET @o_Msg = '¡N° de estado digitado no existe!';						
+							SET @o_Msg = '¡Estado no existe!';						
 						END
 					ELSE
 						BEGIN
@@ -78,7 +78,7 @@ BEGIN
 						END
 				END
 			/* FILTRAR ESTADOS POR TIPO TRANSACCION*/
-			ELSE IF (@Tipo_Transaccion = 2)
+			ELSE IF (@Tipo_Transaccion = 4)
 				BEGIN
 					BEGIN TRY
 						SELECT
@@ -110,7 +110,7 @@ BEGIN
 					END CATCH
 				END
 			/* LISTAR ULTIMOS 10 ESTADOS */
-			ELSE IF(@Tipo_Transaccion = 3)
+			ELSE IF(@Tipo_Transaccion = 5)
 				BEGIN
 					BEGIN TRY
 						SELECT TOP 10
@@ -143,7 +143,7 @@ BEGIN
 					END CATCH
 				END
 			/* AGREGAR ESTADOS */
-			ELSE IF(@Tipo_Transaccion = 4)
+			ELSE IF(@Tipo_Transaccion = 1)
 				BEGIN
 					IF ISNULL(@Nombre_Estado, '') = ''	
 						BEGIN
@@ -202,7 +202,7 @@ BEGIN
 						END
 				END
 			/* ACTUALIZAR ESTADOS */
-			ELSE IF(@Tipo_Transaccion = 5)
+			ELSE IF(@Tipo_Transaccion = 2)
 				BEGIN
 					IF ISNULL(@Id_Estado, 0) = 0
 						BEGIN
