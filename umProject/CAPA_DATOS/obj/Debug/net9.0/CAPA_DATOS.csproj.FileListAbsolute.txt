@@ -1,0 +1,15 @@
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\bin\Debug\net9.0\CAPA_DATOS.deps.json
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\bin\Debug\net9.0\CAPA_DATOS.dll
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\bin\Debug\net9.0\CAPA_DATOS.pdb
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\bin\Debug\net9.0\CAPA_ENTIDADES.dll
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\bin\Debug\net9.0\CAPA_ENTIDADES.pdb
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.csproj.AssemblyReference.cache
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.AssemblyInfoInputs.cache
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.AssemblyInfo.cs
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.csproj.CoreCompileInputs.cache
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.csproj.Up2Date
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.dll
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\refint\CAPA_DATOS.dll
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\CAPA_DATOS.pdb
+C:\Users\justi\source\repos\umProject\CAPA_DATOS\obj\Debug\net9.0\ref\CAPA_DATOS.dll

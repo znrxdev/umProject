@@ -1,0 +1,171 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\justi\\source\\repos\\umProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|c:\\users\\justi\\source\\repos\\umproject\\umforms\\principales\\umfprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|solutionrelative:umforms\\principales\\umfprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|c:\\users\\justi\\source\\repos\\umproject\\umforms\\principales\\umfprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|solutionrelative:umforms\\principales\\umfprincipal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|C:\\Users\\justi\\source\\repos\\umProject\\umforms\\principales\\umfiniciosesion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|solutionrelative:umforms\\principales\\umfiniciosesion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{43912C0E-4C08-4756-B077-634CF1600540}|CAPA_DATOS\\CAPA_DATOS.csproj|c:\\users\\justi\\source\\repos\\umproject\\capa_datos\\cd_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{43912C0E-4C08-4756-B077-634CF1600540}|CAPA_DATOS\\CAPA_DATOS.csproj|solutionrelative:capa_datos\\cd_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D5127975-0A5F-4E64-A4F3-D56CF8DCB012}|CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj|c:\\users\\justi\\source\\repos\\umproject\\capa_entidades\\ce_menus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5127975-0A5F-4E64-A4F3-D56CF8DCB012}|CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj|solutionrelative:capa_entidades\\ce_menus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7E66690-6A0F-448F-82CB-4D4B2AD150C0}|CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj|c:\\users\\justi\\source\\repos\\umproject\\capa_negocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7E66690-6A0F-448F-82CB-4D4B2AD150C0}|CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj|solutionrelative:capa_negocios\\cn_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D5127975-0A5F-4E64-A4F3-D56CF8DCB012}|CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj|c:\\users\\justi\\source\\repos\\umproject\\capa_entidades\\ce_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D5127975-0A5F-4E64-A4F3-D56CF8DCB012}|CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj|solutionrelative:capa_entidades\\ce_usuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|c:\\users\\justi\\source\\repos\\umproject\\umforms\\principales\\umfiniciosesion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|solutionrelative:umforms\\principales\\umfiniciosesion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|c:\\users\\justi\\source\\repos\\umproject\\umforms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05A4E8DB-35F9-4F2C-923F-C25928F09D7C}|umForms\\umForms.csproj|solutionrelative:umforms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CE_USUARIOS.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CE_USUARIOS.cs",
+              "RelativeDocumentMoniker": "CAPA_ENTIDADES\\CE_USUARIOS.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CE_USUARIOS.cs",
+              "RelativeToolTip": "CAPA_ENTIDADES\\CE_USUARIOS.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:52:37.066Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "umfPrincipal.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfPrincipal.cs",
+              "RelativeDocumentMoniker": "umForms\\Principales\\umfPrincipal.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfPrincipal.cs",
+              "RelativeToolTip": "umForms\\Principales\\umfPrincipal.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAywCcAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:47:13.206Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CN_USUARIOS.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_NEGOCIOS\\CN_USUARIOS.cs",
+              "RelativeDocumentMoniker": "CAPA_NEGOCIOS\\CN_USUARIOS.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_NEGOCIOS\\CN_USUARIOS.cs",
+              "RelativeToolTip": "CAPA_NEGOCIOS\\CN_USUARIOS.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:46:25.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CE_MENUS.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CE_MENUS.cs",
+              "RelativeDocumentMoniker": "CAPA_ENTIDADES\\CE_MENUS.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CE_MENUS.cs",
+              "RelativeToolTip": "CAPA_ENTIDADES\\CE_MENUS.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:43:16.196Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CD_USUARIOS.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_DATOS\\CD_USUARIOS.cs",
+              "RelativeDocumentMoniker": "CAPA_DATOS\\CD_USUARIOS.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_DATOS\\CD_USUARIOS.cs",
+              "RelativeToolTip": "CAPA_DATOS\\CD_USUARIOS.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAiwG8AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:43:04.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "umfPrincipal.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfPrincipal.cs",
+              "RelativeDocumentMoniker": "umForms\\Principales\\umfPrincipal.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfPrincipal.cs [Design]",
+              "RelativeToolTip": "umForms\\Principales\\umfPrincipal.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:07:46.681Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Program.cs",
+              "RelativeDocumentMoniker": "umForms\\Program.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Program.cs",
+              "RelativeToolTip": "umForms\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T02:00:13.201Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "umfInicioSesion.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfInicioSesion.cs",
+              "RelativeDocumentMoniker": "umForms\\Principales\\umfInicioSesion.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfInicioSesion.cs*",
+              "RelativeToolTip": "umForms\\Principales\\umfInicioSesion.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T01:42:54.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "umfInicioSesion.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfInicioSesion.cs",
+              "RelativeDocumentMoniker": "umForms\\Principales\\umfInicioSesion.cs",
+              "ToolTip": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\Principales\\umfInicioSesion.cs [Design]*",
+              "RelativeToolTip": "umForms\\Principales\\umfInicioSesion.cs [Design]*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-07T01:42:28.321Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
