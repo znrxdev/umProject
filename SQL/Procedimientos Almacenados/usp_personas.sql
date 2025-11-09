@@ -15,6 +15,7 @@ CREATE OR ALTER PROC usp_personas
 @Id_Genero_Persona INT = NULL,
 @Id_Nacionalidad INT = NULL,
 @Id_Estado_Civil INT = NULL,
+@Fecha_Nacimiento DATE = NULL,
 @Fecha_Creacion DATETIME = NULL,
 @Fecha_Modificacion DATETIME = NULL,
 @Id_Creador INT = NULL,
@@ -75,6 +76,11 @@ BEGIN
 							SET @o_Num = -1;
 							SET @o_Msg = '¡Ya existe una persona con este n° de documento!';
 						END
+					ELSE IF ISNULL(@Fecha_Nacimiento, '1900-01-01') = '1900-01-01'
+						BEGIN
+							SET @o_Num = -1;
+							SET @o_Msg = '¡Fecha de Nacimiento no Valida.';
+						END
 					ELSE IF ISNULL(@Id_Genero_Persona, 0) = 0
 						BEGIN
 							SET @o_Num = -1;
@@ -106,8 +112,8 @@ BEGIN
 							@o_Num = @Id_Transaccion OUTPUT
 							BEGIN TRAN trx_AgregarPersona
 							BEGIN TRY
-								INSERT INTO tbl_personas(Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Tipo_Documento, Valor_Documento, Id_Genero_Persona,Id_Nacionalidad, Id_Estado_Civil, Id_Estado, Fecha_Creacion, Fecha_Modificacion, Id_Creador, Id_Modificador, Id_Transaccion)
-								VALUES (@Primer_Nombre, @Segundo_Nombre, @Primer_Apellido, @Segundo_Apellido, @Id_Tipo_Documento, @Valor_Documento, @Id_Genero_Persona, @Id_Nacionalidad, @Id_Estado_Civil, @Id_Estado, @Fecha_Creacion, @Fecha_Modificacion, @Id_Creador, @Id_Modificador, @Id_Transaccion)
+								INSERT INTO tbl_personas(Primer_Nombre, Segundo_Nombre, Primer_Apellido, Fecha_Nacimiento, Segundo_Apellido, Id_Tipo_Documento, Valor_Documento, Id_Genero_Persona,Id_Nacionalidad, Id_Estado_Civil, Id_Estado, Fecha_Creacion, Fecha_Modificacion, Id_Creador, Id_Modificador, Id_Transaccion)
+								VALUES (@Primer_Nombre, @Segundo_Nombre, @Primer_Apellido, @Fecha_Nacimiento,@Segundo_Apellido, @Id_Tipo_Documento, @Valor_Documento, @Id_Genero_Persona, @Id_Nacionalidad, @Id_Estado_Civil, @Id_Estado, @Fecha_Creacion, @Fecha_Modificacion, @Id_Creador, @Id_Modificador, @Id_Transaccion)
 								SET @o_Num = SCOPE_IDENTITY();
 								SET @o_Msg = '¡Persona registrada correctamente!';
 								COMMIT TRAN trx_AgregarPersona
@@ -172,6 +178,7 @@ BEGIN
 									Segundo_Nombre = COALESCE(@Segundo_Nombre, Segundo_Nombre),
 									Primer_Apellido = COALESCE(@Primer_Apellido, Primer_Apellido),
 									Segundo_Apellido = COALESCE(@Segundo_Apellido, Segundo_Apellido),
+									Fecha_Nacimiento = COALESCE(@Fecha_Nacimiento, Fecha_Nacimiento),
 									Id_Tipo_Documento = COALESCE(@Id_Tipo_Documento, Id_Tipo_Documento),
 									Valor_Documento = COALESCE(@Valor_Documento, Valor_Documento),
 									Id_Genero_Persona = COALESCE(@Id_Genero_Persona, Id_Genero_Persona),
@@ -223,6 +230,7 @@ BEGIN
 							Segundo_Apellido,
 							Id_Tipo_Documento,
 							Valor_Documento,
+							Fecha_Nacimiento,
 							Id_Genero_Persona,
 							Id_Nacionalidad,
 							Id_Estado_Civil,
@@ -275,6 +283,7 @@ BEGIN
 									Primer_Apellido,
 									Segundo_Apellido,
 									Id_Tipo_Documento,
+									Fecha_Nacimiento,
 									Valor_Documento,
 									Id_Genero_Persona,
 									Id_Nacionalidad,

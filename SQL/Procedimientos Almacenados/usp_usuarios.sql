@@ -4,6 +4,8 @@ GO
 sp_usuarios
 */
 
+SELECT * FROM tbl_usuarios
+
 CREATE OR ALTER PROCEDURE usp_usuarios
 (
 @Id_Usuario INT = NULL,
@@ -65,8 +67,8 @@ BEGIN
 							FROM tbl_usuarios U WITH (NOLOCK)
 							WHERE U.Usuario = @Usuario;
 
-							SET @o_Num = 1;
-							SET @o_Msg = '¡Usuario encontrado!';
+							SET @o_Num = 0;
+							SET @o_Msg = '¡Bienvenido!';
 						END
 
 				END
@@ -157,7 +159,7 @@ BEGIN
 							END CATCH
 						END
 				END
-		/* ACTUALIZAR USUARIOS */
+			/* ACTUALIZAR USUARIOS */
 			ELSE IF(@Id_Tipo_Transaccion = 21)
 				BEGIN
 					IF ISNULL(@Id_Usuario, 0) = 0
@@ -261,6 +263,7 @@ BEGIN
 						FROM tbl_usuarios(NOLOCK)
 						WHERE Id_Estado = 1
 						AND Id_Usuario <> 1
+						ORDER BY Fecha_Modificacion DESC
 
 						SET @o_Num = 0;
 						SET @o_Msg = '¡Usuarios listados!';
@@ -366,6 +369,7 @@ BEGIN
 							SET @o_Num = -1;
 							SET @o_Msg = '¡Debe seleccionar a la persona para filtrar su usuario!';
 						END
+					
 					ELSE IF NOT EXISTS(SELECT 1 FROM tbl_usuarios(NOLOCK) WHERE Id_Persona = @Id_Persona)
 						BEGIN
 							SET @o_Num = -1;
@@ -420,7 +424,7 @@ BEGIN
 						INNER JOIN cls_Roles (NOLOCK) R ON MR.Id_Rol = R.Id_Rol AND R.Activo = 1
 						INNER JOIN cls_usuarios_roles (NOLOCK) UR ON MR.Id_Rol = UR.Id_Rol AND UR.Activo = 1
 						INNER JOIN tbl_usuarios (NOLOCK) U ON UR.Id_Usuario = U.Id_Usuario
-						WHERE U.Id_Usuario = @Id_Sesion
+						WHERE U.Id_Usuario = 1
 						AND U.Id_Estado = 1
 						ORDER BY Id_Menu ASC
 

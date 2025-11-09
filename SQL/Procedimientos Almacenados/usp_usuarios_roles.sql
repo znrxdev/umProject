@@ -58,7 +58,7 @@ BEGIN
 						END
 					ELSE
 						BEGIN
-							DECLARE @roltmp NVARCHAR(255)
+							DECLARE @roltmp NVARCHAR(255)d
 							SELECT @roltmp = Nombre_Rol FROM cls_roles(NOLOCK) WHERE Id_Rol = @Id_Rol
 							SET @iConcepto = CONCAT('ASIGNANDO ROL: ', @roltmp)
 							EXEC sp_transacciones

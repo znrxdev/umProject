@@ -68,7 +68,94 @@ INSERT INTO tbl_personas(Primer_Nombre,Segundo_Nombre,Primer_Apellido,Segundo_Ap
 VALUES ('JUSTIN','ZAHIR','CALDERON','JOYA','2004-08-14',1,'0011408041050U',2,6,8,GETDATE(),GETDATE(),NULL,NULL,NULL,1)
 
 INSERT INTO tbl_usuarios (Usuario,Contrasena,Fecha_Creacion,Fecha_Modificacion,Ultima_Sesion,Ultimo_Cambio_Contrasena,Id_Creador,Id_Modificador,Id_Transaccion,Id_Estado)
-VALUES ('znr',CONVERT(VARBINARY(64),'$2a$11$lrqmyt.z2dgs1mnBp8InyuT.XJvS49jlTN.iPbGi.VYVlYYfWl22W'),GETDATE(),GETDATE(),NULL,NULL,NULL,NULL,NULL,1)
+VALUES ('znr','$2a$11$lrqmyt.z2dgs1mnBp8InyuT.XJvS49jlTN.iPbGi.VYVlYYfWl22W',GETDATE(),GETDATE(),NULL,NULL,NULL,NULL,NULL,1)
+
+-- ----------------------------------------------------------------
+-- INSERTS MASIVOS: tbl_personas + tbl_usuarios (10 registros)
+-- ----------------------------------------------------------------
+
+/* PERSONAS */
+INSERT INTO tbl_personas
+(Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Fecha_Nacimiento,
+ Id_Tipo_Documento, Valor_Documento, Id_Genero_Persona, Id_Nacionalidad, Id_Estado_Civil,
+ Fecha_Creacion, Fecha_Modificacion, Id_Creador, Id_Modificador, Id_Transaccion, Id_Estado)
+VALUES
+('MARIA',    'ELENA',  'LOPEZ',     'GARCIA',    '1990-03-22', 1, 'MLOP9003220001', 1, 6, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('CARLOS',   'EDUARDO','RUIZ',      'MARTINEZ',  '1985-11-11', 1, 'CRUI8511110002', 2, 6, 2, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('ANA',      'ISABEL', 'GOMEZ',     'PEREZ',     '1995-06-05', 1, 'AGOM9506050003', 1, 6, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('LUIS',     'FERNANDO','HERRERA',   'SANCHEZ',   '1988-01-30', 1, 'LHERR8801300004', 2, 6, 3, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('SOFIA',    'MAR',    'MARTINEZ',  'LOZANO',    '1992-09-09', 1, 'SMART9209090005', 1, 6, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('DIEGO',    'ANDRES', 'ALVAREZ',   'TORRES',    '1979-12-01', 1, 'DALV7912010006', 2, 6, 2, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('PAULA',    'ROCIO',  'CASTILLO',  'VARGAS',    '1998-07-17', 1, 'PCAST9807170007', 1, 6, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('ROBERTO',  'MIGUEL', 'FERNANDEZ', 'OLIVARES',  '1982-04-24', 1, 'RFER8204240008', 2, 6, 2, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
+('ELENA',    'MARIA',  'RIVERA',    'DOMINGUEZ', '1997-02-02', 1, 'ERIV9702020009', 1, 6, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1);
+
+-- Nota: ajusta Id_Tipo_Documento, Id_Genero_Persona, Id_Nacionalidad, Id_Estado_Civil según tu catálogo real.
+-- ----------------------------------------------------------------
+
+/* USUARIOS (relacionados por Valor_Documento -> Id_Persona obtenido mediante subquery) 
+   Las contraseñas están como hashes BCrypt (VARCHAR(100) ok). */
+
+INSERT INTO tbl_usuarios
+(Id_Persona, Usuario, Contrasena,
+ Fecha_Creacion, Fecha_Modificacion, Ultima_Sesion, Ultimo_Cambio_Contrasena,
+ Id_Creador, Id_Modificador, Id_Transaccion, Id_Estado)
+VALUES
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'MLOP9003220001'),
+ 'mlopez',
+ '$2a$11$yF1h7KQ0Z8uQh6mYv1Pq9uk6dQ8b1aZ2xgEo2h2pQwX9ZJk4uT1e',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'CRUI8511110002'),
+ 'cruiz',
+ '$2a$11$N8q5dYk3rPz7sT1vM2wXyue6ZfH0b9cQpLk3j2QfR8uVYc5tB0sG',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'AGOM9506050003'),
+ 'agomez',
+ '$2a$11$Gz7wYb9Lp4Qk3sT1uV8nZeJ2yH5pM0qRrT6cXl8dF3sW1vN9bU0x',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'LHERR8801300004'),
+ 'lherrera',
+ '$2a$11$Hk4pTz2Wq8Nn5cV7bJ1rYeL3oM9fG6sXcZ2vQw8yU5tR1pO0nB3d',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'SMART9209090005'),
+ 'smartinez',
+ '$2a$11$Sx9kQw7Lm2Vc8bY1nZ4pEuF6hR3oJ0tWqY5zN8vC2mT1sP6aB7dE',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'DALV7912010006'),
+ 'dalvarez',
+ '$2a$11$Vz2bQp5Lm8Wc1nR9sT3yEeF4uH7oK6jXzY1qP8vC2mT9sL4oN0gH',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'PCAST9807170007'),
+ 'pcastillo',
+ '$2a$11$Qw3eRt6Yu9Ii2oP8Lm5VbN7cRf4tG1yHjK0oP8zX2cV7nM5sL1dB',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'RFER8204240008'),
+ 'rfernandez',
+ '$2a$11$Lp6mNz1Qv8Xs3wT9bR4yCeF2oH5pK7jXzN1qP9vC3tS6uO2gH0dB',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+),
+(
+ (SELECT TOP 1 Id_Persona FROM tbl_personas WHERE Valor_Documento = 'ERIV9702020009'),
+ 'erivera',
+ '$2a$11$Tz8vWr2Yn6Qs4pHjM0lBeK9cX5oF1uG3rV7nP2wQ8sM6tL9kA4dB',
+ GETDATE(), GETDATE(), NULL, NULL, NULL, NULL, NULL, 1
+);
+
 
 INSERT INTO cls_usuarios_roles(Id_Usuario,Id_Rol,Fecha_Creacion,Fecha_Modificacion,Id_Creador,Id_Modificador,Id_Transaccion,Activo)
 VALUES (1,1,GETDATE(),GETDATE(),1,1,NULL,1)
@@ -250,3 +337,19 @@ INSERT INTO cls_transacciones_roles (Id_Tipo_Transaccion, Id_Rol, Fecha_Creacion
 (56, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
 (57, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1),
 (58, 1, GETDATE(), GETDATE(), NULL, NULL, NULL, 1);
+
+
+
+INSERT INTO cls_transacciones_estados(Id_Tipo_Transaccion,Id_Estado,Fecha_Creacion,Fecha_Modificacion,Activo) VALUES
+(15,1,GETDATE(),GETDATE(),1),
+(15,3,GETDATE(),GETDATE(),1),
+(16,1,GETDATE(),GETDATE(),1),
+(16,2,GETDATE(),GETDATE(),1); 
+
+INSERT INTO cls_transacciones_estados(Id_Tipo_Transaccion,Id_Estado,Fecha_Creacion,Fecha_Modificacion,Activo) VALUES
+(20,1,GETDATE(),GETDATE(),1),
+(20,3,GETDATE(),GETDATE(),1),
+(21,1,GETDATE(),GETDATE(),1),
+(21,2,GETDATE(),GETDATE(),1); 
+
+

@@ -28,7 +28,7 @@ BEGIN
 	SET @Fecha_Modificacion = GETDATE();
 	SET @Id_Creador = @Id_Sesion;
 	SET @Id_Modificador = @Id_Sesion;
-	SET @Permiso = dbo.fnValidaPermiso(@Id_Sesion, @Tipo_Transaccion)
+	SET @Permiso = dbo.fn_Validar_Permisos(@Id_Sesion, @Tipo_Transaccion)
 	IF(@Permiso = 1)
 		BEGIN
 			/* FILTRAR ESTADOS ID */
@@ -82,10 +82,8 @@ BEGIN
 				BEGIN
 					BEGIN TRY
 						SELECT
-							TT.Id_Tipo_Transaccion,
 							E.Id_Estado,
-							E.Nombre_Estado,
-							E.Activo
+							E.Nombre_Estado
 						FROM cls_transacciones_estados (NOLOCK) TE
 						INNER JOIN cls_tipos_transacciones (NOLOCK) TT ON TT.Id_Tipo_Transaccion = TE.Id_Tipo_Transaccion AND TT.Activo = 1
 						INNER JOIN cls_estados (NOLOCK) E ON TE.Id_estado = E.Id_Estado AND E.Activo = 1

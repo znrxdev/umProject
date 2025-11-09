@@ -8,7 +8,7 @@ cls_roles
 CREATE OR ALTER PROC usp_roles
 (
 @Id_Rol INT = NULL,
-@Nombre_Rol VARCHAR(80) = NULL,
+@Nombre_Rol VARCHAR(80) = NULL,	
 @Fecha_Creacion DATETIME = NULL,
 @Fecha_Modificacion DATETIME = NULL,
 @Id_Creador INT = NULL,
