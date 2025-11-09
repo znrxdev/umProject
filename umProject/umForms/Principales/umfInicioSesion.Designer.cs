@@ -76,17 +76,17 @@
             // btn_IniciarSesion
             // 
             btn_IniciarSesion.BackColor = Color.Transparent;
-            btn_IniciarSesion.BorderColor = Color.FromArgb(32, 34, 37);
-            btn_IniciarSesion.EnteredBorderColor = Color.FromArgb(32, 34, 37);
-            btn_IniciarSesion.EnteredColor = Color.FromArgb(32, 34, 37);
+            btn_IniciarSesion.BorderColor = Color.FromArgb(10, 28, 51);
+            btn_IniciarSesion.EnteredBorderColor = Color.FromArgb(10, 28, 51);
+            btn_IniciarSesion.EnteredColor = Color.FromArgb(10, 28, 51);
             btn_IniciarSesion.Font = new Font("Microsoft Sans Serif", 12F);
             btn_IniciarSesion.Image = null;
             btn_IniciarSesion.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_IniciarSesion.InactiveColor = Color.FromArgb(64, 64, 64);
-            btn_IniciarSesion.Location = new Point(231, 158);
+            btn_IniciarSesion.InactiveColor = Color.FromArgb(10, 28, 51);
+            btn_IniciarSesion.Location = new Point(231, 157);
             btn_IniciarSesion.Name = "btn_IniciarSesion";
-            btn_IniciarSesion.PressedBorderColor = Color.Lime;
-            btn_IniciarSesion.PressedColor = Color.Lime;
+            btn_IniciarSesion.PressedBorderColor = Color.FromArgb(10, 28, 51);
+            btn_IniciarSesion.PressedColor = Color.FromArgb(10, 28, 51);
             btn_IniciarSesion.Size = new Size(220, 40);
             btn_IniciarSesion.TabIndex = 2;
             btn_IniciarSesion.Text = "INGRESAR";
@@ -169,7 +169,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "UM - University Management";
             TransparencyKey = Color.Fuchsia;
-            Load += umMainForm_Load;
             pnl_Logo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pb_Logo).EndInit();
             ResumeLayout(false);

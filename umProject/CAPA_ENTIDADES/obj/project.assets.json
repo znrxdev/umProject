@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj",
+      "projectUniqueName": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj",
       "projectName": "CAPA_ENTIDADES",
-      "projectPath": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj",
+      "projectPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj",
       "packagesPath": "C:\\Users\\justi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\obj\\",
+      "outputPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_ENTIDADES\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

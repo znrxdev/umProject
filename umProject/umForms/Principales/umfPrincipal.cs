@@ -15,6 +15,7 @@ namespace umForms.Principales
 {
     public partial class umfPrincipal : Form
     {
+        UT_Sesion sesion = new UT_Sesion();
         public CN_USUARIOS CNUsuarios = new CN_USUARIOS();
         public umfPrincipal()
         {
@@ -24,8 +25,17 @@ namespace umForms.Principales
         private void umfPrincipal_Load(object sender, EventArgs e)
         {
             icon_User.Text = "Usuario: " + CE_SESION_USUARIO.Usuario_Sesion;
-            UT_Sesion sesion = new UT_Sesion();
-            sesion.CARGAR_MENUS(pnl_Botones);
+
+            sesion.UbicacionCambiada += (texto) => icon_Ubicacion.Text = texto;
+            sesion.CARGAR_MENUS(pnl_Botones, pnl_Principal);
+        }
+
+        private void btn_CerrarSesion_Click(object sender, EventArgs e)
+        {
+            sesion.LIMPIAR_SESION();
+            umfInicioSesion _umfInicioSesion = new umfInicioSesion();
+            _umfInicioSesion.Show();
+            this.Close();
         }
     }
 }

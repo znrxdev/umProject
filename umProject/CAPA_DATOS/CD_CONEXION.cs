@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using System.Configuration;
 using System.Data; 
 
-namespace CD_DATOS
+namespace CAPA_DATOS
 {
     public class CD_CONEXION
     {

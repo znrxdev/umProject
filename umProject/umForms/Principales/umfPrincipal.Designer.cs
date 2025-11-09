@@ -29,14 +29,15 @@
         private void InitializeComponent()
         {
             pnl_Izquierda = new ReaLTaiizor.Controls.NightPanel();
+            pnl_Botones = new ReaLTaiizor.Controls.NightPanel();
             btn_CerrarSesion = new ReaLTaiizor.Controls.CrownButton();
             pnl_Logo = new ReaLTaiizor.Controls.NightPanel();
             pb_Logo = new ReaLTaiizor.Controls.HopePictureBox();
             pnl_Arriba = new ReaLTaiizor.Controls.NightPanel();
+            icon_Ubicacion = new FontAwesome.Sharp.IconButton();
             icon_User = new FontAwesome.Sharp.IconButton();
             cnt_ControlVentana = new ReaLTaiizor.Controls.ControlBox();
             pnl_Principal = new ReaLTaiizor.Controls.ExtendedPanel();
-            pnl_Botones = new ReaLTaiizor.Controls.NightPanel();
             pnl_Izquierda.SuspendLayout();
             pnl_Logo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pb_Logo).BeginInit();
@@ -58,9 +59,21 @@
             pnl_Izquierda.Size = new Size(126, 450);
             pnl_Izquierda.TabIndex = 0;
             // 
+            // pnl_Botones
+            // 
+            pnl_Botones.Dock = DockStyle.Fill;
+            pnl_Botones.ForeColor = Color.FromArgb(250, 250, 250);
+            pnl_Botones.LeftSideColor = Color.FromArgb(10, 28, 51);
+            pnl_Botones.Location = new Point(0, 98);
+            pnl_Botones.Name = "pnl_Botones";
+            pnl_Botones.RightSideColor = Color.FromArgb(10, 28, 51);
+            pnl_Botones.Side = ReaLTaiizor.Controls.NightPanel.PanelSide.Left;
+            pnl_Botones.Size = new Size(126, 329);
+            pnl_Botones.TabIndex = 2;
+            // 
             // btn_CerrarSesion
             // 
-            btn_CerrarSesion.ButtonStyle = ReaLTaiizor.Enum.Crown.ButtonStyle.Flat;
+            btn_CerrarSesion.BackColor = Color.White;
             btn_CerrarSesion.Dock = DockStyle.Bottom;
             btn_CerrarSesion.Location = new Point(0, 427);
             btn_CerrarSesion.Name = "btn_CerrarSesion";
@@ -68,6 +81,7 @@
             btn_CerrarSesion.Size = new Size(126, 23);
             btn_CerrarSesion.TabIndex = 2;
             btn_CerrarSesion.Text = "CERRAR SESION";
+            btn_CerrarSesion.Click += btn_CerrarSesion_Click;
             // 
             // pnl_Logo
             // 
@@ -79,7 +93,7 @@
             pnl_Logo.Name = "pnl_Logo";
             pnl_Logo.RightSideColor = Color.FromArgb(10, 28, 51);
             pnl_Logo.Side = ReaLTaiizor.Controls.NightPanel.PanelSide.Left;
-            pnl_Logo.Size = new Size(126, 116);
+            pnl_Logo.Size = new Size(126, 98);
             pnl_Logo.TabIndex = 1;
             // 
             // pb_Logo
@@ -90,7 +104,7 @@
             pb_Logo.Location = new Point(0, 0);
             pb_Logo.Name = "pb_Logo";
             pb_Logo.PixelOffsetType = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-            pb_Logo.Size = new Size(126, 116);
+            pb_Logo.Size = new Size(126, 98);
             pb_Logo.SizeMode = PictureBoxSizeMode.Zoom;
             pb_Logo.SmoothingType = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             pb_Logo.TabIndex = 0;
@@ -99,6 +113,7 @@
             // 
             // pnl_Arriba
             // 
+            pnl_Arriba.Controls.Add(icon_Ubicacion);
             pnl_Arriba.Controls.Add(icon_User);
             pnl_Arriba.Controls.Add(cnt_ControlVentana);
             pnl_Arriba.Dock = DockStyle.Top;
@@ -110,6 +125,23 @@
             pnl_Arriba.Side = ReaLTaiizor.Controls.NightPanel.PanelSide.Left;
             pnl_Arriba.Size = new Size(674, 44);
             pnl_Arriba.TabIndex = 1;
+            // 
+            // icon_Ubicacion
+            // 
+            icon_Ubicacion.Anchor = AnchorStyles.Left;
+            icon_Ubicacion.Enabled = false;
+            icon_Ubicacion.ForeColor = Color.Black;
+            icon_Ubicacion.IconChar = FontAwesome.Sharp.IconChar.Square;
+            icon_Ubicacion.IconColor = Color.Black;
+            icon_Ubicacion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            icon_Ubicacion.IconSize = 15;
+            icon_Ubicacion.ImageAlign = ContentAlignment.MiddleLeft;
+            icon_Ubicacion.Location = new Point(163, 10);
+            icon_Ubicacion.Name = "icon_Ubicacion";
+            icon_Ubicacion.Size = new Size(160, 23);
+            icon_Ubicacion.TabIndex = 7;
+            icon_Ubicacion.Text = "PRINCIPAL";
+            icon_Ubicacion.UseVisualStyleBackColor = true;
             // 
             // icon_User
             // 
@@ -123,7 +155,7 @@
             icon_User.ImageAlign = ContentAlignment.MiddleLeft;
             icon_User.Location = new Point(6, 10);
             icon_User.Name = "icon_User";
-            icon_User.Size = new Size(104, 23);
+            icon_User.Size = new Size(151, 23);
             icon_User.TabIndex = 6;
             icon_User.Text = "USUARIO";
             icon_User.UseVisualStyleBackColor = true;
@@ -159,18 +191,6 @@
             pnl_Principal.TabIndex = 2;
             pnl_Principal.TopMost = true;
             // 
-            // pnl_Botones
-            // 
-            pnl_Botones.Dock = DockStyle.Fill;
-            pnl_Botones.ForeColor = Color.FromArgb(250, 250, 250);
-            pnl_Botones.LeftSideColor = Color.FromArgb(10, 28, 51);
-            pnl_Botones.Location = new Point(0, 116);
-            pnl_Botones.Name = "pnl_Botones";
-            pnl_Botones.RightSideColor = Color.FromArgb(10, 28, 51);
-            pnl_Botones.Side = ReaLTaiizor.Controls.NightPanel.PanelSide.Left;
-            pnl_Botones.Size = new Size(126, 311);
-            pnl_Botones.TabIndex = 2;
-            // 
             // umfPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -203,5 +223,6 @@
         private ReaLTaiizor.Controls.CrownButton btn_CerrarSesion;
         private ReaLTaiizor.Controls.ExtendedPanel pnl_Principal;
         private ReaLTaiizor.Controls.NightPanel pnl_Botones;
+        private FontAwesome.Sharp.IconButton icon_Ubicacion;
     }
 }

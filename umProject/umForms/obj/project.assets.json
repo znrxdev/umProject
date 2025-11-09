@@ -1913,11 +1913,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\umForms.csproj",
+      "projectUniqueName": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umForms\\umForms.csproj",
       "projectName": "umForms",
-      "projectPath": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\umForms.csproj",
+      "projectPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umForms\\umForms.csproj",
       "packagesPath": "C:\\Users\\justi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\justi\\source\\repos\\umProject\\umForms\\obj\\",
+      "outputPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umForms\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1938,11 +1938,11 @@
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "projectReferences": {
-            "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj": {
-              "projectPath": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj"
+            "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj": {
+              "projectPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_ENTIDADES\\CAPA_ENTIDADES.csproj"
             },
-            "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj": {
-              "projectPath": "C:\\Users\\justi\\source\\repos\\umProject\\CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj"
+            "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj": {
+              "projectPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\CAPA_NEGOCIOS\\CAPA_NEGOCIOS.csproj"
             }
           }
         }

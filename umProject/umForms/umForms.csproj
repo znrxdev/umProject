@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Flotantes\" />
-    <Folder Include="Principales\Hijos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
     <PackageReference Include="ReaLTaiizor" Version="3.8.1.3" />
