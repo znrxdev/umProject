@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="Controles\umTabControlPersonalizado.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfApelarSancion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfDecisionUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfDetallesSancion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfManteniemientoPersona.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoEvaluacionAlumno.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoEvaluacionInstancia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoEvaluacionModelo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoMateria.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoSancionAcademica.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfMantenimientoUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfResponderApelacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfUsuariosRoles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Flotantes\umfValidarPersona.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfAuditoria.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfAuditoriaGeneral.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfAuditoriaSistema.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfEvaluacionesAcademicas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfEvaluacionesCalificaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfEvaluacionesInstancias.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfEvaluacionesModelos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfMaterias.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfMiHistorial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfMiHistorialBecas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfMiHistorialEvaluaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfMiHistorialSanciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfProgramasBecas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfReportes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfSancionesAcademicas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfSolicitudesBecas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\Hijos\umfUsuarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\umfPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Principales\umfInicioSesion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
