@@ -1,0 +1,103 @@
+@model UmProject.Entities.Inscripcion
+
+@{
+    ViewData["Title"] = "Nueva Inscripción";
+    ViewData["Subtitle"] = "Registrar nueva inscripción académica";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Inscripciones" asp-action="Index">Inscripciones</a>
+        <span class="separator">/</span>
+        <span>Nueva</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nueva Inscripción</h1>
+            <p class="page-subtitle">Registre una nueva inscripción académica</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Información de la Inscripción</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <!-- Código de Inscripción se autogenera en el SP, no se muestra en el formulario -->
+                    <input type="hidden" asp-for="CodigoInscripcion" value="" />
+                    <!-- Estado siempre EN REVISION (4) al crear -->
+                    <input type="hidden" asp-for="IdEstado" value="4" />
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estado <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" value="EN REVISION" readonly />
+                        <small class="form-text text-muted">El estado se establece automáticamente como EN REVISION al crear una nueva inscripción.</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstudiante" class="form-label">Estudiante <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstudiante" class="form-select" required>
+                            <option value="">Seleccione un estudiante</option>
+                            @if (ViewBag.Estudiantes != null)
+                            {
+                                @foreach (var estudiante in ViewBag.Estudiantes as List<UmProject.Entities.Estudiante>)
+                                {
+                                    <option value="@estudiante.IdUsuario">@(estudiante.NombreCompleto ?? "") - @(estudiante.Usuario ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstudiante" class="text-danger"></span>
+                        <small class="form-text text-muted">Nota: La inscripción se asignará a una sección a través de un grupo.</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdTipoInscripcion" class="form-label">Tipo de Inscripción</label>
+                        <select asp-for="IdTipoInscripcion" class="form-select">
+                            <option value="">Seleccione un tipo (opcional)</option>
+                            @if (ViewBag.TiposInscripcion != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposInscripcion as List<UmProject.Entities.Catalogo>)
+                                {
+                                    <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoInscripcion" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Inscripción
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

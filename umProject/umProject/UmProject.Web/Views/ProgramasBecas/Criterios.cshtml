@@ -1,0 +1,183 @@
+@model UmProject.Web.Models.BecaProgramaCriteriosViewModel
+
+@{
+    ViewData["Title"] = "Criterios de Aprobación";
+    ViewData["Subtitle"] = "Configurar criterios del programa de beca";
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="ProgramasBecas" asp-action="Index">Programas de Becas</a>
+        <span class="separator">/</span>
+        <span>Criterios</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Criterios del programa @Model.Programa?.NombrePrograma</h1>
+            <p class="page-subtitle">Defina las reglas de aprobación</p>
+            <p class="text-muted small mb-0">Código: @Model.Programa?.CodigoPrograma</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<div class="content-container">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2"></i>Listado de criterios</h6>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Tipo criterio</th>
+                                <th>Operador</th>
+                                <th>Valor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Criterios.Any())
+                            {
+                                foreach (var criterio in Model.Criterios)
+                                {
+                                    <tr>
+                                        <td>@criterio.Codigo</td>
+                                        <td>@criterio.NombreCriterio</td>
+                                        <td>@criterio.IdTipoCriterio</td>
+                                        <td>@criterio.OperadorComparacion</td>
+                                        <td>@criterio.ValorCriterio</td>
+                                        <td>
+                                            <a asp-action="Criterios" asp-route-programaId="@criterio.IdPrograma" asp-route-criterioId="@criterio.IdBecaCriterio" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Aún no hay criterios configurados.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        @(Model.EsEdicion ? "Editar criterio" : "Nuevo criterio")
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="GuardarCriterio" method="post">
+                        <input type="hidden" asp-for="FormCriterio.IdBecaCriterio" />
+                        <input type="hidden" asp-for="FormCriterio.IdPrograma" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FormCriterio.Codigo" class="form-label">Código</label>
+                            <input asp-for="FormCriterio.Codigo" class="form-control" />
+                            <span asp-validation-for="FormCriterio.Codigo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FormCriterio.NombreCriterio" class="form-label">Nombre</label>
+                            <input asp-for="FormCriterio.NombreCriterio" class="form-control" />
+                            <span asp-validation-for="FormCriterio.NombreCriterio" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FormCriterio.ClaveCriterio" class="form-label">Clave</label>
+                            <input asp-for="FormCriterio.ClaveCriterio" class="form-control" />
+                            <span asp-validation-for="FormCriterio.ClaveCriterio" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FormCriterio.IdTipoCriterio" class="form-label">Tipo de criterio</label>
+                                <select asp-for="FormCriterio.IdTipoCriterio" class="form-select">
+                                    <option value="">Seleccione</option>
+                                    @foreach (var tipo in ViewBag.TiposCriterio as List<UmProject.Entities.Catalogo>)
+                                    {
+                                        <option value="@tipo.IdCatalogo" selected="@(tipo.IdCatalogo == Model.FormCriterio.IdTipoCriterio)">@tipo.NombreCatalogo</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="FormCriterio.IdTipoCriterio" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FormCriterio.TipoDatoValor" class="form-label">Tipo de dato</label>
+                                <select asp-for="FormCriterio.TipoDatoValor" class="form-select">
+                                    <option value="">Seleccione</option>
+                                    @foreach (var dato in ViewBag.TiposDato as List<string>)
+                                    {
+                                        <option value="@dato" selected="@(dato == Model.FormCriterio.TipoDatoValor)">@dato</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="FormCriterio.TipoDatoValor" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FormCriterio.OperadorComparacion" class="form-label">Operador</label>
+                                <select asp-for="FormCriterio.OperadorComparacion" class="form-select">
+                                    <option value="">Seleccione</option>
+                                    @foreach (var op in ViewBag.Operadores as List<string>)
+                                    {
+                                        <option value="@op" selected="@(op == Model.FormCriterio.OperadorComparacion)">@op</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="FormCriterio.OperadorComparacion" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FormCriterio.ValorCriterio" class="form-label">Valor</label>
+                                <input asp-for="FormCriterio.ValorCriterio" class="form-control" />
+                                <span asp-validation-for="FormCriterio.ValorCriterio" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FormCriterio.Observaciones" class="form-label">Observaciones</label>
+                            <textarea asp-for="FormCriterio.Observaciones" class="form-control" rows="2" maxlength="500"></textarea>
+                            <span asp-validation-for="FormCriterio.Observaciones" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input asp-for="FormCriterio.Activo" class="form-check-input" type="checkbox" value="true" checked="@Model.FormCriterio.Activo" />
+                            <input type="hidden" name="FormCriterio.Activo" value="false" />
+                            <label class="form-check-label" asp-for="FormCriterio.Activo">Activo</label>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Criterios" asp-route-programaId="@Model.Programa?.IdBecaPrograma" class="btn btn-secondary">
+                                <i class="fas fa-undo me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>@(Model.EsEdicion ? "Actualizar" : "Crear") criterio
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

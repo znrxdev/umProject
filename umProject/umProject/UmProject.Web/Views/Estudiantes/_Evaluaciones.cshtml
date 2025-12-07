@@ -1,0 +1,102 @@
+@model List<UmProject.Entities.EstudianteEvaluacion>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <div class="mb-3">
+            <label class="form-check-label">
+                <input type="checkbox" id="soloActuales" class="form-check-input" onchange="filtrarEvaluaciones()">
+                Mostrar solo evaluaciones del período actual
+            </label>
+        </div>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Evaluación</th>
+                    <th>Materia</th>
+                    <th>Sección</th>
+                    <th>Período</th>
+                    <th>Puntaje</th>
+                    <th>Porcentaje</th>
+                    <th>Máximo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evaluacion in Model)
+                {
+                    <tr>
+                        <td>@evaluacion.CodigoRegistro</td>
+                        <td>@evaluacion.NombreEvaluacion</td>
+                        <td>@evaluacion.NombreMateria (@evaluacion.CodigoMateria)</td>
+                        <td>@evaluacion.CodigoSeccion</td>
+                        <td>@evaluacion.NombrePeriodo</td>
+                        <td>@evaluacion.PuntajeObtenido.ToString("F2")</td>
+                        <td>
+                            @if (evaluacion.PorcentajeLogrado.HasValue)
+                            {
+                                <span class="badge @(evaluacion.PorcentajeLogrado >= 60 ? "bg-success" : "bg-danger")">
+                                    @evaluacion.PorcentajeLogrado.Value.ToString("F2")%
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td>@evaluacion.CalificacionMaxima.ToString("F2")</td>
+                        <td>
+                            @if (evaluacion.EstadoEvaluacion != null && evaluacion.EstadoEvaluacion.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@evaluacion.EstadoEvaluacion
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge inactive">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@evaluacion.EstadoEvaluacion
+                                </span>
+                            }
+                        </td>
+                        <td>@(evaluacion.FechaEvaluacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-clipboard-check"></i>
+        <h3>No hay evaluaciones</h3>
+        <p>El estudiante no tiene evaluaciones registradas.</p>
+    </div>
+}
+
+<script>
+    function filtrarEvaluaciones() {
+        var soloActuales = $('#soloActuales').is(':checked');
+        // Obtener el ID del estudiante desde data del contenedor o desde la URL
+        var estudianteId = $('#evaluacionesContainer').data('estudianteId');
+        if (!estudianteId) {
+            var urlPath = window.location.pathname;
+            var match = urlPath.match(/\/Estudiantes\/Details\/(\d+)/);
+            estudianteId = match ? match[1] : 0;
+        }
+        
+        $.ajax({
+            url: '@Url.Action("Evaluaciones", "Estudiantes")',
+            type: 'GET',
+            data: { id: estudianteId, soloActuales: soloActuales },
+            success: function(data) {
+                $('#evaluacionesContainer').html(data);
+                $('#evaluacionesContainer').data('estudianteId', estudianteId);
+            }
+        });
+    }
+</script>
+

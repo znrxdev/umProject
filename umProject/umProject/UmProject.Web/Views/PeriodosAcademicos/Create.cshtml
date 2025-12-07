@@ -1,0 +1,214 @@
+@model UmProject.Entities.PeriodoAcademico
+
+@{
+    ViewData["Title"] = "Nuevo Período Académico";
+    ViewData["Subtitle"] = "Registrar nuevo período académico";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-calendar-plus me-2"></i>Información del Período Académico</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CodigoPeriodo" class="form-label">Código de Período <span class="text-danger">*</span></label>
+                    <input asp-for="CodigoPeriodo" class="form-control" value="@ViewBag.CodigoPeriodo" readonly />
+                    <input type="hidden" asp-for="CodigoPeriodo" value="@ViewBag.CodigoPeriodo" />
+                    <small class="form-text text-muted">El código se genera automáticamente basado en el último período académico.</small>
+                    <span asp-validation-for="CodigoPeriodo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="NombrePeriodo" class="form-label">Nombre del Período <span class="text-danger">*</span></label>
+                    <input asp-for="NombrePeriodo" class="form-control" placeholder="Ej: Primer Cuatrimestre 2024" maxlength="100" />
+                    <span asp-validation-for="NombrePeriodo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdTipoPeriodo" class="form-label">Tipo de Período</label>
+                    <select asp-for="IdTipoPeriodo" class="form-select">
+                        <option value="">Seleccione un tipo</option>
+                        @if (ViewBag.TiposPeriodo != null)
+                        {
+                            @foreach (var tipo in ViewBag.TiposPeriodo as List<UmProject.Entities.Catalogo>)
+                            {
+                                <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="IdTipoPeriodo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" value="EN REVISION" readonly />
+                    <input type="hidden" asp-for="IdEstado" value="@ViewBag.EstadoRevision" />
+                    <small class="form-text text-muted">El estado se establece automáticamente como EN REVISION al crear un nuevo período.</small>
+                    <span asp-validation-for="IdEstado" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaInicio" class="form-label">Fecha de Inicio <span class="text-danger">*</span></label>
+                    <input asp-for="FechaInicio" type="date" class="form-control" id="FechaInicio" required />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                    <small class="form-text text-muted">La fecha de fin y cierre se calcularán automáticamente</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaFin" class="form-label">Fecha de Fin <span class="text-danger">*</span></label>
+                    <input asp-for="FechaFin" type="date" class="form-control" id="FechaFin" readonly />
+                    <span asp-validation-for="FechaFin" class="text-danger"></span>
+                    <small class="form-text text-muted">Se calcula automáticamente (4 meses después de la fecha de inicio)</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaCierreCalificaciones" class="form-label">Fecha Cierre Calificaciones</label>
+                    <input asp-for="FechaCierreCalificaciones" type="date" class="form-control" id="FechaCierreCalificaciones" readonly />
+                    <span asp-validation-for="FechaCierreCalificaciones" class="text-danger"></span>
+                    <small class="form-text text-muted">Se calcula automáticamente (1 semana después de la fecha de fin)</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" name="EsPeriodoActual" id="EsPeriodoActual" value="true" disabled />
+                        <input type="hidden" name="EsPeriodoActual" value="false" />
+                        <label class="form-check-label" for="EsPeriodoActual">Es Período Actual</label>
+                    </div>
+                    <small class="form-text text-muted">Al crear un período, este campo se desactiva automáticamente (solo se activa cuando el estado es ACTIVO)</small>
+                    <span asp-validation-for="EsPeriodoActual" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Código de Integración</label>
+                    <input type="text" class="form-control" value="Se generará automáticamente" readonly />
+                    <input type="hidden" asp-for="CodigoIntegracion" value="" />
+                    <small class="form-text text-muted">El código de integración se genera automáticamente.</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="255" placeholder="Observaciones adicionales sobre el período académico"></textarea>
+                    <span asp-validation-for="Observaciones" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Guardar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Validar formato del código de período
+            $('#CodigoPeriodo').on('blur', function() {
+                var codigo = $(this).val().trim().toUpperCase();
+                var pattern = /^(\d{4})-(I|II|III)$/;
+                
+                if (codigo && !pattern.test(codigo)) {
+                    $(this).addClass('is-invalid');
+                    if ($(this).next('.text-danger').length === 0) {
+                        $(this).after('<span class="text-danger">El código debe tener el formato: AÑO-I, AÑO-II o AÑO-III (ejemplo: 2024-I)</span>');
+                    }
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).next('.text-danger').remove();
+                    
+                    // Convertir a mayúsculas si es válido
+                    if (pattern.test(codigo)) {
+                        $(this).val(codigo);
+                    }
+                }
+            });
+
+            // El estado y código son readonly, no se necesita validación adicional
+
+            // Asegurar que el campo de fecha de inicio no tenga restricciones de min/max
+            $('#FechaInicio').removeAttr('min');
+            $('#FechaInicio').removeAttr('max');
+            
+            // Autocalcular fechas basadas en fecha de inicio (cuatrimestre = 4 meses)
+            function calcularFechas() {
+                var fechaInicio = $('#FechaInicio').val();
+                
+                if (fechaInicio) {
+                    // Calcular fecha de fin: 4 meses después de la fecha de inicio
+                    var fechaInicioDate = new Date(fechaInicio + 'T00:00:00');
+                    fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 4);
+                    // Restar 1 día para que sea el último día del cuatrimestre
+                    fechaInicioDate.setDate(fechaInicioDate.getDate() - 1);
+                    var fechaFin = fechaInicioDate.toISOString().split('T')[0];
+                    
+                    // Calcular fecha de cierre de calificaciones: 1 semana después de fecha de fin
+                    var fechaFinDate = new Date(fechaFin + 'T00:00:00');
+                    fechaFinDate.setDate(fechaFinDate.getDate() + 7);
+                    var fechaCierre = fechaFinDate.toISOString().split('T')[0];
+                    
+                    // Establecer valores en los campos readonly (se envían en el formulario)
+                    $('#FechaFin').val(fechaFin);
+                    $('#FechaCierreCalificaciones').val(fechaCierre);
+                } else {
+                    // Limpiar campos si no hay fecha de inicio
+                    $('#FechaFin').val('');
+                    $('#FechaCierreCalificaciones').val('');
+                }
+            }
+            
+            // Calcular fechas cuando cambia la fecha de inicio
+            $('#FechaInicio').on('change', function() {
+                calcularFechas();
+            });
+            
+            // Calcular fechas al cargar si ya hay una fecha de inicio
+            if ($('#FechaInicio').val()) {
+                calcularFechas();
+            }
+
+            // Validar fecha de inicio antes de enviar el formulario
+            $('form').on('submit', function(e) {
+                var fechaInicio = $('#FechaInicio').val();
+                var fechaMinimaInicio = '@(ViewBag.FechaMinimaInicio ?? DateTime.Now.ToString("yyyy-MM-dd"))';
+                
+                if (!fechaInicio) {
+                    e.preventDefault();
+                    alert('Debe especificar la fecha de inicio');
+                    $('#FechaInicio').focus();
+                    return false;
+                }
+                
+                // Validar que la fecha de inicio no sea menor a la fecha de cierre del período más reciente
+                var fechaInicioDate = new Date(fechaInicio + 'T00:00:00');
+                fechaInicioDate.setHours(0, 0, 0, 0);
+                var fechaMinimaDate = new Date(fechaMinimaInicio + 'T00:00:00');
+                fechaMinimaDate.setHours(0, 0, 0, 0);
+                
+                
+                // Asegurar que las fechas calculadas estén correctamente establecidas
+                calcularFechas();
+            });
+        });
+    </script>
+}
+

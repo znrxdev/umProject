@@ -1,0 +1,84 @@
+@model List<UmProject.Entities.DocenteSeccionEstudiante>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <div class="mb-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchEstudiantes" placeholder="Buscar estudiante..." class="form-control" style="border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <span class="badge bg-info fs-6">Total: @Model.Count estudiantes</span>
+                </div>
+            </div>
+        </div>
+        <table class="modern-table" id="tablaEstudiantes">
+            <thead>
+                <tr>
+                    <th>Código Inscripción</th>
+                    <th>Estudiante</th>
+                    <th>Documento</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Fecha Inscripción</th>
+                    <th>Fecha Validación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var estudiante in Model)
+                {
+                    <tr>
+                        <td><code>@estudiante.CodigoInscripcion</code></td>
+                        <td>
+                            <strong>@estudiante.NombreEstudiante</strong>
+                            <br><small class="text-muted">@estudiante.UsuarioEstudiante</small>
+                        </td>
+                        <td>@estudiante.ValorDocumento</td>
+                        <td>@(estudiante.TipoInscripcion ?? "N/A")</td>
+                        <td>
+                            @if (estudiante.EstadoInscripcion != null && estudiante.EstadoInscripcion.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@estudiante.EstadoInscripcion
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge inactive">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@estudiante.EstadoInscripcion
+                                </span>
+                            }
+                        </td>
+                        <td>@(estudiante.FechaInscripcion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@(estudiante.FechaValidacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-users"></i>
+        <h3>No hay estudiantes</h3>
+        <p>No hay estudiantes inscritos en esta sección.</p>
+    </div>
+}
+
+<script>
+    $(document).ready(function() {
+        $('#searchEstudiantes').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('#tablaEstudiantes tbody tr').each(function() {
+                var rowText = $(this).text().toLowerCase();
+                $(this).toggle(rowText.includes(searchText));
+            });
+        });
+    });
+</script>
+

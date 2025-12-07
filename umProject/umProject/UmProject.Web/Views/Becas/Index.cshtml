@@ -1,0 +1,152 @@
+@model List<UmProject.Entities.SolicitudBeca>
+
+@{
+    ViewData["Title"] = "Gestión de Becas";
+    ViewData["Subtitle"] = "Administración de solicitudes de becas";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Becas</span>
+    </nav>
+        <div class="page-title-section">
+            <div>
+                <h1 class="page-title">Gestión de Becas</h1>
+                <p class="page-subtitle">Administre y controle las solicitudes de becas del sistema</p>
+            </div>
+            <!-- Botón Nueva Solicitud eliminado en gestión (solo en menú Solicitudes Becas de estudiante) -->
+        </div>
+</div>
+
+<!-- Tabs navegación Gestión de Becas -->
+<ul class="nav nav-tabs mb-4" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="@Url.Action("Index", "ProgramasBecas")">
+            <i class="fas fa-graduation-cap me-2"></i>Programas de Becas
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" aria-current="page">
+            <i class="fas fa-file-alt me-2"></i>Gestión de Becas (Solicitudes)
+        </a>
+    </li>
+</ul>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por código, estudiante, programa..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Estudiante</th>
+                        <th>Programa</th>
+                        <th>Promedio</th>
+                        <th>Estado</th>
+                        <th>Prioritaria</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var solicitud in Model)
+                    {
+                        <tr>
+                            <td>@solicitud.IdSolicitudBeca</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@solicitud.CodigoSeguimiento</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@(solicitud.EstudianteNombre ?? "N/A")</div>
+                                <small class="text-muted">@(solicitud.EstudianteUsuario ?? "")</small>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem;">@(solicitud.NombreProgramaBeca ?? "N/A")</div>
+                                <small class="text-muted">@(solicitud.CodigoProgramaBeca ?? "")</small>
+                            </td>
+                            <td>
+                                @if (solicitud.PromedioVigente.HasValue)
+                                {
+                                    <span class="badge bg-info">@solicitud.PromedioVigente.Value.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(solicitud.EstadoNombre))
+                                {
+                                    <span class="status-badge active">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@solicitud.EstadoNombre
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (solicitud.EsPrioritaria)
+                                {
+                                    <span class="badge bg-warning"><i class="fas fa-star me-1"></i>Prioritaria</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@solicitud.IdSolicitudBeca" class="btn-icon btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@solicitud.IdSolicitudBeca" class="btn-icon btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>No hay solicitudes de becas registradas</h3>
+                <p>No se encontraron solicitudes de becas en el sistema. Agregue una nueva solicitud para comenzar.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real
+            $('#searchInput').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                $('.modern-table tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+        });
+    </script>
+}
+

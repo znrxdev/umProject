@@ -1,0 +1,128 @@
+@* 
+    Componente parcial para mostrar badges de estado de forma consistente
+    Uso: @await Html.PartialAsync("_EstadoBadge", modelo)
+    O: @{ ViewData["IdEstado"] = valor; ViewData["NombreEstado"] = nombre; } @await Html.PartialAsync("_EstadoBadge")
+    O: @{ ViewData["NombreEstado"] = nombre; } @await Html.PartialAsync("_EstadoBadge") - Si solo tienes el nombre
+*@
+
+@{
+    int? idEstado = null;
+    string nombreEstado = "N/A";
+    
+    // Intentar obtener desde ViewData primero
+    if (ViewData.ContainsKey("IdEstado"))
+    {
+        idEstado = ViewData["IdEstado"] as int?;
+    }
+    if (ViewData.ContainsKey("NombreEstado"))
+    {
+        nombreEstado = ViewData["NombreEstado"] as string ?? "N/A";
+    }
+    
+    // Si no está en ViewData, intentar desde el Model
+    if (!idEstado.HasValue && Model != null)
+    {
+        var idProp = Model.GetType().GetProperty("IdEstado");
+        if (idProp != null)
+        {
+            idEstado = idProp.GetValue(Model) as int?;
+        }
+    }
+    
+    if (nombreEstado == "N/A" && Model != null)
+    {
+        // Intentar diferentes nombres de propiedades comunes
+        var nombreProp = Model.GetType().GetProperty("NombreEstado") 
+                      ?? Model.GetType().GetProperty("EstadoNombre")
+                      ?? Model.GetType().GetProperty("EstadoInscripcion")
+                      ?? Model.GetType().GetProperty("EstadoUsuario")
+                      ?? Model.GetType().GetProperty("EstadoSancion");
+        if (nombreProp != null)
+        {
+            nombreEstado = nombreProp.GetValue(Model) as string ?? "N/A";
+        }
+    }
+    
+    // Si no tenemos IdEstado pero tenemos nombreEstado, intentar mapear por nombre
+    if (!idEstado.HasValue && !string.IsNullOrEmpty(nombreEstado) && nombreEstado != "N/A")
+    {
+        var nombreUpper = nombreEstado.ToUpper().Trim();
+        switch (nombreUpper)
+        {
+            case "ACTIVO":
+                idEstado = 1;
+                break;
+            case "INACTIVO":
+                idEstado = 2;
+                break;
+            case "PENDIENTE":
+                idEstado = 3;
+                break;
+            case "EN REVISION":
+            case "EN REVISIÓN":
+                idEstado = 4;
+                break;
+            case "APROBADA":
+            case "APROBADO":
+                idEstado = 5;
+                break;
+            case "RECHAZADA":
+            case "RECHAZADO":
+                idEstado = 6;
+                break;
+            case "PLANIFICADA":
+            case "PLANIFICADO":
+                idEstado = 7;
+                break;
+        }
+    }
+}
+
+@{
+    string badgeClass = "inactive";
+    string badgeStyle = "";
+    
+    if (idEstado.HasValue)
+    {
+        switch (idEstado.Value)
+        {
+            case 1: // ACTIVO
+                badgeClass = "active";
+                badgeStyle = "background-color: #10b981; color: #ffffff;";
+                break;
+            case 2: // INACTIVO
+                badgeClass = "inactive";
+                badgeStyle = "background-color: #6b7280; color: #ffffff;";
+                break;
+            case 3: // PENDIENTE
+                badgeClass = "warning";
+                badgeStyle = "background-color: #f59e0b; color: #78350f;";
+                break;
+            case 4: // EN REVISION
+                badgeClass = "info";
+                badgeStyle = "background-color: #fbbf24; color: #78350f;";
+                break;
+            case 5: // APROBADA
+                badgeClass = "success";
+                badgeStyle = "background-color: #10b981; color: #ffffff;";
+                break;
+            case 6: // RECHAZADA
+                badgeClass = "danger";
+                badgeStyle = "background-color: #ef4444; color: #ffffff;";
+                break;
+            case 7: // PLANIFICADA
+                badgeClass = "secondary";
+                badgeStyle = "background-color: #6366f1; color: #ffffff;";
+                break;
+            default:
+                badgeClass = "inactive";
+                badgeStyle = "background-color: #6b7280; color: #ffffff;";
+                break;
+        }
+    }
+}
+
+<span class="status-badge @badgeClass" style="@badgeStyle">
+    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@nombreEstado
+</span>
+

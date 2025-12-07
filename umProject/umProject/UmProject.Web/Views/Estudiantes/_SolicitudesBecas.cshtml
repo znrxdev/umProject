@@ -1,0 +1,89 @@
+@model List<UmProject.Entities.EstudianteSolicitudBeca>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Código Seguimiento</th>
+                    <th>Programa</th>
+                    <th>Convocatoria</th>
+                    <th>Período</th>
+                    <th>Promedio</th>
+                    <th>Sanciones Activas</th>
+                    <th>Cumple Criterios</th>
+                    <th>Estado</th>
+                    <th>Fecha Solicitud</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var solicitud in Model)
+                {
+                    <tr>
+                        <td>@solicitud.CodigoSeguimiento</td>
+                        <td>@solicitud.NombrePrograma</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>
+                            @if (solicitud.PromedioVigente.HasValue)
+                            {
+                                <span class="badge @(solicitud.PromedioVigente >= 60 ? "bg-success" : "bg-danger")">
+                                    @solicitud.PromedioVigente.Value.ToString("F2")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            @if (solicitud.TotalSancionesActivas > 0)
+                            {
+                                <span class="badge bg-danger">@solicitud.TotalSancionesActivas</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">0</span>
+                            }
+                        </td>
+                        <td>
+                            @if (solicitud.CumpleCriterios)
+                            {
+                                <span class="badge bg-success">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">No</span>
+                            }
+                        </td>
+                        <td>
+                            @if (solicitud.EstadoSolicitud != null && solicitud.EstadoSolicitud.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@solicitud.EstadoSolicitud
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge inactive">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@solicitud.EstadoSolicitud
+                                </span>
+                            }
+                        </td>
+                        <td>@(solicitud.FechaSolicitud?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-hand-holding-usd"></i>
+        <h3>No hay solicitudes de becas</h3>
+        <p>El estudiante no tiene solicitudes de becas registradas.</p>
+    </div>
+}
+

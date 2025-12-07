@@ -1,0 +1,264 @@
+@model UmProject.Entities.SancionAcademica
+
+@{
+    ViewData["Title"] = "Detalles de Sanción Académica";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="SancionesAcademicas" asp-action="Index">Sanciones Académicas</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoSancion</h1>
+            <p class="page-subtitle">@(Model.NombreEstudiante ?? "N/A") - @(Model.NombreTipoSancion ?? "N/A")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdSancion" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Detalles de la Sanción</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 detail-label">Código:</dt>
+                        <dd class="col-sm-8 detail-value"><strong>@Model.CodigoSancion</strong></dd>
+
+                        <dt class="col-sm-4 detail-label">Estudiante:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.NombreEstudiante ?? "N/A")</div>
+                            <small class="text-muted">@(Model.UsuarioEstudiante ?? "")</small>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Tipo de Sanción:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreTipoSancion))
+                            {
+                                <span class="badge bg-danger" style="font-size: 1rem;">@Model.NombreTipoSancion</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Tipo de Falta:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreTipoFalta))
+                            {
+                                <span class="badge bg-warning" style="font-size: 1rem;">@Model.NombreTipoFalta</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Severidad:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreSeveridad))
+                            {
+                                <span class="badge bg-info" style="font-size: 1rem;">@Model.NombreSeveridad</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Estado:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreEstado))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@Model.NombreEstado
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Es Apelable:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (Model.EsApelable)
+                            {
+                                <span class="badge bg-success"><i class="fas fa-check me-1"></i>Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>No</span>
+                            }
+                        </dd>
+
+                        @if (!string.IsNullOrEmpty(Model.Motivo))
+                        {
+                            <dt class="col-sm-4 detail-label">Motivo:</dt>
+                            <dd class="col-sm-8 detail-value">@Model.Motivo</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de Apelación y Resolución -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-gavel me-2"></i>Apelación y Resolución</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6 detail-label">Fecha Apelación:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.FechaApelacion.HasValue)
+                            {
+                                <i class="fas fa-calendar-check me-1 text-info"></i>@Model.FechaApelacion.Value.ToString("dd/MM/yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin apelar</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-12 detail-label mb-2 mt-2">Resultado Apelación:</dt>
+                        <dd class="col-sm-12 detail-value mb-3" style="word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;">
+                            @if (!string.IsNullOrEmpty(Model.ResultadoApelacion))
+                            {
+                                <div style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; line-height: 1.5;">@Model.ResultadoApelacion</div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin resultado</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Usuario Resolución:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.UsuarioResolucion))
+                            {
+                                <div>@Model.UsuarioResolucion</div>
+                                @if (!string.IsNullOrEmpty(Model.NombreUsuarioResolucion))
+                                {
+                                    <small class="text-muted">@Model.NombreUsuarioResolucion</small>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin asignar</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Fecha Resolución:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.FechaResolucion.HasValue)
+                            {
+                                <i class="fas fa-calendar-check me-1 text-success"></i>@Model.FechaResolucion.Value.ToString("dd/MM/yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin resolver</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Documento:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.DocumentoResolucion))
+                            {
+                                <span>@Model.DocumentoResolucion</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin documento</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    @if (!string.IsNullOrEmpty(Model.ObservacionesApelacion))
+                    {
+                        <hr />
+                        <h6 class="text-primary mb-2">Observaciones de Apelación</h6>
+                        <p class="detail-value">@Model.ObservacionesApelacion</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Fechas y Auditoría -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Fechas y Auditoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Fechas Importantes</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">Fecha Registro:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaRegistro.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-info"></i>@Model.FechaRegistro.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Fin:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaFin.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-times me-1 text-danger"></i>@Model.FechaFin.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin fecha de fin</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Creación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaCreacion ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Modificación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaModificacion ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Información Adicional</h6>
+                            @if (Model.IdSancionOrigen.HasValue)
+                            {
+                                <h6 class="text-primary mt-3 mb-2">Sanción Origen</h6>
+                                <p class="detail-value">ID: @Model.IdSancionOrigen.Value</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

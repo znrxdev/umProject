@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Subtitle"] = "Panel de control del sistema";
+    var usuarioSesion = Context.Session.GetString("UsuarioSesion") ?? string.Empty;
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <span>Dashboard</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Bienvenido, @usuarioSesion</h1>
+            <p class="page-subtitle">Sistema de Control de Evaluaciones Académicas</p>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Welcome Card -->
+        <div class="col-12">
+            <div class="modern-table-container" style="padding: 4rem 3rem; text-align: center;">
+                <div style="margin-bottom: 2rem;">
+                    <img src="~/assets/LogoUmProject.png" alt="Logo" style="max-width: 250px; height: auto; margin: 0 auto 2rem; display: block; object-fit: contain;" />
+                    <h2 style="font-size: 1.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">Bienvenido al Sistema</h2>
+                    <p style="font-size: 1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                        Utilice el menú lateral para navegar por las diferentes opciones disponibles del sistema de gestión académica.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

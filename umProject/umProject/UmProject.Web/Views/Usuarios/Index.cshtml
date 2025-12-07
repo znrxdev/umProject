@@ -1,0 +1,388 @@
+@model List<UmProject.Entities.Usuario>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    ViewData["Subtitle"] = "Administración de usuarios del sistema";
+    var roles = ViewBag.Roles as List<UmProject.Entities.Rol> ?? new List<UmProject.Entities.Rol>();
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show m-3" role="alert" style="border-radius: 8px;">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Usuarios</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Gestión de Usuarios</h1>
+            <p class="page-subtitle">Administre y controle el acceso de usuarios al sistema</p>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalValidarPersona" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nuevo Usuario
+        </button>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por nombre de usuario..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+    <select class="form-select" id="rolFilter" style="width: auto; min-width: 200px; border: 1px solid var(--border-color);">
+        <option value="">Todos los roles</option>
+        @foreach (var rol in roles)
+        {
+            <option value="@rol.IdRol">@rol.NombreRol</option>
+        }
+    </select>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container" id="tablaUsuariosContainer">
+        @await Html.PartialAsync("_TablaUsuarios", Model)
+    </div>
+</div>
+
+@await Html.PartialAsync("_DecisionUsuario")
+@await Html.PartialAsync("_DecisionEdicion")
+@await Html.PartialAsync("_AgregarRoles")
+@await Html.PartialAsync("_ConfirmarCrearPersona")
+@await Html.PartialAsync("_ValidarPersona")
+
+@section Scripts {
+    <script>
+        // Función global para mostrar la ventana de decisión
+        window.mostrarDecisionUsuario = function(data) {
+            var contenido = $('#contenidoDecision');
+            var modal = $('#modalDecisionUsuario');
+            
+            if (data.tieneUsuario) {
+                // La persona tiene usuario - mostrar opciones de actualizar
+                var botonPermisos = data.urlPermisosUsuario 
+                    ? `<button type="button" class="btn btn-outline-info btn-lg" onclick="redirigirDesdeDecision('${data.urlPermisosUsuario}')">
+                        <i class="fas fa-user-shield me-2"></i>Permisos de Usuario
+                    </button>`
+                    : '';
+                
+                contenido.html(`
+                    <i class="fas fa-user-check fa-3x text-success mb-3"></i>
+                    <h5 class="mb-3">La persona ya tiene un usuario registrado</h5>
+                    <p class="text-muted mb-4">Seleccione qué desea actualizar:</p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-lg" onclick="redirigirDesdeDecision('${data.urlActualizarPersona}')">
+                            <i class="fas fa-user-edit me-2"></i>Actualizar Datos Persona
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-lg" onclick="redirigirDesdeDecision('${data.urlActualizarUsuario}')">
+                            <i class="fas fa-user-cog me-2"></i>Actualizar Datos Usuario
+                        </button>
+                        ${botonPermisos}
+                    </div>
+                `);
+            } else {
+                // La persona existe pero NO tiene usuario - mostrar opción de agregar
+                contenido.html(`
+                    <i class="fas fa-user-plus fa-3x text-info mb-3"></i>
+                    <h5 class="mb-3">La persona no tiene usuario registrado</h5>
+                    <p class="text-muted mb-4">¿Desea agregar un usuario a esta persona?</p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="redirigirDesdeDecision('${data.urlAgregarUsuario}')">
+                            <i class="fas fa-user-plus me-2"></i>Agregar Usuario
+                        </button>
+                    </div>
+                `);
+            }
+            
+            // Restaurar botón de validar cuando se cierre el modal
+            modal.off('hidden.bs.modal').on('hidden.bs.modal', function() {
+                var btnValidar = $('#btnValidar');
+                btnValidar.prop('disabled', false).html('<i class="fas fa-search me-1"></i>Validar');
+            });
+            
+            modal.modal('show');
+        };
+        
+        function redirigirDesdeDecision(url) {
+            $('#modalDecisionUsuario').modal('hide');
+            window.location.href = url;
+        }
+
+        // Función global para mostrar confirmación de crear persona
+        window.mostrarConfirmarCrearPersona = function(valorDocumento, urlCrearPersona) {
+            $('#documentoMostrar').text(valorDocumento);
+            $('#btnConfirmarCrearPersona').off('click').on('click', function() {
+                $('#modalConfirmarCrearPersona').modal('hide');
+                window.location.href = urlCrearPersona;
+            });
+            
+            // Restaurar botón de validar cuando se cierre el modal
+            $('#modalConfirmarCrearPersona').off('hidden.bs.modal').on('hidden.bs.modal', function() {
+                var btnValidar = $('#btnValidar');
+                btnValidar.prop('disabled', false).html('<i class="fas fa-search me-1"></i>Validar');
+            });
+            
+            $('#modalConfirmarCrearPersona').modal('show');
+        };
+
+        // Función para mostrar decisión de edición
+        window.mostrarDecisionEdicion = function(data) {
+            var contenido = $('#contenidoDecisionEdicion');
+            var modal = $('#modalDecisionEdicion');
+            
+            contenido.html(`
+                <i class="fas fa-edit fa-3x text-primary mb-3"></i>
+                <h5 class="mb-3">¿Qué desea editar?</h5>
+                <p class="text-muted mb-4">Seleccione la opción que desea modificar:</p>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-warning btn-lg" onclick="redirigirDesdeDecision('${data.urlEditarUsuario}')">
+                        <i class="fas fa-user-cog me-2"></i>Editar Datos Usuario
+                    </button>
+                    ${data.urlEditarPersona ? `<button type="button" class="btn btn-outline-primary btn-lg" onclick="redirigirDesdeDecision('${data.urlEditarPersona}')">
+                        <i class="fas fa-user-edit me-2"></i>Editar Datos Persona
+                    </button>` : ''}
+                    <button type="button" class="btn btn-outline-info btn-lg" onclick="redirigirDesdeDecision('${data.urlGestionarRoles}')">
+                        <i class="fas fa-user-shield me-2"></i>Gestionar Roles
+                    </button>
+                </div>
+            `);
+            
+            modal.modal('show');
+        };
+
+        // Script para validar persona y filtros
+        $(document).ready(function() {
+            var searchTimeout;
+            var currentRolFilter = '';
+            
+            // Función para actualizar la tabla
+            function actualizarTabla(nombreUsuario, idRol) {
+                var url = '@Url.Action("BuscarUsuarios", "Usuarios")';
+                var data = { 
+                    nombreUsuario: nombreUsuario || '',
+                    idRol: idRol || null
+                };
+                
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function(html) {
+                        $('#tablaUsuariosContainer').html(html);
+                        // Re-attach event handlers
+                        attachEditHandlers();
+                    },
+                    error: function() {
+                        $('#tablaUsuariosContainer').html('<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error al buscar</h3><p>Intente nuevamente</p></div>');
+                    }
+                });
+            }
+            
+            // Función para re-attach event handlers después de actualizar la tabla
+            function attachEditHandlers() {
+                $('.btnEditarUsuario').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    var idUsuario = $(this).data('id-usuario');
+                    $.ajax({
+                        url: '@Url.Action("Edit", "Usuarios")',
+                        type: 'GET',
+                        data: { id: idUsuario },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response && response.success && response.mostrarDecisionEdicion) {
+                                mostrarDecisionEdicion(response);
+                            } else {
+                                window.location.href = '@Url.Action("EditarUsuario", "Usuarios")?id=' + idUsuario;
+                            }
+                        },
+                        error: function() {
+                            window.location.href = '@Url.Action("EditarUsuario", "Usuarios")?id=' + idUsuario;
+                        }
+                    });
+                });
+            }
+            
+            // Búsqueda por nombre de usuario (con debounce)
+            $('#searchInput').on('keyup', function() {
+                clearTimeout(searchTimeout);
+                var nombreUsuario = $(this).val().trim();
+                var idRol = $('#rolFilter').val();
+                
+                searchTimeout = setTimeout(function() {
+                    actualizarTabla(nombreUsuario, idRol || null);
+                }, 500); // Esperar 500ms después de que el usuario deje de escribir
+            });
+            
+            // Filtro por rol
+            $('#rolFilter').on('change', function() {
+                var idRol = $(this).val();
+                var nombreUsuario = $('#searchInput').val().trim();
+                currentRolFilter = idRol;
+                
+                actualizarTabla(nombreUsuario, idRol || null);
+            });
+            
+            // Attach edit handlers inicialmente
+            attachEditHandlers();
+            // Verificar si se debe mostrar el modal de agregar roles
+            @if (TempData["AgregarRoles"] != null && TempData["IdUsuarioCreado"] != null)
+            {
+                <text>
+                var idUsuarioCreado = @TempData["IdUsuarioCreado"];
+                $('#btnSiAgregarRoles').off('click').on('click', function() {
+                    $('#modalAgregarRoles').modal('hide');
+                    window.location.href = '@Url.Action("GestionarRoles", "Usuarios", new { idUsuario = TempData["IdUsuarioCreado"] })';
+                });
+                $('#modalAgregarRoles').modal('show');
+                </text>
+            }
+            
+            var formValidarPersona = $('#formValidarPersona');
+            var btnValidarOriginal = null;
+            
+            // Guardar el HTML original del botón
+            $('#btnValidar').on('click', function() {
+                if (!btnValidarOriginal) {
+                    btnValidarOriginal = $(this).html();
+                }
+            });
+            
+            // Restaurar botón cuando se cierra el modal de validación
+            $('#modalValidarPersona').on('hidden.bs.modal', function() {
+                var btnValidar = $('#btnValidar');
+                if (btnValidarOriginal) {
+                    btnValidar.prop('disabled', false).html(btnValidarOriginal);
+                } else {
+                    btnValidar.prop('disabled', false).html('<i class="fas fa-search me-1"></i>Validar');
+                }
+                // Limpiar campo de documento
+                $('#valorDocumento').val('');
+                $('#mensajeValidacion').addClass('d-none');
+            });
+            
+            // Usar el botón directamente en lugar del submit del formulario
+            $('#btnValidar').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var valorDocumento = $('#valorDocumento').val().trim();
+                var mensajeDiv = $('#mensajeValidacion');
+                
+                // Limpiar mensajes anteriores
+                mensajeDiv.addClass('d-none').removeClass('alert-success alert-danger alert-warning');
+                
+                if (!valorDocumento) {
+                    mensajeDiv.removeClass('d-none').addClass('alert-warning');
+                    mensajeDiv.html('<i class="fas fa-exclamation-triangle me-2"></i>El número de documento no puede estar vacío.');
+                    return false;
+                }
+                
+                // Deshabilitar botón mientras se procesa
+                var btnValidar = $('#btnValidar');
+                var btnTextOriginal = btnValidar.html();
+                btnValidar.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Validando...');
+                
+                $.ajax({
+                    url: '@Url.Action("ValidarPersona", "Usuarios")',
+                    type: 'POST',
+                    data: {
+                        valorDocumento: valorDocumento
+                    },
+                    dataType: 'json',
+                    beforeSend: function(xhr) {
+                        // Agregar token si existe
+                        var token = formValidarPersona.find('input[name="__RequestVerificationToken"]').val();
+                        if (token) {
+                            xhr.setRequestHeader('RequestVerificationToken', token);
+                        }
+                    },
+                    success: function(response) {
+                        console.log('Respuesta recibida:', response);
+                        
+                        if (response && response.success === true) {
+                            // Cerrar el modal de validación
+                            $('#modalValidarPersona').modal('hide');
+                            
+                            if (response.mostrarDecision === true) {
+                                // Mostrar ventana de decisión
+                                if (typeof mostrarDecisionUsuario === 'function') {
+                                    mostrarDecisionUsuario(response);
+                                } else {
+                                    console.error('mostrarDecisionUsuario no está disponible');
+                                    // Fallback: redirigir según el caso
+                                    if (response.tieneUsuario && response.urlActualizarUsuario) {
+                                        window.location.href = response.urlActualizarUsuario;
+                                    } else if (response.urlAgregarUsuario) {
+                                        window.location.href = response.urlAgregarUsuario;
+                                    }
+                                }
+                            } else if (response.mostrarConfirmacion === true) {
+                                // Mostrar confirmación para crear persona
+                                if (typeof mostrarConfirmarCrearPersona === 'function') {
+                                    mostrarConfirmarCrearPersona(response.valorDocumento, response.urlCrearPersona);
+                                } else {
+                                    console.error('mostrarConfirmarCrearPersona no está disponible');
+                                    // Fallback: redirigir directamente
+                                    if (response.urlCrearPersona) {
+                                        window.location.href = response.urlCrearPersona;
+                                    }
+                                }
+                            } else if (response.redirectUrl) {
+                                // Redirigir directamente
+                                window.location.href = response.redirectUrl;
+                            }
+                        } else {
+                            mensajeDiv.removeClass('d-none').addClass('alert-danger');
+                            mensajeDiv.html('<i class="fas fa-times-circle me-2"></i>' + (response.message || 'Error desconocido'));
+                            btnValidar.prop('disabled', false).html(btnTextOriginal);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error AJAX:', xhr, status, error);
+                        console.error('Response Text:', xhr.responseText);
+                        
+                        var errorMsg = 'Error al validar la persona. Por favor, intente nuevamente.';
+                        
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+                        } else if (xhr.responseText) {
+                            try {
+                                var errorResponse = JSON.parse(xhr.responseText);
+                                if (errorResponse.message) {
+                                    errorMsg = errorResponse.message;
+                                }
+                            } catch (e) {
+                                // Si no es JSON válido
+                                if (xhr.status === 400) {
+                                    errorMsg = 'Error en la solicitud. Verifique los datos ingresados.';
+                                } else if (xhr.status === 500) {
+                                    errorMsg = 'Error interno del servidor. Por favor, contacte al administrador.';
+                                } else if (xhr.status === 0) {
+                                    errorMsg = 'No se pudo conectar con el servidor. Verifique su conexión.';
+                                }
+                            }
+                        }
+                        
+                        mensajeDiv.removeClass('d-none').addClass('alert-danger');
+                        mensajeDiv.html('<i class="fas fa-times-circle me-2"></i>' + errorMsg);
+                        btnValidar.prop('disabled', false).html(btnTextOriginal);
+                    }
+                });
+                
+                return false;
+            });
+        });
+    </script>
+}
+

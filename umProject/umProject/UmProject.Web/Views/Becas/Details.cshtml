@@ -1,0 +1,215 @@
+@model UmProject.Entities.SolicitudBeca
+
+@{
+    ViewData["Title"] = "Detalles de Solicitud de Beca";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Becas" asp-action="Index">Becas</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoSeguimiento</h1>
+            <p class="page-subtitle">@(Model.EstudianteNombre ?? "N/A") - @(Model.NombreProgramaBeca ?? "N/A")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdSolicitudBeca" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Detalles de la Solicitud</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 detail-label">Código:</dt>
+                        <dd class="col-sm-8 detail-value"><strong>@Model.CodigoSeguimiento</strong></dd>
+
+                        <dt class="col-sm-4 detail-label">Estudiante:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.EstudianteNombre ?? "N/A")</div>
+                            <small class="text-muted">@(Model.EstudianteUsuario ?? "")</small>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Programa de Beca:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.NombreProgramaBeca ?? "N/A")</div>
+                            <small class="text-muted">@(Model.CodigoProgramaBeca ?? "")</small>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Promedio Vigente:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (Model.PromedioVigente.HasValue)
+                            {
+                                <span class="badge bg-info" style="font-size: 1rem;">@Model.PromedioVigente.Value.ToString("F2")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Sanciones Activas:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <span class="badge @(Model.TotalSancionesActivas > 0 ? "bg-danger" : "bg-success")" style="font-size: 1rem;">@Model.TotalSancionesActivas</span>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Cumple Criterios:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (Model.CumpleCriterios)
+                            {
+                                <span class="badge bg-success">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">No</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Es Prioritaria:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (Model.EsPrioritaria)
+                            {
+                                <span class="badge bg-warning"><i class="fas fa-star me-1"></i>Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de Aprobación -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Estado y Aprobación</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6 detail-label">Estado:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.EstadoNombre))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@Model.EstadoNombre
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Tipo Decisión:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.TipoDecisionNombre))
+                            {
+                                <span class="badge bg-info">@Model.TipoDecisionNombre</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin decisión</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fechas y Auditoría -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Fechas y Auditoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Fechas Importantes</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">Fecha Solicitud:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaSolicitud.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-info"></i>@Model.FechaSolicitud.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Última Decisión:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaUltimaDecision.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-success"></i>@Model.FechaUltimaDecision.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin decisión</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Cierre:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaCierre.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-times me-1 text-danger"></i>@Model.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin cerrar</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Creación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaCreacion ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Modificación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaModificacion ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Información Adicional</h6>
+                            @if (!string.IsNullOrEmpty(Model.MotivoUltimaDecision))
+                            {
+                                <h6 class="text-primary mt-3 mb-2">Motivo de Última Decisión</h6>
+                                <p class="detail-value">@Model.MotivoUltimaDecision</p>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Observaciones))
+                            {
+                                <h6 class="text-primary mt-3 mb-2">Observaciones</h6>
+                                <p class="detail-value">@Model.Observaciones</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

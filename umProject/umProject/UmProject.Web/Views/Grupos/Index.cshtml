@@ -1,0 +1,165 @@
+@model List<UmProject.Entities.Grupo>
+
+@{
+    ViewData["Title"] = "Gestión de Grupos";
+    ViewData["Subtitle"] = "Administración de grupos académicos";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Grupos</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Gestión de Grupos</h1>
+            <p class="page-subtitle">Administre y controle los grupos académicos del sistema</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nuevo Grupo
+        </a>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label for="filtroPeriodo" class="form-label mb-1" style="font-size: 0.875rem; font-weight: 500;">Filtrar por Período Académico</label>
+            <select id="filtroPeriodo" class="form-select" style="border: 1px solid var(--border-color);">
+                <option value="">Todos los períodos</option>
+                @if (ViewBag.PeriodosAcademicos != null)
+                {
+                    @foreach (var periodo in ViewBag.PeriodosAcademicos as List<UmProject.Entities.PeriodoAcademico>)
+                    {
+                        var isSelected = ViewBag.IdPeriodoSeleccionado != null && ViewBag.IdPeriodoSeleccionado == periodo.IdPeriodo;
+                        <option value="@periodo.IdPeriodo" selected="@(isSelected ? "selected" : null)">@periodo.CodigoPeriodo - @periodo.NombrePeriodo</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-8">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por código, nombre, período o coordinador..." class="form-control" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Período</th>
+                        <th>Tipo</th>
+                        <th>Coordinador</th>
+                        <th>Jornada</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var grupo in Model)
+                    {
+                        <tr>
+                            <td>@grupo.IdGrupo</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@grupo.CodigoGrupo</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@grupo.NombreGrupo</div>
+                                <small class="text-muted">@(grupo.CodigoSeguimiento ?? "")</small>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem;">@(grupo.NombrePeriodo ?? "N/A")</div>
+                                <small class="text-muted">@(grupo.CodigoPeriodo ?? "")</small>
+                            </td>
+                            <td>@(grupo.NombreTipoGrupo ?? "N/A")</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(grupo.CoordinadorNombre))
+                                {
+                                    <div style="font-size: 0.875rem;">@grupo.CoordinadorNombre</div>
+                                    <small class="text-muted">@(grupo.CoordinadorUsuario ?? "")</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Sin asignar</span>
+                                }
+                            </td>
+                            <td>@(grupo.NombreJornada ?? "N/A")</td>
+                            <td>
+                                @{
+                                    ViewData["IdEstado"] = grupo.IdEstado;
+                                    ViewData["NombreEstado"] = grupo.NombreEstado;
+                                }
+                                @await Html.PartialAsync("_EstadoBadge", grupo)
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@grupo.IdGrupo" class="btn-icon btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@grupo.IdGrupo" class="btn-icon btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>No hay grupos registrados</h3>
+                <p>No se encontraron grupos en el sistema. Agregue un nuevo grupo para comenzar.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real
+            $('#searchInput').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                $('.modern-table tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+            
+            // Filtrado por período académico
+            $('#filtroPeriodo').on('change', function() {
+                var idPeriodo = $(this).val();
+                if (idPeriodo) {
+                    window.location.href = '@Url.Action("Index", "Grupos")?idPeriodo=' + idPeriodo;
+                } else {
+                    window.location.href = '@Url.Action("Index", "Grupos")';
+                }
+            });
+            
+            // Mostrar modal con código de grupo generado si existe
+            @if (TempData["CodigoGrupoGenerado"] != null)
+            {
+                <text>
+                var mensaje = '@Html.Raw(TempData["CodigoGrupoGenerado"])';
+                alert(mensaje);
+                </text>
+            }
+        });
+    </script>
+}

@@ -1,0 +1,136 @@
+@model UmProject.Entities.EvaluacionModelo
+
+@{
+    ViewData["Title"] = "Editar Modelo de Evaluación";
+    ViewData["Subtitle"] = "Modificar información de modelo";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="ConfiguracionEvaluaciones" asp-action="Index" asp-route-tab="modelos">Configuración de Evaluaciones</a>
+        <span class="separator">/</span>
+        <span>Editar</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Editar Modelo de Evaluación</h1>
+            <p class="page-subtitle">Modifique la información del modelo</p>
+        </div>
+        <a asp-action="Index" asp-route-tab="modelos" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Información del Modelo</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="ModelosEvaluacionEdit" method="post">
+                <input type="hidden" asp-for="IdEvaluacionModelo" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CodigoModelo" class="form-label">Código del Modelo <span class="text-danger">*</span></label>
+                        <input asp-for="CodigoModelo" class="form-control" maxlength="30" required />
+                        <span asp-validation-for="CodigoModelo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="NombreEvaluacion" class="form-label">Nombre de la Evaluación <span class="text-danger">*</span></label>
+                        <input asp-for="NombreEvaluacion" class="form-control" maxlength="100" required />
+                        <span asp-validation-for="NombreEvaluacion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdMateria" class="form-label">Materia <span class="text-danger">*</span></label>
+                        <select asp-for="IdMateria" class="form-select" required>
+                            <option value="">Seleccione una materia</option>
+                            @if (ViewBag.Materias != null)
+                            {
+                                @foreach (var materia in ViewBag.Materias as List<UmProject.Entities.Materia>)
+                                {
+                                    <option value="@materia.IdMateria" selected="@(materia.IdMateria == Model.IdMateria)">@materia.NombreMateria (@materia.CodigoMateria)</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdMateria" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdTipoEvaluacion" class="form-label">Tipo de Evaluación <span class="text-danger">*</span></label>
+                        <select asp-for="IdTipoEvaluacion" class="form-select" required>
+                            <option value="">Seleccione un tipo</option>
+                            @if (ViewBag.TiposEvaluacion != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposEvaluacion as List<UmProject.Entities.Catalogo>)
+                                {
+                                    <option value="@tipo.IdCatalogo" selected="@(tipo.IdCatalogo == Model.IdTipoEvaluacion)">@tipo.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoEvaluacion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Concepto" class="form-label">Concepto</label>
+                        <textarea asp-for="Concepto" class="form-control" rows="3" maxlength="255">@Model.Concepto</textarea>
+                        <span asp-validation-for="Concepto" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="VersionConfiguracion" class="form-label">Versión de Configuración</label>
+                        <input asp-for="VersionConfiguracion" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="VersionConfiguracion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="RubricaDetalle" class="form-label">Detalle de Rúbrica</label>
+                        <textarea asp-for="RubricaDetalle" class="form-control" rows="5" placeholder="Detalle de la rúbrica de evaluación...">@Model.RubricaDetalle</textarea>
+                        <span asp-validation-for="RubricaDetalle" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Activo</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" name="Activo" id="Activo" value="true" checked="@Model.Activo" />
+                            <input type="hidden" name="Activo" value="false" />
+                            <label class="form-check-label" for="Activo">Sí</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" asp-route-tab="modelos" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

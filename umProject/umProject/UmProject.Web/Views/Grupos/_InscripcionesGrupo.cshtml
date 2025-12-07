@@ -1,0 +1,66 @@
+@model List<UmProject.Entities.GrupoInscripcion>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Código Inscripción</th>
+                    <th>Estudiante</th>
+                    <th>Documento</th>
+                    <th>Usuario</th>
+                    <th>Fecha Asignación</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var grupoInscripcion in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong style="color: var(--primary-color);">@grupoInscripcion.CodigoInscripcion</strong>
+                        </td>
+                        <td>@grupoInscripcion.EstudianteNombreCompleto</td>
+                        <td>@grupoInscripcion.EstudianteDocumento</td>
+                        <td>@grupoInscripcion.EstudianteUsuario</td>
+                        <td>@(grupoInscripcion.FechaAsignacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>
+                            @{
+                                ViewData["IdEstado"] = grupoInscripcion.IdEstado;
+                                ViewData["NombreEstado"] = grupoInscripcion.EstadoNombre;
+                            }
+                            @await Html.PartialAsync("_EstadoBadge", grupoInscripcion)
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="action-buttons">
+                                <button type="button" class="btn-icon btn-delete" onclick="eliminarInscripcion(@grupoInscripcion.IdGrupoInscripcion, @grupoInscripcion.IdGrupo)" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-user-graduate"></i>
+        <h3>No hay inscripciones en este grupo</h3>
+        <p>No se encontraron inscripciones asociadas a este grupo. Agregue una nueva inscripción para comenzar.</p>
+    </div>
+}
+
+<script>
+    function eliminarInscripcion(idGrupoInscripcion, idGrupo) {
+        if (confirm('¿Está seguro de que desea eliminar esta inscripción del grupo?')) {
+            // TODO: Implementar eliminación
+            alert('Funcionalidad de eliminación pendiente de implementar');
+        }
+    }
+</script>
+

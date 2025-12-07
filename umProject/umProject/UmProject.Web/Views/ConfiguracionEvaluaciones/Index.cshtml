@@ -1,0 +1,265 @@
+@{
+    ViewData["Title"] = "Configuración de Evaluaciones";
+    ViewData["Subtitle"] = "Gestión de instancias y modelos de evaluación";
+    var activeTab = ViewData["ActiveTab"]?.ToString() ?? "instancias";
+    var instancias = ViewBag.Instancias as List<UmProject.Entities.EvaluacionInstancia> ?? new List<UmProject.Entities.EvaluacionInstancia>();
+    var modelos = ViewBag.Modelos as List<UmProject.Entities.EvaluacionModelo> ?? new List<UmProject.Entities.EvaluacionModelo>();
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Configuración de Evaluaciones</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Configuración de Evaluaciones</h1>
+            <p class="page-subtitle">Administre instancias y modelos de evaluación del sistema</p>
+        </div>
+        <div>
+            @if (activeTab == "instancias")
+            {
+                <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Nueva Instancia
+                </a>
+            }
+            else
+            {
+                <a asp-action="ModelosEvaluacionCreate" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Nuevo Modelo
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="configTabs" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link @(activeTab == "instancias" ? "active" : "")" id="instancias-tab" data-bs-toggle="tab" data-bs-target="#instancias" type="button" role="tab" aria-controls="instancias" aria-selected="@(activeTab == "instancias" ? "true" : "false")" onclick="window.location.href='@Url.Action("Index", new { tab = "instancias" })'">
+            <i class="fas fa-clipboard-list me-2"></i>Instancias de Evaluación
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link @(activeTab == "modelos" ? "active" : "")" id="modelos-tab" data-bs-toggle="tab" data-bs-target="#modelos" type="button" role="tab" aria-controls="modelos" aria-selected="@(activeTab == "modelos" ? "true" : "false")" onclick="window.location.href='@Url.Action("Index", new { tab = "modelos" })'">
+            <i class="fas fa-file-alt me-2"></i>Modelos de Evaluación
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="configTabContent">
+    <!-- Instancias Tab -->
+    <div class="tab-pane fade @(activeTab == "instancias" ? "show active" : "")" id="instancias" role="tabpanel" aria-labelledby="instancias-tab">
+        <!-- Filter Toolbar -->
+        <div class="filter-toolbar mb-3">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInputInstancias" placeholder="Buscar por código, materia, modelo o período..." class="form-control" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="content-container">
+            <div class="modern-table-container">
+                @if (instancias != null && instancias.Any())
+                {
+                    <table class="modern-table" id="tableInstancias">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código</th>
+                                <th>Sección</th>
+                                <th>Modelo de Evaluación</th>
+                                <th>Período</th>
+                                <th>Fecha Programada</th>
+                                <th>Fecha Límite</th>
+                                <th>Estado</th>
+                                <th style="text-align: right;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var instancia in instancias)
+                            {
+                                <tr>
+                                    <td>@instancia.IdEvaluacionInstancia</td>
+                                    <td>
+                                        <strong style="color: var(--primary-color);">@instancia.CodigoInstancia</strong>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500;">@(instancia.NombreMateria ?? "N/A")</div>
+                                        <small class="text-muted">@(instancia.CodigoSeccion ?? "")</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500;">@(instancia.NombreModeloEvaluacion ?? "N/A")</div>
+                                        <small class="text-muted">@(instancia.CodigoModelo ?? "")</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500;">@(instancia.NombrePeriodo ?? "N/A")</div>
+                                        <small class="text-muted">@(instancia.CodigoPeriodo ?? "")</small>
+                                    </td>
+                                    <td>@(instancia.FechaProgramada?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                                    <td>@(instancia.FechaLimite?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(instancia.NombreEstado))
+                                        {
+                                            <span class="badge bg-secondary">@instancia.NombreEstado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <div class="action-buttons">
+                                            <a asp-action="Details" asp-route-id="@instancia.IdEvaluacionInstancia" class="btn-action btn-view" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@instancia.IdEvaluacionInstancia" class="btn-action btn-edit" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check fa-3x mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                        <h3>No hay instancias de evaluación registradas</h3>
+                        <p>Comience agregando una nueva instancia de evaluación.</p>
+                        <a asp-action="Create" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Nueva Instancia
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Modelos Tab -->
+    <div class="tab-pane fade @(activeTab == "modelos" ? "show active" : "")" id="modelos" role="tabpanel" aria-labelledby="modelos-tab">
+        <!-- Filter Toolbar -->
+        <div class="filter-toolbar mb-3">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInputModelos" placeholder="Buscar por código, nombre, materia o tipo..." class="form-control" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="content-container">
+            <div class="modern-table-container">
+                @if (modelos != null && modelos.Any())
+                {
+                    <table class="modern-table" id="tableModelos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Materia</th>
+                                <th>Tipo</th>
+                                <th>Estado</th>
+                                <th style="text-align: right;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var modelo in modelos)
+                            {
+                                <tr>
+                                    <td>@modelo.IdEvaluacionModelo</td>
+                                    <td>
+                                        <strong style="color: var(--primary-color);">@modelo.CodigoModelo</strong>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500;">@modelo.NombreEvaluacion</div>
+                                        @if (!string.IsNullOrEmpty(modelo.Concepto))
+                                        {
+                                            <small class="text-muted">@(modelo.Concepto.Length > 50 ? modelo.Concepto.Substring(0, 50) + "..." : modelo.Concepto)</small>
+                                        }
+                                    </td>
+                                    <td>@(modelo.NombreMateria ?? "N/A")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(modelo.NombreTipoEvaluacion))
+                                        {
+                                            <span class="badge bg-info">@modelo.NombreTipoEvaluacion</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (modelo.Activo)
+                                        {
+                                            <span class="status-badge active">
+                                                <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Activo
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge inactive">
+                                                <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Inactivo
+                                            </span>
+                                        }
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <div class="action-buttons">
+                                            <a asp-action="ModelosEvaluacionDetails" asp-route-id="@modelo.IdEvaluacionModelo" class="btn-icon btn-view" title="Ver detalles">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="ModelosEvaluacionEdit" asp-route-id="@modelo.IdEvaluacionModelo" class="btn-icon btn-edit" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list fa-3x mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                        <h3>No hay modelos de evaluación registrados</h3>
+                        <p>Comience agregando un nuevo modelo de evaluación.</p>
+                        <a asp-action="ModelosEvaluacionCreate" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Nuevo Modelo
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real para Instancias
+            $('#searchInputInstancias').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#tableInstancias tbody tr').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    $(this).toggle(text.includes(searchTerm));
+                });
+            });
+
+            // Búsqueda en tiempo real para Modelos
+            $('#searchInputModelos').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                $('#tableModelos tbody tr').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    $(this).toggle(text.includes(searchTerm));
+                });
+            });
+        });
+    </script>
+}

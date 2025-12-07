@@ -1,0 +1,247 @@
+@model UmProject.Entities.EvaluacionInstancia
+
+@{
+    ViewData["Title"] = "Nueva Instancia de Evaluación";
+    ViewData["Subtitle"] = "Crear nueva instancia de evaluación";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="ConfiguracionEvaluaciones" asp-action="Index">Configuración de Evaluaciones</a>
+        <span class="separator">/</span>
+        <span>Nueva</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nueva Instancia de Evaluación</h1>
+            <p class="page-subtitle">Cree una nueva instancia de evaluación</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-clipboard-check me-2"></i>Información de la Instancia</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" id="formCreateInstancia">
+                @if (!ViewContext.ModelState.IsValid)
+                {
+                    <div asp-validation-summary="All" class="alert alert-danger"></div>
+                }
+
+                <!-- Campo oculto para el código de instancia (autogenerable) - se envía vacío para que el SP lo genere -->
+                <input type="hidden" asp-for="CodigoInstancia" value="" />
+
+                <!-- Campo oculto para el estado (siempre EN REVISION al crear) -->
+                <input type="hidden" asp-for="IdEstado" value="4" />
+
+                <!-- 1. Período Académico (solo EN REVISION) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdPeriodo" class="form-label">Período Académico <span class="text-danger">*</span></label>
+                        <select asp-for="IdPeriodo" class="form-select" id="IdPeriodo" required>
+                            <option value="">Seleccione un período</option>
+                            @if (ViewBag.Periodos != null)
+                            {
+                                @foreach (var periodo in ViewBag.Periodos as List<UmProject.Entities.PeriodoAcademico>)
+                                {
+                                    <option value="@periodo.IdPeriodo">@(periodo.NombrePeriodo ?? "") - @(periodo.CodigoPeriodo ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdPeriodo" class="text-danger"></span>
+                        <small class="form-text text-muted">Solo se muestran períodos en estado EN REVISION</small>
+                    </div>
+                </div>
+
+                <!-- 2. Sección (del período seleccionado) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdSeccion" class="form-label">Sección <span class="text-danger">*</span></label>
+                        <select asp-for="IdSeccion" class="form-select" id="IdSeccion" required disabled>
+                            <option value="">Primero seleccione un período académico</option>
+                        </select>
+                        <span asp-validation-for="IdSeccion" class="text-danger"></span>
+                        <small class="form-text text-muted">Secciones del período académico seleccionado</small>
+                    </div>
+                </div>
+
+                <!-- 3. Modelo de Evaluación (de la materia-período de la sección) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEvaluacionModelo" class="form-label">Modelo de Evaluación <span class="text-danger">*</span></label>
+                        <select asp-for="IdEvaluacionModelo" class="form-select" id="IdEvaluacionModelo" required disabled>
+                            <option value="">Primero seleccione una sección</option>
+                        </select>
+                        <span asp-validation-for="IdEvaluacionModelo" class="text-danger"></span>
+                        <small class="form-text text-muted">Modelos de evaluación de la materia de la sección seleccionada</small>
+                    </div>
+                </div>
+
+                <!-- 4. Fecha Programada (sin restricciones) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaProgramada" class="form-label">Fecha Programada</label>
+                        <input asp-for="FechaProgramada" type="datetime-local" class="form-control" id="FechaProgramada" />
+                        <span asp-validation-for="FechaProgramada" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 5. Fecha Límite (sin restricciones) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaLimite" class="form-label">Fecha Límite</label>
+                        <input asp-for="FechaLimite" type="datetime-local" class="form-control" id="FechaLimite" />
+                        <span asp-validation-for="FechaLimite" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 6. Estado (mostrar como readonly, siempre EN REVISION) -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estado</label>
+                        <input type="text" class="form-control" value="EN REVISION" readonly style="background-color: #f8f9fa;" />
+                        <small class="form-text text-muted">El estado se establece automáticamente como EN REVISION al crear</small>
+                    </div>
+                </div>
+
+                <!-- Calificación Máxima -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CalificacionMaxima" class="form-label">Calificación Máxima (0 - 100) <span class="text-danger">*</span></label>
+                        <input asp-for="CalificacionMaxima" type="number" min="0" max="100" step="0.01" class="form-control" />
+                        <span asp-validation-for="CalificacionMaxima" class="text-danger"></span>
+                        <small class="form-text text-muted">Puntaje total permitido para esta instancia.</small>
+                    </div>
+                </div>
+
+                <!-- Campos adicionales -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Requiere Revisión Interna</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" name="RequiereRevisionInterna" id="RequiereRevisionInterna" value="true" />
+                            <input type="hidden" name="RequiereRevisionInterna" value="false" />
+                            <label class="form-check-label" for="RequiereRevisionInterna">Sí</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="NumeroVersion" class="form-label">Número de Versión</label>
+                        <input asp-for="NumeroVersion" type="number" min="1" class="form-control" value="1" />
+                        <span asp-validation-for="NumeroVersion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Instancia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Cuando se selecciona un período, cargar secciones
+            $('#IdPeriodo').on('change', function() {
+                var idPeriodo = $(this).val();
+                var $seccionSelect = $('#IdSeccion');
+                var $modeloSelect = $('#IdEvaluacionModelo');
+                
+                // Limpiar y deshabilitar secciones y modelos
+                $seccionSelect.empty().append('<option value="">Cargando secciones...</option>').prop('disabled', true);
+                $modeloSelect.empty().append('<option value="">Primero seleccione una sección</option>').prop('disabled', true);
+                
+                if (idPeriodo) {
+                    $.ajax({
+                        url: '@Url.Action("GetSeccionesPorPeriodo", "ConfiguracionEvaluaciones")',
+                        type: 'GET',
+                        data: { idPeriodo: idPeriodo },
+                        success: function(secciones) {
+                            $seccionSelect.empty().append('<option value="">Seleccione una sección</option>');
+                            if (secciones && secciones.length > 0) {
+                                $.each(secciones, function(index, seccion) {
+                                    var texto = (seccion.codigoSeccion || '') + ' - ' + (seccion.nombreMateria || '');
+                                    $seccionSelect.append($('<option></option>').attr('value', seccion.idSeccion).text(texto));
+                                });
+                                $seccionSelect.prop('disabled', false);
+                            } else {
+                                $seccionSelect.append('<option value="">No hay secciones disponibles</option>');
+                            }
+                        },
+                        error: function() {
+                            $seccionSelect.empty().append('<option value="">Error al cargar secciones</option>');
+                        }
+                    });
+                } else {
+                    $seccionSelect.empty().append('<option value="">Primero seleccione un período académico</option>');
+                }
+            });
+            
+            // Cuando se selecciona una sección, cargar modelos de evaluación
+            $('#IdSeccion').on('change', function() {
+                var idSeccion = $(this).val();
+                var $modeloSelect = $('#IdEvaluacionModelo');
+                
+                // Limpiar y deshabilitar modelos
+                $modeloSelect.empty().append('<option value="">Cargando modelos...</option>').prop('disabled', true);
+                
+                if (idSeccion) {
+                    $.ajax({
+                        url: '@Url.Action("GetModelosPorSeccion", "ConfiguracionEvaluaciones")',
+                        type: 'GET',
+                        data: { idSeccion: idSeccion },
+                        success: function(modelos) {
+                            $modeloSelect.empty().append('<option value="">Seleccione un modelo de evaluación</option>');
+                            if (modelos && modelos.length > 0) {
+                                $.each(modelos, function(index, modelo) {
+                                    var texto = (modelo.codigoModelo || '') + ' - ' + (modelo.nombreEvaluacion || '') + ' (' + (modelo.nombreMateria || '') + ')';
+                                    $modeloSelect.append($('<option></option>').attr('value', modelo.idEvaluacionModelo).text(texto));
+                                });
+                                $modeloSelect.prop('disabled', false);
+                            } else {
+                                $modeloSelect.append('<option value="">No hay modelos disponibles para esta sección</option>');
+                            }
+                        },
+                        error: function() {
+                            $modeloSelect.empty().append('<option value="">Error al cargar modelos</option>');
+                        }
+                    });
+                } else {
+                    $modeloSelect.empty().append('<option value="">Primero seleccione una sección</option>');
+                }
+            });
+        });
+    </script>
+}

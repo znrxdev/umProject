@@ -1,0 +1,160 @@
+@model UmProject.Entities.BecaPrograma
+
+@{
+    ViewData["Title"] = "Detalles de Programa de Beca";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="ProgramasBecas" asp-action="Index">Programas de Becas</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoPrograma</h1>
+            <p class="page-subtitle">@Model.NombrePrograma</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdBecaPrograma" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Detalles del Programa</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 detail-label">Código:</dt>
+                        <dd class="col-sm-8 detail-value"><strong>@Model.CodigoPrograma</strong></dd>
+
+                        <dt class="col-sm-4 detail-label">Nombre:</dt>
+                        <dd class="col-sm-8 detail-value">@Model.NombrePrograma</dd>
+
+                        @if (!string.IsNullOrEmpty(Model.Descripcion))
+                        {
+                            <dt class="col-sm-4 detail-label">Descripción:</dt>
+                            <dd class="col-sm-8 detail-value">@Model.Descripcion</dd>
+                        }
+
+                        <dt class="col-sm-4 detail-label">Tipo de Programa:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreTipoPrograma))
+                            {
+                                <span class="badge bg-info" style="font-size: 1rem;">@Model.NombreTipoPrograma</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Modalidad:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreModalidadPrograma))
+                            {
+                                <span class="badge bg-secondary" style="font-size: 1rem;">@Model.NombreModalidadPrograma</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Promedio Mínimo:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @if (Model.PromedioMinimo.HasValue)
+                            {
+                                <span class="badge bg-warning" style="font-size: 1rem;">@Model.PromedioMinimo.Value.ToString("F2")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin requisito</span>
+                            }
+                        </dd>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de Requisitos y Estado -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Requisitos y Estado</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6 detail-label">Estado:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.NombreEstadoPrograma))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@Model.NombreEstadoPrograma
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Sin Sanciones:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.RequiereSinSanciones)
+                            {
+                                <span class="badge bg-success"><i class="fas fa-check me-1"></i>Requerido</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>No requerido</span>
+                            }
+                        </dd>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fechas y Auditoría -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Fechas y Auditoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Fechas Importantes</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">Fecha Creación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaCreacion ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Modificación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaModificacion ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

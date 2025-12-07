@@ -1,0 +1,281 @@
+@model UmProject.Entities.PeriodoAcademico
+
+@{
+    ViewData["Title"] = "Detalles de Período Académico";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="PeriodosAcademicos" asp-action="Index">Períodos Académicos</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.NombrePeriodo</h1>
+            <p class="page-subtitle">@Model.CodigoPeriodo</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdPeriodo" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información Principal</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Código de Período</label>
+                                <div class="info-value">
+                                    <strong style="font-size: 1.125rem; color: var(--primary-color);">@Model.CodigoPeriodo</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Nombre del Período</label>
+                                <div class="info-value">@Model.NombrePeriodo</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Tipo de Período</label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.NombreTipoPeriodo))
+                                    {
+                                        <span class="badge bg-primary">@Model.NombreTipoPeriodo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No especificado</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Estado</label>
+                                <div class="info-value">
+                                    @{
+                                        ViewData["IdEstado"] = Model.IdEstado;
+                                        ViewData["NombreEstado"] = Model.NombreEstado;
+                                    }
+                                    @await Html.PartialAsync("_EstadoBadge", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fechas -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Fechas del Período</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-play-circle me-1 text-success"></i>Fecha de Inicio
+                                </label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.FechaInicio))
+                                    {
+                                        <strong>@DateTime.Parse(Model.FechaInicio).ToString("dd/MM/yyyy")</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-stop-circle me-1 text-danger"></i>Fecha de Fin
+                                </label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.FechaFin))
+                                    {
+                                        <strong>@DateTime.Parse(Model.FechaFin).ToString("dd/MM/yyyy")</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-lock me-1 text-warning"></i>Cierre Calificaciones
+                                </label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.FechaCierreCalificaciones))
+                                    {
+                                        <strong>@DateTime.Parse(Model.FechaCierreCalificaciones).ToString("dd/MM/yyyy")</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No definida</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Observaciones))
+            {
+                <!-- Observaciones -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Observaciones</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" style="color: var(--text-primary); line-height: 1.6;">@Model.Observaciones</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="col-lg-4">
+            <!-- Estado y Configuración -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-cog me-2"></i>Configuración</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #f8f9fa;">
+                            <div>
+                                <label class="info-label mb-1">Es Período Actual</label>
+                                <div>
+                                    @if (Model.EsPeriodoActual == true)
+                                    {
+                                        <span class="status-badge active">
+                                            <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Sí
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge inactive">
+                                            <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>No
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                            <i class="fas fa-calendar-check fa-2x" style="color: var(--primary-color); opacity: 0.3;"></i>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #f8f9fa;">
+                            <div>
+                                <label class="info-label mb-1">Permite Inscripciones</label>
+                                <div>
+                                    <span class="text-muted">Campo eliminado</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-user-plus fa-2x" style="color: var(--primary-color); opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info me-2"></i>Información Adicional</h6>
+                </div>
+                <div class="card-body">
+                    <div class="info-item mb-3">
+                        <label class="info-label">ID del Período</label>
+                        <div class="info-value">
+                            <span class="badge bg-secondary">#@Model.IdPeriodo</span>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.CodigoIntegracion))
+                    {
+                        <div class="info-item mb-3">
+                            <label class="info-label">Código de Integración</label>
+                            <div class="info-value">
+                                <code style="background-color: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.875rem;">@Model.CodigoIntegracion</code>
+                            </div>
+                        </div>
+                    }
+                    <div class="info-item mb-3">
+                        <label class="info-label">Fecha de Creación</label>
+                        <div class="info-value" style="font-size: 0.875rem;">
+                            @(Model.FechaCreacion ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Última Modificación</label>
+                        <div class="info-value" style="font-size: 0.875rem;">
+                            @(Model.FechaModificacion ?? "N/A")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .info-item {
+        margin-bottom: 1rem;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+        margin-bottom: 0.375rem;
+    }
+
+    .info-value {
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .card {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+    }
+</style>

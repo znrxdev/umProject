@@ -1,0 +1,54 @@
+@model List<UmProject.Entities.EstudianteDesempeno>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Período</th>
+                    <th>Código</th>
+                    <th>Total Materias</th>
+                    <th>Total Evaluaciones</th>
+                    <th>Promedio General</th>
+                    <th>Materias Aprobadas</th>
+                    <th>Materias Reprobadas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var desempeno in Model)
+                {
+                    <tr>
+                        <td>@desempeno.NombrePeriodo</td>
+                        <td>@desempeno.CodigoPeriodo</td>
+                        <td><span class="badge bg-primary">@desempeno.TotalMaterias</span></td>
+                        <td><span class="badge bg-info">@desempeno.TotalEvaluaciones</span></td>
+                        <td>
+                            @if (desempeno.PromedioGeneral.HasValue)
+                            {
+                                <span class="badge @(desempeno.PromedioGeneral >= 60 ? "bg-success" : "bg-danger")">
+                                    @desempeno.PromedioGeneral.Value.ToString("F2")%
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td><span class="badge bg-success">@desempeno.MateriasAprobadas</span></td>
+                        <td><span class="badge bg-danger">@desempeno.MateriasReprobadas</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-chart-line"></i>
+        <h3>No hay datos de desempeño</h3>
+        <p>No se encontraron datos de desempeño académico para este estudiante.</p>
+    </div>
+}
+

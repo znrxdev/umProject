@@ -1,0 +1,96 @@
+@model List<UmProject.Entities.ReporteSancion>
+
+@{
+    ViewData["Title"] = "Reporte de Sanciones";
+    ViewData["Subtitle"] = "Sanciones Académicas";
+    var tipoReporte = "sanciones";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Reportes" asp-action="Index">Reportes</a>
+        <span class="separator">/</span>
+        <span>@ViewData["Subtitle"]</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@ViewData["Subtitle"]</h1>
+            <p class="page-subtitle">Listado detallado de sanciones académicas del sistema</p>
+        </div>
+        <form asp-action="ExportarPdf" method="post" style="display: inline;">
+            <input type="hidden" name="tipoReporte" value="@tipoReporte" />
+            <input type="hidden" name="fechaInicio" value="@ViewBag.FechaInicio?.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="fechaFin" value="@ViewBag.FechaFin?.ToString("yyyy-MM-dd")" />
+            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-file-pdf me-2"></i>Descargar PDF
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Estudiante</th>
+                        <th>Nombre Estudiante</th>
+                        <th>Tipo Sanción</th>
+                        <th>Tipo Falta</th>
+                        <th>Severidad</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th>Fecha Fin</th>
+                        <th>Motivo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sancion in Model)
+                    {
+                        <tr>
+                            <td>@sancion.CodigoSancion</td>
+                            <td>@sancion.Estudiante</td>
+                            <td>@sancion.NombreEstudiante</td>
+                            <td>@sancion.TipoSancion</td>
+                            <td>@sancion.TipoFalta</td>
+                            <td>@sancion.Severidad</td>
+                            <td>
+                                @if (sancion.Estado != null && sancion.Estado.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="status-badge active">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@sancion.Estado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge inactive">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@sancion.Estado
+                                    </span>
+                                }
+                            </td>
+                            <td>@sancion.FechaRegistro</td>
+                            <td>@sancion.FechaFin</td>
+                            <td>@sancion.Motivo</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-info-circle"></i>
+                <h3>No hay datos para mostrar</h3>
+                <p>No se encontraron sanciones para el período seleccionado.</p>
+            </div>
+        }
+    </div>
+</div>
+

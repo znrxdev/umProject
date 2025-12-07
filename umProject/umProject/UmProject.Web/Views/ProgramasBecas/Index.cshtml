@@ -1,0 +1,166 @@
+@model List<UmProject.Entities.BecaPrograma>
+
+@{
+    ViewData["Title"] = "Gestión de Programas de Becas";
+    ViewData["Subtitle"] = "Administración de programas de becas";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Programas de Becas</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Gestión de Programas de Becas</h1>
+            <p class="page-subtitle">Administre y controle los programas de becas del sistema</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nuevo Programa
+        </a>
+    </div>
+</div>
+
+<!-- Tabs navegación Gestión de Becas -->
+<ul class="nav nav-tabs mb-4" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" aria-current="page">
+            <i class="fas fa-graduation-cap me-2"></i>Programas de Becas
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" href="@Url.Action("Index", "Becas")">
+            <i class="fas fa-file-alt me-2"></i>Gestión de Becas (Solicitudes)
+        </a>
+    </li>
+</ul>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por código, nombre, tipo de programa..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Modalidad</th>
+                        <th>Promedio Mín.</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var programa in Model)
+                    {
+                        <tr>
+                            <td>@programa.IdBecaPrograma</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@programa.CodigoPrograma</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@programa.NombrePrograma</div>
+                                @if (!string.IsNullOrEmpty(programa.Descripcion))
+                                {
+                                    <small class="text-muted">@(programa.Descripcion.Length > 50 ? programa.Descripcion.Substring(0, 50) + "..." : programa.Descripcion)</small>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(programa.NombreTipoPrograma))
+                                {
+                                    <span class="badge bg-info">@programa.NombreTipoPrograma</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(programa.NombreModalidadPrograma))
+                                {
+                                    <span class="badge bg-secondary">@programa.NombreModalidadPrograma</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (programa.PromedioMinimo.HasValue)
+                                {
+                                    <span class="badge bg-warning">@programa.PromedioMinimo.Value.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(programa.NombreEstadoPrograma))
+                                {
+                                    <span class="status-badge active">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@programa.NombreEstadoPrograma
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@programa.IdBecaPrograma" class="btn-icon btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Criterios" asp-route-programaId="@programa.IdBecaPrograma" class="btn-icon btn-outline-secondary" title="Criterios">
+                                        <i class="fas fa-list-check"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@programa.IdBecaPrograma" class="btn-icon btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-graduation-cap"></i>
+                <h3>No hay programas de becas registrados</h3>
+                <p>No se encontraron programas de becas en el sistema. Agregue un nuevo programa para comenzar.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real
+            $('#searchInput').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                $('.modern-table tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+        });
+    </script>
+}
+

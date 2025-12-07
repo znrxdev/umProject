@@ -1,0 +1,168 @@
+@model List<UmProject.Entities.SancionAcademica>
+
+@{
+    ViewData["Title"] = "Gestión de Sanciones Académicas";
+    ViewData["Subtitle"] = "Administración de sanciones académicas";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Sanciones Académicas</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Gestión de Sanciones Académicas</h1>
+            <p class="page-subtitle">Administre y controle las sanciones académicas del sistema</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nueva Sanción
+        </a>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por código, estudiante, tipo de sanción..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Estudiante</th>
+                        <th>Tipo Sanción</th>
+                        <th>Tipo Falta</th>
+                        <th>Severidad</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th>Apelable</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sancion in Model)
+                    {
+                        <tr>
+                            <td>@sancion.IdSancion</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@sancion.CodigoSancion</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@(sancion.NombreEstudiante ?? "N/A")</div>
+                                <small class="text-muted">@(sancion.UsuarioEstudiante ?? "")</small>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(sancion.NombreTipoSancion))
+                                {
+                                    <span class="badge bg-danger">@sancion.NombreTipoSancion</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(sancion.NombreTipoFalta))
+                                {
+                                    <span class="badge bg-warning">@sancion.NombreTipoFalta</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(sancion.NombreSeveridad))
+                                {
+                                    <span class="badge bg-info">@sancion.NombreSeveridad</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(sancion.NombreEstado))
+                                {
+                                    <span class="status-badge active">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@sancion.NombreEstado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (sancion.FechaRegistro.HasValue)
+                                {
+                                    <span>@sancion.FechaRegistro.Value.ToString("dd/MM/yyyy")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (sancion.EsApelable)
+                                {
+                                    <span class="badge bg-success"><i class="fas fa-check me-1"></i>Sí</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary"><i class="fas fa-times me-1"></i>No</span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@sancion.IdSancion" class="btn-icon btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@sancion.IdSancion" class="btn-icon btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>No hay sanciones académicas registradas</h3>
+                <p>No se encontraron sanciones académicas en el sistema. Agregue una nueva sanción para comenzar.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real
+            $('#searchInput').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                $('.modern-table tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+        });
+    </script>
+}
+

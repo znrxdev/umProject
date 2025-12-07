@@ -1,0 +1,161 @@
+@model UmProject.Entities.Grupo
+
+@{
+    ViewData["Title"] = "Nuevo Grupo";
+    ViewData["Subtitle"] = "Registrar nuevo grupo académico";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Grupos" asp-action="Index">Grupos</a>
+        <span class="separator">/</span>
+        <span>Nuevo</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nuevo Grupo</h1>
+            <p class="page-subtitle">Registre un nuevo grupo académico</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-users me-2"></i>Información del Grupo</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Paso 1: Período Académico -->
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="IdPeriodo" class="form-label">Período Académico <span class="text-danger">*</span></label>
+                        <select asp-for="IdPeriodo" class="form-select" id="IdPeriodo" required>
+                            <option value="">Seleccione un período</option>
+                            @if (ViewBag.Periodos != null)
+                            {
+                                @foreach (var periodo in ViewBag.Periodos as List<UmProject.Entities.PeriodoAcademico>)
+                                {
+                                    <option value="@periodo.IdPeriodo" data-fecha-inicio="@periodo.FechaInicio">@periodo.NombrePeriodo (@periodo.CodigoPeriodo)</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdPeriodo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Nombre del Grupo -->
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="NombreGrupo" class="form-label">Nombre del Grupo <span class="text-danger">*</span></label>
+                        <input asp-for="NombreGrupo" class="form-control" placeholder="Ej: Grupo Académico A - 2024-III" maxlength="100" required />
+                        <span asp-validation-for="NombreGrupo" class="text-danger"></span>
+                        <small class="form-text text-muted">El código de grupo se generará automáticamente al guardar</small>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Tipo de Grupo -->
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="IdTipoGrupo" class="form-label">Tipo de Grupo <span class="text-danger">*</span></label>
+                        <select asp-for="IdTipoGrupo" class="form-select" required>
+                            <option value="">Seleccione un tipo</option>
+                            @if (ViewBag.TiposGrupo != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposGrupo as List<UmProject.Entities.Catalogo>)
+                                {
+                                    <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoGrupo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Paso 4: Coordinador -->
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="IdCoordinador" class="form-label">Coordinador</label>
+                        <select asp-for="IdCoordinador" class="form-select">
+                            <option value="">Seleccione un coordinador (opcional)</option>
+                            @if (ViewBag.Coordinadores != null)
+                            {
+                                @foreach (var coordinador in ViewBag.Coordinadores as List<UmProject.Entities.Usuario>)
+                                {
+                                    <option value="@coordinador.IdUsuario">@coordinador.NombreCompleto - @coordinador.UsuarioNombre</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdCoordinador" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Estado: Siempre EN REVISION -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estado</label>
+                        <input type="text" class="form-control" value="EN REVISION" readonly />
+                        <input type="hidden" asp-for="IdEstado" value="@ViewBag.EstadoRevision" />
+                        <small class="form-text text-muted">El estado se establece automáticamente como EN REVISION al crear un nuevo grupo</small>
+                    </div>
+
+                    <!-- Fecha de Cierre: Autocalculada -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaCierre" class="form-label">Fecha de Cierre</label>
+                        <input asp-for="FechaCierre" type="datetime-local" class="form-control" id="FechaCierre" readonly />
+                        <small class="form-text text-muted">Se calcula automáticamente como el día de inicio del período académico seleccionado</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3" placeholder="Observaciones adicionales sobre el grupo..." maxlength="255"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Grupo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Autocalcular Fecha de Cierre cuando se selecciona un período
+            $('#IdPeriodo').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var fechaInicio = selectedOption.data('fecha-inicio');
+                
+                if (fechaInicio) {
+                    // Convertir fecha de formato yyyy-MM-dd a formato datetime-local
+                    var fechaInicioDate = new Date(fechaInicio + 'T00:00:00');
+                    var fechaLocal = fechaInicioDate.toISOString().slice(0, 16);
+                    $('#FechaCierre').val(fechaLocal);
+                } else {
+                    $('#FechaCierre').val('');
+                }
+            });
+        });
+    </script>
+}

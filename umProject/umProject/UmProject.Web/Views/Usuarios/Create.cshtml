@@ -1,0 +1,77 @@
+@model UmProject.Entities.Usuario
+
+@{
+    ViewData["Title"] = "Nuevo Usuario";
+    ViewData["Subtitle"] = "Registrar nuevo usuario del sistema";
+    var persona = ViewBag.Persona as UmProject.Entities.Persona;
+    var personaCreada = ViewBag.PersonaCreada as bool? ?? false;
+    var estados = ViewBag.Estados as List<UmProject.Entities.Estado> ?? new List<UmProject.Entities.Estado>();
+}
+
+@if (persona != null)
+{
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>@(personaCreada ? "Persona Creada" : "Persona encontrada"):</strong> @persona.PrimerNombre @persona.SegundoNombre @persona.PrimerApellido @persona.SegundoApellido
+        <br><small>Documento: @persona.ValorDocumento</small>
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-user-plus me-2"></i>Información del Usuario</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            @* Campo IdPersona oculto *@
+            <input type="hidden" asp-for="IdPersona" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="UsuarioNombre" class="form-label">Nombre de Usuario <span class="text-danger">*</span></label>
+                    <input asp-for="UsuarioNombre" class="form-control" placeholder="Nombre de usuario único" />
+                    <span asp-validation-for="UsuarioNombre" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdEstado" class="form-label">Estado</label>
+                    <select asp-for="IdEstado" class="form-select" required>
+                        <option value="">Seleccione un estado...</option>
+                        @foreach (var estado in estados)
+                        {
+                            <option value="@estado.IdEstado">@estado.NombreEstado</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdEstado" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contrasena" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                    <input asp-for="Contrasena" type="password" class="form-control" placeholder="Mínimo 8 caracteres" required />
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                    <small class="form-text text-muted">
+                        La contraseña debe tener al menos 8 caracteres, incluir una minúscula, una mayúscula y un carácter especial.
+                    </small>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Guardar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,235 @@
+@model List<UmProject.Entities.Seccion>
+
+@{
+    ViewData["Title"] = "Gestión de Secciones";
+    ViewData["Subtitle"] = "Administración de secciones académicas";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Secciones</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Gestión de Secciones</h1>
+            <p class="page-subtitle">Administre y controle las secciones académicas del sistema</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nueva Sección
+        </a>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label for="filtroPeriodo" class="form-label mb-1" style="font-size: 0.875rem; font-weight: 500;">Filtrar por Período Académico</label>
+            <select id="filtroPeriodo" class="form-select" style="border: 1px solid var(--border-color);">
+                <option value="">Todos los períodos</option>
+                @if (ViewBag.PeriodosAcademicos != null)
+                {
+                    @foreach (var periodo in ViewBag.PeriodosAcademicos as List<UmProject.Entities.PeriodoAcademico>)
+                    {
+                        var isSelected = ViewBag.IdPeriodoSeleccionado != null && ViewBag.IdPeriodoSeleccionado == periodo.IdPeriodo;
+                        <option value="@periodo.IdPeriodo" selected="@(isSelected ? "selected" : null)">@periodo.CodigoPeriodo - @periodo.NombrePeriodo</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-8">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar por código, materia, docente o período..." class="form-control" style="border: 1px solid var(--border-color);">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Materia</th>
+                        <th>Período</th>
+                        <th>Docente</th>
+                        <th>Tipo</th>
+                        <th>Modalidad</th>
+                        <th>Cupo</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var seccion in Model)
+                    {
+                        <tr>
+                            <td>@seccion.IdSeccion</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@seccion.CodigoSeccion</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@(seccion.NombreMateria ?? "N/A")</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">@(seccion.CodigoMateria ?? "")</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@(seccion.NombreMateria ?? "N/A") (@(seccion.CodigoMateria ?? ""))</div>
+                                <small class="text-muted">@(seccion.NombrePeriodo ?? "N/A") - @(seccion.CodigoPeriodo ?? "")</small>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem;">@(seccion.DocenteNombre ?? "N/A")</div>
+                                <small class="text-muted">@(seccion.DocenteUsuario ?? "")</small>
+                            </td>
+                            <td>@(seccion.TipoSeccionNombre ?? "N/A")</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(seccion.Modalidad))
+                                {
+                                    <span class="badge bg-info">@seccion.Modalidad</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (seccion.CupoMaximo.HasValue)
+                                {
+                                    <span style="font-weight: 500;">@seccion.CupoMaximo</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    ViewData["IdEstado"] = seccion.IdEstado;
+                                    ViewData["NombreEstado"] = seccion.EstadoNombre;
+                                }
+                                @await Html.PartialAsync("_EstadoBadge", seccion)
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@seccion.IdSeccion" class="btn-action btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@seccion.IdSeccion" class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-layer-group fa-3x mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                <h3>No hay secciones registradas</h3>
+                <p>Comience agregando una nueva sección académica.</p>
+                <a asp-action="Create" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus me-2"></i>Nueva Sección
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    /* Estilos mejorados para botones de acción */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        font-size: 0.875rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-action:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Botón Ver Detalles - Azul suave y amigable */
+    .btn-view {
+        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+    }
+
+    /* Botón Editar - Verde azulado suave y amigable */
+    .btn-edit {
+        background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    /* Asegurar que los iconos estén centrados */
+    .btn-action i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<script>
+    // Búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('.modern-table tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
+
+    // Filtro por período académico
+    document.getElementById('filtroPeriodo').addEventListener('change', function(e) {
+        const idPeriodo = e.target.value;
+        if (idPeriodo) {
+            window.location.href = '@Url.Action("Index", "Secciones")?idPeriodoAcademico=' + idPeriodo;
+        } else {
+            window.location.href = '@Url.Action("Index", "Secciones")';
+        }
+    });
+</script>
+

@@ -1,0 +1,179 @@
+@model UmProject.Web.Models.SolicitudesBecaViewModel
+@{
+    ViewData["Title"] = "Solicitudes de Becas";
+    ViewData["Subtitle"] = "Aplicación y seguimiento (estudiante)";
+}
+
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Solicitudes de Becas</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Solicitudes de Becas</h1>
+            <p class="page-subtitle">Aplicar y consultar el estado de tus solicitudes.</p>
+        </div>
+    </div>
+</div>
+
+<div class="content-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Programas de becas disponibles</h6>
+        </div>
+        <div class="card-body">
+            @if (Model.ProgramasDisponibles != null && Model.ProgramasDisponibles.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var programa in Model.ProgramasDisponibles)
+                    {
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h5 class="card-title mb-1">@programa.NombrePrograma</h5>
+                                            <small class="text-muted">@programa.CodigoPrograma</small>
+                                        </div>
+                                        <span class="badge @(programa.NombreEstadoPrograma?.ToUpper() == "ACTIVO" ? "bg-success" : "bg-secondary")">@programa.NombreEstadoPrograma</span>
+                                    </div>
+                                    <p class="mb-2"><strong>Promedio mínimo:</strong> @(programa.PromedioMinimo.HasValue ? programa.PromedioMinimo.Value.ToString("F2") : "No requiere")</p>
+                                    <p class="mb-2"><strong>Requiere sin sanciones:</strong> @(programa.RequiereSinSanciones ? "Sí" : "No")</p>
+                                    <p class="mb-2"><strong>Criterios:</strong> @(string.IsNullOrEmpty(programa.CriteriosResumen) ? "No definidos" : programa.CriteriosResumen)</p>
+                                    <form asp-action="AplicarSolicitud" method="post" class="mt-3">
+                                        <input type="hidden" name="idPrograma" value="@programa.IdBecaPrograma" />
+                                        <div class="mb-2">
+                                            <label class="form-label">Observaciones (opcional)</label>
+                                            <textarea name="observaciones" class="form-control" rows="2" maxlength="500" placeholder="Notas para tu solicitud"></textarea>
+                                        </div>
+                                            <button type="submit" class="btn btn-primary w-100">
+                                            <i class="fas fa-paper-plane me-2"></i>Aplicar a este programa
+                                        </button>
+                                        @Html.AntiForgeryToken()
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-info-circle"></i>
+                    <h3>No hay programas activos</h3>
+                    <p>No encontramos programas de becas activos para aplicar en este momento.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-list me-2"></i>Mis solicitudes</h6>
+        </div>
+        <div class="card-body">
+            @if (Model.MisSolicitudes != null && Model.MisSolicitudes.Any())
+            {
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Programa</th>
+                            <th>Promedio</th>
+                            <th>Sanciones</th>
+                            <th>Cumple criterios</th>
+                            <th>Estado</th>
+                            <th>Fecha solicitud</th>
+                            <th>Última decisión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model.MisSolicitudes)
+                        {
+                            <tr>
+                                <td>@s.CodigoSeguimiento</td>
+                                <td>
+                                    <div>@(s.NombrePrograma ?? "N/D")</div>
+                                    <small class="text-muted">@s.CodigoPrograma</small>
+                                </td>
+                                <td>@(s.PromedioVigente.HasValue ? s.PromedioVigente.Value.ToString("F2") : "N/A")</td>
+                                <td>@s.TotalSancionesActivas</td>
+                                <td>
+                                    @if (s.CumpleCriterios) { <span class="badge bg-success">Sí</span> } else { <span class="badge bg-warning">No</span> }
+                                </td>
+                                <td>@(s.EstadoSolicitud ?? "N/A")</td>
+                                <td>@(s.FechaSolicitud?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                <td>@(s.FechaUltimaDecision?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No tienes solicitudes</h3>
+                    <p>Cuando apliques, verás tus solicitudes aquí.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-history me-2"></i>Historial de solicitudes</h6>
+        </div>
+        <div class="card-body">
+            @if (Model.HistorialSolicitudes != null && Model.HistorialSolicitudes.Any())
+            {
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Solicitud</th>
+                            <th>Estado nuevo</th>
+                            <th>Revisor</th>
+                            <th>Fecha</th>
+                            <th>Motivo</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model.HistorialSolicitudes)
+                        {
+                            <tr>
+                                <td>@h.IdSolicitudBeca</td>
+                                <td>@h.EstadoNuevoNombre</td>
+                                <td>@(h.UsuarioRevisor ?? "-")</td>
+                                <td>@h.FechaDecision.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@(h.MotivoDecision ?? "-")</td>
+                                <td>@(h.Observaciones ?? "-")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <h3>Sin movimientos</h3>
+                    <p>Aún no hay historial de cambios en tus solicitudes.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

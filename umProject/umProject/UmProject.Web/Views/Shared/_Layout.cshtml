@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sistema de Control de Evaluaciones Académicas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/UmProject.Web.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @if (Context.Session.GetInt32("IdSesion") != null)
+    {
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-container">
+                    <img src="~/assets/LogoUmProject.png" alt="Logo" class="sidebar-logo" />
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                @{
+                    // Diccionario de iconos basado en Nombre_Boton
+                    var iconosMenu = new Dictionary<string, string>
+                    {
+                        { "btn_UsuarioMenu", "fa-users" },
+                        { "btn_EstudiantesMenu", "fa-user-graduate" },
+                        { "btn_DocentesMenu", "fa-chalkboard-teacher" },
+                        { "btn_MateriasMenu", "fa-book" },
+                        { "btn_PeriodosMenu", "fa-calendar-alt" },
+                        { "btn_SeccionesMenu", "fa-layer-group" },
+                        { "btn_GruposMenu", "fa-users-cog" },
+                        { "btn_InscripcionesMenu", "fa-clipboard-list" },
+                        { "btn_EvaluacionesMenu", "fa-clipboard-check" },
+                        { "btn_BecasMenu", "fa-hand-holding-usd" },
+                        { "btn_SancionesMenu", "fa-exclamation-triangle" },
+                        { "btn_ReportesMenu", "fa-chart-bar" },
+                        { "btn_ProgramasBecasMenu", "fa-graduation-cap" },
+                        { "btn_SolicitudesBecasMenu", "fa-file-alt" },
+                        { "btn_MiHistorialMenu", "fa-history" },
+                        { "btn_AuditoriaMenu", "fa-shield-alt" },
+                        { "btn_ConfiguracionEvaluacionesMenu", "fa-cog" },
+                        { "btn_RevisionEvaluacionesMenu", "fa-check-circle" }
+                    };
+
+                    var menusJson = Context.Session.GetString("Menus");
+                    if (!string.IsNullOrEmpty(menusJson))
+                    {
+                        var menus = System.Text.Json.JsonSerializer.Deserialize<List<UmProject.Entities.Menu>>(menusJson);
+                        if (menus != null)
+                        {
+                            foreach (var menu in menus.OrderBy(m => m.IdMenu))
+                            {
+                                // Mapear Nombre_Boton a rutas conocidas
+                                string routeUrl = menu.NombreBoton switch
+                                {
+                                    "btn_UsuarioMenu" => Url.Action("Index", "Usuarios"),
+                                    "btn_MateriasMenu" => Url.Action("Index", "Materias"),
+                                    "btn_EstudiantesMenu" => Url.Action("Index", "Estudiantes"),
+                                    "btn_DocentesMenu" => Url.Action("Index", "Docentes"),
+                                    "btn_PeriodosMenu" => Url.Action("Index", "PeriodosAcademicos"),
+                                    "btn_SeccionesMenu" => Url.Action("Index", "Secciones"),
+                                    "btn_GruposMenu" => Url.Action("Index", "Grupos"),
+                                    "btn_InscripcionesMenu" => Url.Action("Index", "Inscripciones"),
+                                    "btn_EvaluacionesMenu" => Url.Action("Index", "Evaluaciones"),
+                                    "btn_BecasMenu" => Url.Action("Solicitudes", "Becas"),
+                                    "btn_SancionesMenu" => Url.Action("Index", "SancionesAcademicas"),
+                                    "btn_ReportesMenu" => Url.Action("Index", "Reportes"),
+                                    "btn_ProgramasBecasMenu" => Url.Action("Index", "ProgramasBecas"),
+                                    "btn_SolicitudesBecasMenu" => Url.Action("Index", "Becas"), // Redirigir a Becas (solicitudes)
+                                    "btn_MiHistorialMenu" => Url.Action("Index", "MiHistorial"),
+                                    "btn_AuditoriaMenu" => Url.Action("Index", "Auditoria"),
+                                    "btn_ConfiguracionEvaluacionesMenu" => Url.Action("Index", "ConfiguracionEvaluaciones"),
+                                    "btn_RevisionEvaluacionesMenu" => Url.Action("Index", "RevisionEvaluaciones"),
+                                    _ => Url.Action("MenuNoImplementado", "Menu", new { nombreMenu = menu.MenuNombre })
+                                };
+                                
+                                // Obtener el icono del diccionario, o usar uno por defecto
+                                string icono = iconosMenu.ContainsKey(menu.NombreBoton) 
+                                    ? iconosMenu[menu.NombreBoton] 
+                                    : "fa-circle";
+                                
+                                <li>
+                                    <a href="@routeUrl" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == menu.NombreBoton.Replace("btn_", "").Replace("Menu", "") ? "active" : "")">
+                                        <i class="fas @icono"></i>
+                                        <span>@menu.MenuNombre</span>
+                                    </a>
+                                </li>
+                            }
+                        }
+                    }
+                }
+            </ul>
+            <div class="sidebar-footer p-3 mt-auto border-top" style="border-color: rgba(255,255,255,0.08) !important;">
+                <div class="d-flex align-items-center justify-content-center">
+                    <small class="d-block" style="color: #94a3b8;">@Context.Session.GetString("UsuarioSesion")</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Navbar -->
+            <div class="top-navbar">
+                <div class="top-navbar-left">
+                    <button type="button" class="btn-icon" id="sidebarToggle" style="background: transparent; border: none;">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h5 class="mb-0" style="font-size: 1.125rem; font-weight: 600;">@ViewData["Title"]</h5>
+                        <small class="text-muted" style="font-size: 0.875rem;">@ViewData["Subtitle"]</small>
+                    </div>
+                </div>
+                <div class="top-navbar-right">
+                    <div class="user-profile-dropdown" id="userProfileDropdown">
+                        <div class="user-avatar">
+                            @{
+                                var usuarioSesion = Context.Session.GetString("UsuarioSesion") ?? "";
+                                var iniciales = usuarioSesion.Length > 0 ? usuarioSesion.Substring(0, Math.Min(2, usuarioSesion.Length)).ToUpper() : "U";
+                            }
+                            @iniciales
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary);">@usuarioSesion</div>
+                        </div>
+                        <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: var(--text-secondary);"></i>
+                        <div class="user-dropdown-menu" id="userDropdownMenu">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="w-100">
+                                <button type="submit" class="dropdown-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; border: none; background: transparent; width: 100%; text-align: left; color: var(--text-primary); cursor: pointer; transition: background 0.2s;">
+                                    <i class="fas fa-sign-out-alt" style="color: var(--danger-color);"></i>
+                                    <span>Cerrar Sesión</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            <div class="fade-in">
+                @RenderBody()
+            </div>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/notificaciones.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar')?.classList.toggle('collapsed');
+        });
+
+        // User Profile Dropdown Toggle
+        const userProfileDropdown = document.getElementById('userProfileDropdown');
+        if (userProfileDropdown) {
+            userProfileDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userProfileDropdown.contains(e.target)) {
+                    userProfileDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Mostrar notificaciones desde TempData
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            Notificaciones.exito('@Html.Raw(TempData["SuccessMessage"]?.ToString().Replace("'", "\\'"))');
+            </text>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+            Notificaciones.error('@Html.Raw(TempData["ErrorMessage"]?.ToString().Replace("'", "\\'"))');
+            </text>
+        }
+        @if (TempData["InfoMessage"] != null)
+        {
+            <text>
+            Notificaciones.info('@Html.Raw(TempData["InfoMessage"]?.ToString().Replace("'", "\\'"))');
+            </text>
+        }
+        @if (TempData["WarningMessage"] != null)
+        {
+            <text>
+            Notificaciones.advertencia('@Html.Raw(TempData["WarningMessage"]?.ToString().Replace("'", "\\'"))');
+            </text>
+        }
+
+        // Establecer fecha máxima para todos los inputs de fecha (excepto fecha de nacimiento)
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaMaxima = new Date().toISOString().split('T')[0]; // Fecha de hoy en formato YYYY-MM-DD
+            
+            // Obtener todos los inputs de tipo date
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            
+            dateInputs.forEach(function(input) {
+                // Si el input no tiene atributo max definido, establecerlo
+                if (!input.hasAttribute('max')) {
+                    input.setAttribute('max', fechaMaxima);
+                }
+                
+                // Si el input es para fecha de nacimiento, establecer fecha máxima como ayer
+                const label = input.closest('.mb-3')?.querySelector('label');
+                if (label && (label.textContent.includes('Fecha de Nacimiento') || label.textContent.includes('Fecha de nacimiento'))) {
+                    const fechaAyer = new Date();
+                    fechaAyer.setDate(fechaAyer.getDate() - 1);
+                    const fechaMaximaNacimiento = fechaAyer.toISOString().split('T')[0];
+                    input.setAttribute('max', fechaMaximaNacimiento);
+                }
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

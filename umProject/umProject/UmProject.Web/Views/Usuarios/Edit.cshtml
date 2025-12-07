@@ -1,0 +1,72 @@
+@model UmProject.Entities.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuario";
+    ViewData["Subtitle"] = "Modificar información de usuario";
+    var estados = ViewBag.Estados as List<UmProject.Entities.Estado> ?? new List<UmProject.Entities.Estado>();
+}
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Información del Usuario</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" asp-controller="Usuarios" asp-route-id="@Model.IdUsuario" method="post">
+            <input type="hidden" asp-for="IdUsuario" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="UsuarioNombre" class="form-label">Nombre de Usuario</label>
+                    <input asp-for="UsuarioNombre" class="form-control" readonly />
+                    <span asp-validation-for="UsuarioNombre" class="text-danger"></span>
+                    <small class="form-text text-muted">El nombre de usuario no puede ser modificado</small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdEstado" class="form-label">Estado</label>
+                    <select asp-for="IdEstado" class="form-select" required>
+                        <option value="">Seleccione un estado...</option>
+                        @foreach (var estado in estados)
+                        {
+                            @if (estado.IdEstado == Model.IdEstado)
+                            {
+                                <option value="@estado.IdEstado" selected>@estado.NombreEstado</option>
+                            }
+                            else
+                            {
+                                <option value="@estado.IdEstado">@estado.NombreEstado</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="IdEstado" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Contrasena" class="form-label">Nueva Contraseña</label>
+                    <input asp-for="Contrasena" type="password" class="form-control" placeholder="Dejar en blanco para no cambiar" />
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                    <small class="form-text text-muted">
+                        Solo complete si desea cambiar la contraseña. Debe tener al menos 8 caracteres, incluir una minúscula, una mayúscula y un carácter especial.
+                    </small>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Guardar Cambios
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i>Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

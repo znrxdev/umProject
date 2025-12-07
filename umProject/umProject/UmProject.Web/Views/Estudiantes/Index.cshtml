@@ -1,0 +1,108 @@
+@model List<UmProject.Entities.Estudiante>
+
+@{
+    ViewData["Title"] = "Estudiantes";
+    ViewData["Subtitle"] = "Gestión de estudiantes";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show m-3" role="alert" style="border-radius: 8px;">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Estudiantes</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Estudiantes</h1>
+            <p class="page-subtitle">Gestión y visualización de información de estudiantes</p>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por nombre o documento..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Nombre Completo</th>
+                        <th>Documento</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Estado</th>
+                        <th>Última Sesión</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var estudiante in Model)
+                    {
+                        <tr>
+                            <td>@estudiante.IdUsuario</td>
+                            <td>@estudiante.Usuario</td>
+                            <td>@estudiante.NombreCompleto</td>
+                            <td>@estudiante.ValorDocumento</td>
+                            <td>@(estudiante.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                            <td>
+                                @{
+                                    ViewData["NombreEstado"] = estudiante.EstadoUsuario;
+                                }
+                                @await Html.PartialAsync("_EstadoBadge", estudiante)
+                            </td>
+                            <td>@(estudiante.UltimaSesion?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@estudiante.IdUsuario" class="btn btn-sm btn-primary" title="Ver detalles">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-user-graduate"></i>
+                <h3>No hay estudiantes registrados</h3>
+                <p>No se encontraron estudiantes en el sistema.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Búsqueda en tiempo real
+            $('#searchInput').on('input', function() {
+                var searchText = $(this).val().toLowerCase();
+                $('.modern-table tbody tr').each(function() {
+                    var rowText = $(this).text().toLowerCase();
+                    $(this).toggle(rowText.includes(searchText));
+                });
+            });
+        });
+    </script>
+}
+

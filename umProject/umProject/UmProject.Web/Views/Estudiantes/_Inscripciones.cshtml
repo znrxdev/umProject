@@ -1,0 +1,44 @@
+@model List<UmProject.Entities.EstudianteInscripcion>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Fecha Inscripción</th>
+                    <th>Fecha Validación</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inscripcion in Model)
+                {
+                    <tr>
+                        <td>@inscripcion.CodigoInscripcion</td>
+                        <td>@inscripcion.TipoInscripcion</td>
+                        <td>
+                            @{
+                                ViewData["NombreEstado"] = inscripcion.EstadoInscripcion;
+                            }
+                            @await Html.PartialAsync("_EstadoBadge", inscripcion)
+                        </td>
+                        <td>@(inscripcion.FechaInscripcion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@(inscripcion.FechaValidacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No hay inscripciones</h3>
+        <p>El estudiante no tiene inscripciones registradas.</p>
+    </div>
+}
+

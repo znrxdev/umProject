@@ -1,0 +1,457 @@
+@model UmProject.Entities.Grupo
+
+@{
+    ViewData["Title"] = "Editar Grupo";
+    ViewData["Subtitle"] = "Modificar información de grupo";
+    var activeTab = ViewBag.ActiveTab as string ?? "informacion";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Grupos" asp-action="Index">Grupos</a>
+        <span class="separator">/</span>
+        <span>Editar</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Editar Grupo</h1>
+            <p class="page-subtitle">Modifique la información del grupo</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    @if (TempData["ErrorMessage"] is string errMsg && !string.IsNullOrWhiteSpace(errMsg))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@errMsg
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["SuccessMessage"] is string okMsg && !string.IsNullOrWhiteSpace(okMsg))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@okMsg
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" id="grupoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "informacion" ? "active" : "")" id="informacion-tab" data-bs-toggle="tab" data-bs-target="#informacion" type="button" role="tab" aria-controls="informacion" aria-selected="@(activeTab == "informacion" ? "true" : "false")">
+                <i class="fas fa-info-circle me-2"></i>Información General
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "inscripciones" ? "active" : "")" id="inscripciones-tab" data-bs-toggle="tab" data-bs-target="#inscripciones" type="button" role="tab" aria-controls="inscripciones" aria-selected="@(activeTab == "inscripciones" ? "true" : "false")">
+                <i class="fas fa-user-graduate me-2"></i>Inscripciones-Grupo
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="grupoTabsContent">
+        <!-- Tab Información General -->
+        <div class="tab-pane fade @(activeTab == "informacion" ? "show active" : "")" id="informacion" role="tabpanel" aria-labelledby="informacion-tab">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-users me-2"></i>Información del Grupo</h6>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" asp-for="IdGrupo" />
+                        <input type="hidden" asp-for="CodigoGrupo" />
+                        <input type="hidden" asp-for="CodigoSeguimiento" />
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger"></div>
+                        }
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Código de Grupo</label>
+                                <input type="text" class="form-control" value="@Model.CodigoGrupo" readonly style="background-color: #e9ecef;" />
+                                <small class="form-text text-muted">El código de grupo no puede modificarse</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NombreGrupo" class="form-label">Nombre del Grupo <span class="text-danger">*</span></label>
+                                <input asp-for="NombreGrupo" class="form-control" placeholder="Ej: Grupo Académico A - 2024-III" maxlength="100" required />
+                                <span asp-validation-for="NombreGrupo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdPeriodo" class="form-label">Período Académico <span class="text-danger">*</span></label>
+                                <select asp-for="IdPeriodo" class="form-select" required>
+                                    <option value="">Seleccione un período</option>
+                                    @if (ViewBag.Periodos != null)
+                                    {
+                                        @foreach (var periodo in ViewBag.Periodos as List<UmProject.Entities.PeriodoAcademico>)
+                                        {
+                                            var isSelectedPeriodo = periodo.IdPeriodo == Model.IdPeriodo;
+                                            <option value="@periodo.IdPeriodo" selected="@(isSelectedPeriodo ? "selected" : null)">@periodo.NombrePeriodo (@periodo.CodigoPeriodo)</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdPeriodo" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdTipoGrupo" class="form-label">Tipo de Grupo <span class="text-danger">*</span></label>
+                                <select asp-for="IdTipoGrupo" class="form-select" required>
+                                    <option value="">Seleccione un tipo</option>
+                                    @if (ViewBag.TiposGrupo != null)
+                                    {
+                                        @foreach (var tipo in ViewBag.TiposGrupo as List<UmProject.Entities.Catalogo>)
+                                        {
+                                            var isSelectedTipo = tipo.IdCatalogo == Model.IdTipoGrupo;
+                                            <option value="@tipo.IdCatalogo" selected="@(isSelectedTipo ? "selected" : null)">@tipo.NombreCatalogo</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdTipoGrupo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdCoordinador" class="form-label">Coordinador</label>
+                                <select asp-for="IdCoordinador" class="form-select">
+                                    <option value="">Seleccione un coordinador (opcional)</option>
+                                    @if (ViewBag.Coordinadores != null)
+                                    {
+                                        @foreach (var coordinador in ViewBag.Coordinadores as List<UmProject.Entities.Usuario>)
+                                        {
+                                            var isSelectedCoordinador = coordinador.IdUsuario == Model.IdCoordinador;
+                                            <option value="@coordinador.IdUsuario" selected="@(isSelectedCoordinador ? "selected" : null)">@coordinador.NombreCompleto - @coordinador.UsuarioNombre</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdCoordinador" class="text-danger"></span>
+                            </div>
+
+                            <!-- Jornada eliminada del formulario -->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Código de Seguimiento</label>
+                                <input type="text" class="form-control" value="@Model.CodigoSeguimiento" readonly style="background-color: #e9ecef;" />
+                                <small class="form-text text-muted">El código de seguimiento no puede modificarse</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                                <select asp-for="IdEstado" class="form-select" required>
+                                    <option value="">Seleccione un estado</option>
+                                    @if (ViewBag.Estados != null)
+                                    {
+                                        @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                                        {
+                                            var isSelectedEstado = estado.IdEstado == Model.IdEstado;
+                                            <option value="@estado.IdEstado" selected="@(isSelectedEstado ? "selected" : null)">@estado.NombreEstado</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdEstado" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FechaCierre" class="form-label">Fecha de Cierre</label>
+                                <input asp-for="FechaCierre" type="datetime-local" class="form-control" value="@(Model.FechaCierre?.ToString("yyyy-MM-ddTHH:mm"))" />
+                                <span asp-validation-for="FechaCierre" class="text-danger"></span>
+                                <small class="form-text text-muted">Fecha en que se cerrará el grupo (opcional)</small>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                                <textarea asp-for="Observaciones" class="form-control" rows="3" placeholder="Observaciones adicionales sobre el grupo..." maxlength="255">@Model.Observaciones</textarea>
+                                <span asp-validation-for="Observaciones" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Inscripciones-Grupo -->
+        <div class="tab-pane fade @(activeTab == "inscripciones" ? "show active" : "")" id="inscripciones" role="tabpanel" aria-labelledby="inscripciones-tab">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="fas fa-user-graduate me-2"></i>Inscripciones del Grupo</h6>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarInscripcion">
+                        <i class="fas fa-plus me-1"></i>Nueva Inscripción
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="inscripcionesList">
+                        <p class="text-muted">Cargando inscripciones...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar inscripción -->
+<div class="modal fade" id="modalAgregarInscripcion" tabindex="-1" aria-labelledby="modalAgregarInscripcionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarInscripcionLabel">
+                    <i class="fas fa-user-plus me-2"></i>Agregar Inscripción al Grupo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarInscripcion">
+                    <input type="hidden" id="IdGrupoInscripcion" value="@Model.IdGrupo" />
+                    <div class="mb-3">
+                        <label for="IdInscripcion" class="form-label">Inscripción (Estudiante) <span class="text-danger">*</span></label>
+                        <div class="position-relative">
+                            <input type="text" id="buscarInscripcion" class="form-control" placeholder="Buscar por nombre, documento o usuario..." autocomplete="off" />
+                            <select id="IdInscripcion" class="form-select" required style="display: none;">
+                                <option value="">Seleccione una inscripción</option>
+                            </select>
+                        </div>
+                        <div id="listaInscripciones" class="list-group mt-2" style="max-height: 300px; overflow-y: auto; display: none;">
+                            <!-- Las opciones se cargarán dinámicamente -->
+                        </div>
+                        <span class="text-danger" id="errorIdInscripcion"></span>
+                        <small class="form-text text-muted">Solo se muestran estudiantes con rol de Estudiante que tengan una inscripción</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ObservacionesInscripcion" class="form-label">Observaciones</label>
+                        <textarea id="ObservacionesInscripcion" class="form-control" rows="2" maxlength="255"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarInscripcion">
+                    <i class="fas fa-save me-1"></i>Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            var idGrupo = @Model.IdGrupo;
+            
+            // Cargar inscripciones cuando se active el tab
+            $('#inscripciones-tab').on('shown.bs.tab', function() {
+                cargarInscripciones(idGrupo);
+            });
+            
+            // Si el tab de inscripciones está activo al cargar, cargar datos
+            @if (activeTab == "inscripciones")
+            {
+                <text>
+                cargarInscripciones(idGrupo);
+                </text>
+            }
+            
+            var inscripcionesDisponibles = [];
+            var inscripcionSeleccionada = null;
+
+            // Cargar inscripciones disponibles al abrir el modal
+            $('#modalAgregarInscripcion').on('show.bs.modal', function() {
+                // Limpiar campos
+                $('#buscarInscripcion').val('');
+                $('#IdInscripcion').val('');
+                $('#listaInscripciones').empty().hide();
+                inscripcionSeleccionada = null;
+                
+                // Cargar inscripciones
+                cargarInscripcionesDisponibles();
+            });
+
+            function cargarInscripcionesDisponibles() {
+                $.ajax({
+                    url: '@Url.Action("GetInscripcionesDisponibles", "Grupos")',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Respuesta recibida:', response);
+                        if (response.success && response.data) {
+                            inscripcionesDisponibles = response.data;
+                            console.log('Inscripciones cargadas:', inscripcionesDisponibles.length);
+                            
+                            $('#IdInscripcion').empty().append('<option value="">Seleccione una inscripción</option>');
+                            
+                            if (inscripcionesDisponibles.length === 0) {
+                                $('#IdInscripcion').append('<option value="">No hay inscripciones disponibles</option>');
+                                return;
+                            }
+                            
+                            response.data.forEach(function(inscripcion) {
+                                console.log('Procesando inscripción:', inscripcion);
+                                var nombre = inscripcion.estudianteNombre || inscripcion.EstudianteNombre || '';
+                                var usuario = inscripcion.estudianteUsuario || inscripcion.EstudianteUsuario || '';
+                                var idInscripcion = inscripcion.idInscripcion || inscripcion.IdInscripcion;
+                                var codigo = inscripcion.codigoInscripcion || inscripcion.CodigoInscripcion || '';
+                                
+                                // Construir texto de visualización
+                                var texto = nombre;
+                                if (usuario) {
+                                    texto += (texto ? ' (' + usuario + ')' : usuario);
+                                }
+                                
+                                if (idInscripcion) {
+                                    $('#IdInscripcion').append('<option value="' + idInscripcion + '" data-texto="' + texto + '">' + texto + '</option>');
+                                }
+                            });
+                            
+                            console.log('Total de inscripciones cargadas en dropdown:', $('#IdInscripcion option').length - 1);
+                        } else {
+                            console.error('Error en respuesta:', response);
+                            alert('Error al cargar inscripciones: ' + (response.message || 'Respuesta inválida'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error AJAX:', status, error);
+                        console.error('Respuesta del servidor:', xhr.responseText);
+                        alert('Error al cargar inscripciones: ' + error);
+                    }
+                });
+            }
+
+            // Búsqueda de inscripciones
+            $('#buscarInscripcion').on('input', function() {
+                var busqueda = $(this).val().toLowerCase().trim();
+                var lista = $('#listaInscripciones');
+                lista.empty();
+
+                if (busqueda.length < 1) {
+                    lista.hide();
+                    return;
+                }
+
+                if (inscripcionesDisponibles.length === 0) {
+                    lista.append('<div class="list-group-item text-warning">Cargando inscripciones...</div>');
+                    lista.show();
+                    cargarInscripcionesDisponibles();
+                    return;
+                }
+
+                var resultados = inscripcionesDisponibles.filter(function(inscripcion) {
+                    // Manejar tanto camelCase como PascalCase
+                    var nombreCompleto = (inscripcion.estudianteNombre || inscripcion.EstudianteNombre || '').toLowerCase();
+                    var usuario = (inscripcion.estudianteUsuario || inscripcion.EstudianteUsuario || '').toLowerCase();
+                    var codigo = (inscripcion.codigoInscripcion || inscripcion.CodigoInscripcion || '').toLowerCase();
+                    
+                    // Extraer documento del nombre si está presente (formato: "Nombre - Documento")
+                    var documento = '';
+                    var nombreSinDocumento = nombreCompleto;
+                    if (nombreCompleto.includes(' - ')) {
+                        var partes = nombreCompleto.split(' - ');
+                        if (partes.length > 1) {
+                            documento = partes[1].toLowerCase().trim();
+                            nombreSinDocumento = partes[0].toLowerCase().trim();
+                        }
+                    }
+                    
+                    // Buscar en todas las partes
+                    return nombreSinDocumento.includes(busqueda) || 
+                           usuario.includes(busqueda) || 
+                           codigo.includes(busqueda) ||
+                           documento.includes(busqueda) ||
+                           nombreCompleto.includes(busqueda);
+                });
+
+                if (resultados.length > 0) {
+                    resultados.forEach(function(inscripcion) {
+                        // Manejar tanto camelCase como PascalCase
+                        var nombre = inscripcion.estudianteNombre || inscripcion.EstudianteNombre || '';
+                        var usuario = inscripcion.estudianteUsuario || inscripcion.EstudianteUsuario || '';
+                        var idInscripcion = inscripcion.idInscripcion || inscripcion.IdInscripcion;
+                        var texto = nombre + (nombre && usuario ? ' (' + usuario + ')' : usuario ? '(' + usuario + ')' : '');
+                        
+                        var item = $('<a href="#" class="list-group-item list-group-item-action" data-id="' + idInscripcion + '">' + texto + '</a>');
+                        item.on('click', function(e) {
+                            e.preventDefault();
+                            inscripcionSeleccionada = inscripcion;
+                            $('#buscarInscripcion').val(texto);
+                            $('#IdInscripcion').val(idInscripcion);
+                            lista.hide();
+                        });
+                        lista.append(item);
+                    });
+                    lista.show();
+                } else {
+                    lista.append('<div class="list-group-item text-muted">No se encontraron resultados para "' + busqueda + '"</div>');
+                    lista.show();
+                }
+            });
+
+            function cargarInscripciones(idGrupo) {
+                $('#inscripcionesList').html('<p class="text-muted">Cargando inscripciones...</p>');
+                $.get('@Url.Action("GetInscripcionesGrupo", "Grupos")', { idGrupo: idGrupo }, function(data) {
+                    $('#inscripcionesList').html(data);
+                }).fail(function() {
+                    $('#inscripcionesList').html('<p class="text-danger">Error al cargar las inscripciones del grupo</p>');
+                });
+            }
+            
+            // Manejar guardar inscripción
+            $('#btnGuardarInscripcion').on('click', function() {
+                var idGrupo = $('#IdGrupoInscripcion').val();
+                var idInscripcion = $('#IdInscripcion').val();
+                var observaciones = $('#ObservacionesInscripcion').val();
+
+                if (!idInscripcion) {
+                    $('#errorIdInscripcion').text('Debe seleccionar una inscripción');
+                    return;
+                }
+
+                $('#errorIdInscripcion').text('');
+
+                $.post('@Url.Action("AgregarInscripcionGrupo", "Grupos")', {
+                    idGrupo: idGrupo,
+                    idInscripcion: idInscripcion,
+                    observaciones: observaciones
+                }, function(response) {
+                    if (response.success) {
+                        $('#modalAgregarInscripcion').modal('hide');
+                        $('#formAgregarInscripcion')[0].reset();
+                        $('#buscarInscripcion').val('');
+                        $('#listaInscripciones').hide();
+                        inscripcionSeleccionada = null;
+                        cargarInscripciones(idGrupo);
+                        alert(response.message || 'Inscripción agregada exitosamente');
+                    } else {
+                        $('#errorIdInscripcion').text(response.message || 'Error al agregar la inscripción');
+                    }
+                }).fail(function() {
+                    $('#errorIdInscripcion').text('Error al comunicarse con el servidor');
+                });
+            });
+        });
+    </script>
+}

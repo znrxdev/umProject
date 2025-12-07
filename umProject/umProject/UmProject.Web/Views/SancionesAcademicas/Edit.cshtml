@@ -1,0 +1,307 @@
+@model UmProject.Entities.SancionAcademica
+
+@{
+    ViewData["Title"] = "Editar Sanción Académica";
+    ViewData["Subtitle"] = "Modificar información de sanción académica";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="SancionesAcademicas" asp-action="Index">Sanciones Académicas</a>
+        <span class="separator">/</span>
+        <span>Editar</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Editar Sanción Académica</h1>
+            <p class="page-subtitle">Modifique la información de la sanción académica</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Información de la Sanción</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="IdSancion" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CodigoSancion" class="form-label">Código de Sanción</label>
+                        <input asp-for="CodigoSancion" class="form-control" maxlength="30" />
+                        <span asp-validation-for="CodigoSancion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstado" class="form-select" required>
+                            <option value="">Seleccione un estado</option>
+                            @if (ViewBag.Estados != null)
+                            {
+                                @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                                {
+                                    <option value="@estado.IdEstado" selected="@(estado.IdEstado == Model.IdEstado ? "selected" : null)">@estado.NombreEstado</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstudiante" class="form-label">Estudiante <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstudiante" class="form-select" required>
+                            <option value="">Seleccione un estudiante</option>
+                            @if (ViewBag.Estudiantes != null)
+                            {
+                                @foreach (var estudiante in ViewBag.Estudiantes as List<UmProject.Entities.Estudiante>)
+                                {
+                                    <option value="@estudiante.IdUsuario" selected="@(estudiante.IdUsuario == Model.IdEstudiante ? "selected" : null)">@(estudiante.NombreCompleto ?? "") - @(estudiante.Usuario ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstudiante" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdTipoSancion" class="form-label">Tipo de Sanción <span class="text-danger">*</span></label>
+                        <select asp-for="IdTipoSancion" class="form-select" required>
+                            <option value="">Seleccione un tipo de sanción</option>
+                            @if (ViewBag.TiposSancion != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposSancion as List<UmProject.Entities.Catalogo>)
+                                {
+                                    var isSelectedTipoSancion = Model.IdTipoSancion.HasValue && tipo.IdCatalogo == Model.IdTipoSancion.Value;
+                                    <option value="@tipo.IdCatalogo" selected="@(isSelectedTipoSancion ? "selected" : null)">@tipo.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoSancion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdTipoFalta" class="form-label">Tipo de Falta</label>
+                        <select asp-for="IdTipoFalta" class="form-select" name="IdTipoFalta" id="IdTipoFalta">
+                            <option value="">Seleccione un tipo de falta (opcional)</option>
+                            @if (ViewBag.TiposFalta != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposFalta as List<UmProject.Entities.Catalogo>)
+                                {
+                                    var isSelected = Model.IdTipoFalta.HasValue && tipo.IdCatalogo == Model.IdTipoFalta.Value;
+                                    @if (isSelected)
+                                    {
+                                        <option value="@tipo.IdCatalogo" selected="selected">@tipo.NombreCatalogo</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoFalta" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdSeveridad" class="form-label">Severidad <span class="text-danger">*</span></label>
+                        <select asp-for="IdSeveridad" class="form-select" required name="IdSeveridad" id="IdSeveridad">
+                            <option value="">Seleccione una severidad</option>
+                            @if (ViewBag.Severidades != null)
+                            {
+                                @foreach (var severidad in ViewBag.Severidades as List<UmProject.Entities.Catalogo>)
+                                {
+                                    var isSelected = Model.IdSeveridad.HasValue && severidad.IdCatalogo == Model.IdSeveridad.Value;
+                                    @if (isSelected)
+                                    {
+                                        <option value="@severidad.IdCatalogo" selected="selected">@severidad.NombreCatalogo</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@severidad.IdCatalogo">@severidad.NombreCatalogo</option>
+                                    }
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdSeveridad" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaRegistro" class="form-label">Fecha de Registro <span class="text-danger">*</span></label>
+                        <input asp-for="FechaRegistro" type="datetime-local" class="form-control" required />
+                        <span asp-validation-for="FechaRegistro" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaFin" class="form-label">Fecha de Fin</label>
+                        <input asp-for="FechaFin" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaFin" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Motivo" class="form-label">Motivo</label>
+                        <textarea asp-for="Motivo" class="form-control" rows="3" placeholder="Motivo de la sanción..." maxlength="300"></textarea>
+                        <span asp-validation-for="Motivo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Es Apelable</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" name="EsApelable" id="EsApelable" value="true" checked="@Model.EsApelable" />
+                            <input type="hidden" name="EsApelable" value="false" />
+                            <label class="form-check-label" for="EsApelable">Sí</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdUsuarioResolucion" class="form-label">Usuario de Resolución</label>
+                        <select asp-for="IdUsuarioResolucion" class="form-select">
+                            <option value="">Seleccione un usuario (opcional)</option>
+                            @if (ViewBag.UsuariosResolucion != null)
+                            {
+                                @foreach (var usuario in ViewBag.UsuariosResolucion as List<UmProject.Entities.Usuario>)
+                                {
+                                    <option value="@usuario.IdUsuario" selected="@(usuario.IdUsuario == Model.IdUsuarioResolucion ? "selected" : null)">@(usuario.NombreCompleto ?? "") - @(usuario.UsuarioNombre ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdUsuarioResolucion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaResolucion" class="form-label">Fecha de Resolución</label>
+                        <input asp-for="FechaResolucion" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaResolucion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DocumentoResolucion" class="form-label">Documento de Resolución</label>
+                        <input asp-for="DocumentoResolucion" class="form-control" placeholder="Nombre del documento..." maxlength="255" />
+                        <span asp-validation-for="DocumentoResolucion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="ObservacionesApelacion" class="form-label">Observaciones de Apelación</label>
+                        <textarea asp-for="ObservacionesApelacion" class="form-control" rows="2" placeholder="Observaciones sobre la apelación (si aplica)..." maxlength="500"></textarea>
+                        <span asp-validation-for="ObservacionesApelacion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Debug: Mostrar valores del modelo
+            console.log('=== VALORES DEL MODELO ===');
+            console.log('IdSancion:', @(Model.IdSancion?.ToString() ?? "null"));
+            console.log('IdTipoSancion:', @(Model.IdTipoSancion?.ToString() ?? "null"));
+            console.log('IdTipoFalta:', @(Model.IdTipoFalta?.ToString() ?? "null"));
+            console.log('IdSeveridad:', @(Model.IdSeveridad?.ToString() ?? "null"));
+            console.log('IdEstado:', @(Model.IdEstado?.ToString() ?? "null"));
+            console.log('IdEstudiante:', @(Model.IdEstudiante?.ToString() ?? "null"));
+            
+            // Debug: Mostrar valores de los dropdowns
+            console.log('=== VALORES DE LOS DROPDOWNS ===');
+            
+            // Tipos de Sanción (Id_Tipo_Catalogo = 6)
+            var tiposSancion = [];
+            $('#IdTipoSancion option').each(function() {
+                tiposSancion.push({
+                    value: $(this).val(),
+                    text: $(this).text(),
+                    selected: $(this).prop('selected')
+                });
+            });
+            console.log('Tipos de Sanción (Id_Tipo_Catalogo = 6):', tiposSancion);
+            console.log('Valor seleccionado en dropdown IdTipoSancion:', $('#IdTipoSancion').val());
+            
+            // Tipos de Falta (Id_Tipo_Catalogo = 24)
+            var tiposFalta = [];
+            $('#IdTipoFalta option').each(function() {
+                tiposFalta.push({
+                    value: $(this).val(),
+                    text: $(this).text(),
+                    selected: $(this).prop('selected')
+                });
+            });
+            console.log('Tipos de Falta (Id_Tipo_Catalogo = 24):', tiposFalta);
+            console.log('Valor seleccionado en dropdown IdTipoFalta:', $('#IdTipoFalta').val());
+            
+            // Severidades (Id_Tipo_Catalogo = 7)
+            var severidades = [];
+            $('#IdSeveridad option').each(function() {
+                severidades.push({
+                    value: $(this).val(),
+                    text: $(this).text(),
+                    selected: $(this).prop('selected')
+                });
+            });
+            console.log('Severidades (Id_Tipo_Catalogo = 7):', severidades);
+            console.log('Valor seleccionado en dropdown IdSeveridad:', $('#IdSeveridad').val());
+            
+            // Comparaciones
+            console.log('=== COMPARACIONES ===');
+            console.log('Model.IdTipoFalta (' + @(Model.IdTipoFalta?.ToString() ?? "null") + ') == Dropdown value (' + $('#IdTipoFalta').val() + '):', 
+                @(Model.IdTipoFalta?.ToString() ?? "null") == $('#IdTipoFalta').val());
+            console.log('Model.IdSeveridad (' + @(Model.IdSeveridad?.ToString() ?? "null") + ') == Dropdown value (' + $('#IdSeveridad').val() + '):', 
+                @(Model.IdSeveridad?.ToString() ?? "null") == $('#IdSeveridad').val());
+            
+            // Verificar si los valores del modelo existen en los dropdowns
+            var idTipoFaltaModel = @(Model.IdTipoFalta?.ToString() ?? "null");
+            var idSeveridadModel = @(Model.IdSeveridad?.ToString() ?? "null");
+            
+            if (idTipoFaltaModel !== null) {
+                var existeTipoFalta = $('#IdTipoFalta option[value="' + idTipoFaltaModel + '"]').length > 0;
+                console.log('¿Existe IdTipoFalta (' + idTipoFaltaModel + ') en el dropdown?:', existeTipoFalta);
+                if (existeTipoFalta) {
+                    console.log('Texto de la opción encontrada:', $('#IdTipoFalta option[value="' + idTipoFaltaModel + '"]').text());
+                }
+            }
+            
+            if (idSeveridadModel !== null) {
+                var existeSeveridad = $('#IdSeveridad option[value="' + idSeveridadModel + '"]').length > 0;
+                console.log('¿Existe IdSeveridad (' + idSeveridadModel + ') en el dropdown?:', existeSeveridad);
+                if (existeSeveridad) {
+                    console.log('Texto de la opción encontrada:', $('#IdSeveridad option[value="' + idSeveridadModel + '"]').text());
+                }
+            }
+        });
+    </script>
+}
+

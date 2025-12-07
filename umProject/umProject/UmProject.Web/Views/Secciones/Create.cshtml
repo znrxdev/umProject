@@ -1,0 +1,221 @@
+@model UmProject.Entities.Seccion
+
+@{
+    ViewData["Title"] = "Nueva Sección";
+    ViewData["Subtitle"] = "Registrar nueva sección académica";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Secciones" asp-action="Index">Secciones</a>
+        <span class="separator">/</span>
+        <span>Nueva</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nueva Sección</h1>
+            <p class="page-subtitle">Registre una nueva sección académica</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-layer-group me-2"></i>Información de la Sección</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Código de Sección</label>
+                        <input type="text" class="form-control" value="Se generará automáticamente" readonly />
+                        <small class="form-text text-muted">El código se genera automáticamente basado en el aula, materia y período</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdMateriaPeriodo" class="form-label">Materia-Período <span class="text-danger">*</span></label>
+                        <select asp-for="IdMateriaPeriodo" class="form-select" id="IdMateriaPeriodo" required>
+                            <option value="">Seleccione una materia-período</option>
+                            @if (ViewBag.MateriasPeriodos != null)
+                            {
+                                @foreach (var mp in ViewBag.MateriasPeriodos as List<object>)
+                                {
+                                    var mpDict = mp as dynamic;
+                                    <option value="@mpDict.IdMateriaPeriodo">@mpDict.DisplayText</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdMateriaPeriodo" class="text-danger"></span>
+                        <small class="form-text text-muted">Solo se muestran materias de períodos en estado PENDIENTE o EN REVISION</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdDocente" class="form-label">Docente <span class="text-danger">*</span></label>
+                        <select asp-for="IdDocente" class="form-select" required>
+                            <option value="">Seleccione un docente</option>
+                            @if (ViewBag.Docentes != null)
+                            {
+                                @foreach (var docente in ViewBag.Docentes as List<UmProject.Entities.Docente>)
+                                {
+                                    <option value="@docente.IdUsuario">@docente.NombreCompleto - @docente.Usuario</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdDocente" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdTipoSeccion" class="form-label">Tipo de Sección <span class="text-danger">*</span></label>
+                        <select asp-for="IdTipoSeccion" class="form-select" required>
+                            <option value="">Seleccione un tipo</option>
+                            @if (ViewBag.TiposSeccion != null)
+                            {
+                                @foreach (var tipo in ViewBag.TiposSeccion as List<UmProject.Entities.Catalogo>)
+                                {
+                                    <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdTipoSeccion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdAula" class="form-label">Aula</label>
+                        <select asp-for="IdAula" class="form-select">
+                            <option value="">Seleccione un aula (opcional)</option>
+                            @if (ViewBag.Aulas != null)
+                            {
+                                @foreach (var aula in ViewBag.Aulas as List<UmProject.Entities.Catalogo>)
+                                {
+                                    <option value="@aula.IdCatalogo">@aula.NombreCatalogo</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Modalidad" class="form-label">Modalidad</label>
+                        <select asp-for="Modalidad" class="form-select">
+                            <option value="">Seleccione una modalidad</option>
+                            <option value="PRESENCIAL">Presencial</option>
+                            <option value="VIRTUAL">Virtual</option>
+                            <option value="HIBRIDO">Híbrido</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="HorarioDescripcion" class="form-label">Descripción del Horario</label>
+                        <input asp-for="HorarioDescripcion" class="form-control" placeholder="Ej: Lunes y Miércoles 8:00-10:00" maxlength="255" />
+                        <span asp-validation-for="HorarioDescripcion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="CupoMaximo" class="form-label">Cupo Máximo</label>
+                        <input asp-for="CupoMaximo" type="number" class="form-control" min="1" />
+                        <span asp-validation-for="CupoMaximo" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PorcentajeAsistenciaMinima" class="form-label">Asistencia Mínima Según Materia</label>
+                        <input asp-for="PorcentajeAsistenciaMinima" type="number" step="0.01" class="form-control" id="PorcentajeAsistenciaMinima" min="0" max="100" readonly />
+                        <small class="form-text text-muted">Se establece automáticamente según la materia-período seleccionada</small>
+                        <span asp-validation-for="PorcentajeAsistenciaMinima" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Estado</label>
+                        <input type="text" class="form-control" value="EN REVISION" readonly />
+                        <input type="hidden" asp-for="IdEstado" value="@ViewBag.EstadoRevision" />
+                        <small class="form-text text-muted">El estado se establece automáticamente como EN REVISION al crear una nueva sección</small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="RequiereAsistencia" value="true" class="form-check-input" id="RequiereAsistencia" checked />
+                            <input type="hidden" name="RequiereAsistencia" value="false" />
+                            <label class="form-check-label" for="RequiereAsistencia">
+                                Requiere Asistencia
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="255" placeholder="Observaciones adicionales..."></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.5rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.5rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Cuando se selecciona una materia-período, cargar el porcentaje de asistencia mínima
+            $('#IdMateriaPeriodo').on('change', function() {
+                var idMateriaPeriodo = $(this).val();
+                
+                if (idMateriaPeriodo && idMateriaPeriodo !== '') {
+                    // Llamar al endpoint para obtener el porcentaje de asistencia mínima
+                    $.ajax({
+                        url: '@Url.Action("GetPorcentajeAsistenciaMateriaPeriodo", "Secciones")',
+                        type: 'GET',
+                        data: { idMateriaPeriodo: idMateriaPeriodo },
+                        success: function(response) {
+                            if (response.success) {
+                                $('#PorcentajeAsistenciaMinima').val(response.porcentajeAsistenciaMinima);
+                            } else {
+                                console.error('Error al obtener porcentaje de asistencia:', response.message);
+                                // Establecer valor por defecto si hay error
+                                $('#PorcentajeAsistenciaMinima').val('75.00');
+                            }
+                        },
+                        error: function() {
+                            console.error('Error al obtener porcentaje de asistencia mínima');
+                            // Establecer valor por defecto si hay error
+                            $('#PorcentajeAsistenciaMinima').val('75.00');
+                        }
+                    });
+                } else {
+                    // Si no hay materia-período seleccionada, limpiar el campo
+                    $('#PorcentajeAsistenciaMinima').val('');
+                }
+            });
+        });
+    </script>
+}
+

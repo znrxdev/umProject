@@ -1,0 +1,229 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\justi\\Documents\\Git\\umProject\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.data\\estudianterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|solutionrelative:umproject\\umproject\\umproject.data\\estudianterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\views\\usuarios\\_confirmarcrearpersona.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\views\\usuarios\\_confirmarcrearpersona.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.data\\errorsqlrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|solutionrelative:umproject\\umproject\\umproject.data\\errorsqlrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.data\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|solutionrelative:umproject\\umproject\\umproject.data\\usuariorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46C7757A-79AB-47E3-BC55-4B177D8127FE}|umProject\\umProject\\UmProject.Entities\\UmProject.Entities.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.entities\\resultadooperacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46C7757A-79AB-47E3-BC55-4B177D8127FE}|umProject\\umProject\\UmProject.Entities\\UmProject.Entities.csproj|solutionrelative:umproject\\umproject\\umproject.entities\\resultadooperacion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.data\\estadorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|solutionrelative:umproject\\umproject\\umproject.data\\estadorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.data\\umproject.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C233409A-FB53-470E-A073-EACD46974E69}|umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj|solutionrelative:umproject\\umproject\\umproject.data\\umproject.data.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\views\\usuarios\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\views\\usuarios\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{46C7757A-79AB-47E3-BC55-4B177D8127FE}|umProject\\umProject\\UmProject.Entities\\UmProject.Entities.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject\\umproject.entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{46C7757A-79AB-47E3-BC55-4B177D8127FE}|umProject\\umProject\\UmProject.Entities\\UmProject.Entities.csproj|solutionrelative:umproject\\umproject\\umproject.entities\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|c:\\users\\justi\\documents\\git\\umproject\\umproject\\umproject.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{CC57F3C1-BD11-44F5-B7E9-15D20A44807B}|umProject\\UmProject.Web\\UmProject.Web.csproj|solutionrelative:umproject\\umproject.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_ConfirmarCrearPersona.cshtml",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Usuarios\\_ConfirmarCrearPersona.cshtml",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\Views\\Usuarios\\_ConfirmarCrearPersona.cshtml",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Usuarios\\_ConfirmarCrearPersona.cshtml",
+              "RelativeToolTip": "umProject\\UmProject.Web\\Views\\Usuarios\\_ConfirmarCrearPersona.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-26T23:40:11.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EstudianteRepository.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\EstudianteRepository.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Data\\EstudianteRepository.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\EstudianteRepository.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Data\\EstudianteRepository.cs",
+              "ViewState": "AgIAAPUAAAAAAAAAAAAuwA0BAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-26T23:00:46.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ErrorSqlRepository.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\ErrorSqlRepository.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Data\\ErrorSqlRepository.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\ErrorSqlRepository.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Data\\ErrorSqlRepository.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAQwAcAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T20:44:01.231Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ResultadoOperacion.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Entities\\ResultadoOperacion.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Entities\\ResultadoOperacion.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Entities\\ResultadoOperacion.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Entities\\ResultadoOperacion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T01:23:06.818Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UsuarioRepository.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\UsuarioRepository.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Data\\UsuarioRepository.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\UsuarioRepository.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Data\\UsuarioRepository.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAPYAAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T01:21:21.991Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "EstadoRepository.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\EstadoRepository.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Data\\EstadoRepository.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\EstadoRepository.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Data\\EstadoRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T01:18:31.038Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "UmProject.Data.csproj",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Data\\UmProject.Data.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-24T01:18:25.863Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Entities\\Usuario.cs",
+              "RelativeDocumentMoniker": "umProject\\umProject\\UmProject.Entities\\Usuario.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\umProject\\UmProject.Entities\\Usuario.cs",
+              "RelativeToolTip": "umProject\\umProject\\UmProject.Entities\\Usuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T01:10:05.551Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "umProject\\UmProject.Web\\Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAN4AAAAAAAAAAAD4v/UAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-24T00:37:12.454Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\README.md",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\README.md",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\README.md",
+              "RelativeToolTip": "umProject\\UmProject.Web\\README.md",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-11-24T00:36:50.076Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Usuarios\\Create.cshtml",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\Views\\Usuarios\\Create.cshtml",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Usuarios\\Create.cshtml",
+              "RelativeToolTip": "umProject\\UmProject.Web\\Views\\Usuarios\\Create.cshtml",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-24T00:36:25.298Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "umProject\\UmProject.Web\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAYwA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-24T00:25:16.715Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\appsettings.json",
+              "RelativeDocumentMoniker": "umProject\\UmProject.Web\\appsettings.json",
+              "ToolTip": "C:\\Users\\justi\\Documents\\Git\\umProject\\umProject\\UmProject.Web\\appsettings.json",
+              "RelativeToolTip": "umProject\\UmProject.Web\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-24T00:16:59.339Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

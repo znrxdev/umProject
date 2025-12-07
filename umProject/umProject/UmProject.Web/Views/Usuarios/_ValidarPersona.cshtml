@@ -1,0 +1,34 @@
+@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalValidarPersona" tabindex="-1" aria-labelledby="modalValidarPersonaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalValidarPersonaLabel">
+                    <i class="fas fa-id-card me-2"></i>Validar Persona
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formValidarPersona" onsubmit="return false;">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="valorDocumento" class="form-label">Número de Documento</label>
+                        <input type="text" class="form-control" id="valorDocumento" name="valorDocumento" placeholder="Ingrese el número de documento" autofocus>
+                        <div class="form-text">Ingrese el número de documento de la persona para validar si existe.</div>
+                    </div>
+                    <div id="mensajeValidacion" class="alert d-none" role="alert"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnValidar" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Validar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

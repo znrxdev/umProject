@@ -1,0 +1,166 @@
+@model UmProject.Entities.SolicitudBeca
+
+@{
+    ViewData["Title"] = "Nueva Solicitud de Beca";
+    ViewData["Subtitle"] = "Registrar nueva solicitud de beca";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Becas" asp-action="Index">Becas</a>
+        <span class="separator">/</span>
+        <span>Nueva</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nueva Solicitud de Beca</h1>
+            <p class="page-subtitle">Registre una nueva solicitud de beca</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Información de la Solicitud</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="CodigoSeguimiento" class="form-label">Código de Seguimiento</label>
+                        <input asp-for="CodigoSeguimiento" class="form-control" placeholder="Se generará automáticamente si se deja vacío" maxlength="30" />
+                        <span asp-validation-for="CodigoSeguimiento" class="text-danger"></span>
+                        <small class="form-text text-muted">Deje vacío para generar automáticamente</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstado" class="form-select" required>
+                            <option value="">Seleccione un estado</option>
+                            @if (ViewBag.Estados != null)
+                            {
+                                @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                                {
+                                    <option value="@estado.IdEstado">@estado.NombreEstado</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdBecaPrograma" class="form-label">Programa de Beca <span class="text-danger">*</span></label>
+                        <input asp-for="IdBecaPrograma" type="number" class="form-control" required placeholder="Ingrese el ID del programa" />
+                        <span asp-validation-for="IdBecaPrograma" class="text-danger"></span>
+                        <small class="form-text text-muted">TODO: Cargar programas de becas cuando el servicio esté disponible. Por ahora, ingrese el ID manualmente.</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstudiante" class="form-label">Estudiante <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstudiante" class="form-select" required>
+                            <option value="">Seleccione un estudiante</option>
+                            @if (ViewBag.Estudiantes != null)
+                            {
+                                @foreach (var estudiante in ViewBag.Estudiantes as List<UmProject.Entities.Estudiante>)
+                                {
+                                    <option value="@estudiante.IdUsuario">@(estudiante.NombreCompleto ?? "") - @(estudiante.Usuario ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstudiante" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="PromedioVigente" class="form-label">Promedio Vigente</label>
+                        <input asp-for="PromedioVigente" type="number" step="0.01" min="0" max="100" class="form-control" placeholder="0.00 - 100.00" />
+                        <span asp-validation-for="PromedioVigente" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="TotalSancionesActivas" class="form-label">Total Sanciones Activas</label>
+                        <input asp-for="TotalSancionesActivas" type="number" min="0" class="form-control" value="0" />
+                        <span asp-validation-for="TotalSancionesActivas" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaSolicitud" class="form-label">Fecha de Solicitud</label>
+                        <input asp-for="FechaSolicitud" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaSolicitud" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaCierre" class="form-label">Fecha de Cierre</label>
+                        <input asp-for="FechaCierre" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaCierre" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="MotivoUltimaDecision" class="form-label">Motivo de Última Decisión</label>
+                        <textarea asp-for="MotivoUltimaDecision" class="form-control" rows="2" placeholder="Motivo de la última decisión (si aplica)" maxlength="500"></textarea>
+                        <span asp-validation-for="MotivoUltimaDecision" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3" placeholder="Observaciones adicionales..." maxlength="1000"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Cumple Criterios</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" name="CumpleCriterios" id="CumpleCriterios" value="true" />
+                            <input type="hidden" name="CumpleCriterios" value="false" />
+                            <label class="form-check-label" for="CumpleCriterios">Sí</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Es Prioritaria</label>
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" name="EsPrioritaria" id="EsPrioritaria" value="true" />
+                            <input type="hidden" name="EsPrioritaria" value="false" />
+                            <label class="form-check-label" for="EsPrioritaria">Sí</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Solicitud
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

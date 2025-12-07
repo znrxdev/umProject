@@ -1,0 +1,107 @@
+@model List<UmProject.Entities.DocenteEvaluacion>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <div class="mb-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchEvaluaciones" placeholder="Buscar por estudiante, materia..." class="form-control" style="border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <span class="badge bg-info fs-6">Total: @Model.Count evaluaciones</span>
+                </div>
+            </div>
+        </div>
+        <table class="modern-table" id="tablaEvaluaciones">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Estudiante</th>
+                    <th>Evaluación</th>
+                    <th>Materia</th>
+                    <th>Sección</th>
+                    <th>Período</th>
+                    <th>Puntaje</th>
+                    <th>Porcentaje</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evaluacion in Model)
+                {
+                    <tr>
+                        <td><code>@evaluacion.CodigoRegistro</code></td>
+                        <td>
+                            <strong>@evaluacion.NombreEstudiante</strong>
+                            <br><small class="text-muted">@evaluacion.UsuarioEstudiante</small>
+                        </td>
+                        <td>@evaluacion.NombreEvaluacion</td>
+                        <td>@evaluacion.NombreMateria <br><small class="text-muted">@evaluacion.CodigoMateria</small></td>
+                        <td>@evaluacion.CodigoSeccion</td>
+                        <td>@evaluacion.NombrePeriodo</td>
+                        <td>@evaluacion.PuntajeObtenido.ToString("F2") / @evaluacion.CalificacionMaxima.ToString("F2")</td>
+                        <td>
+                            @if (evaluacion.PorcentajeLogrado.HasValue)
+                            {
+                                <span class="badge @(evaluacion.PorcentajeLogrado >= 60 ? "bg-success" : "bg-danger")">
+                                    @evaluacion.PorcentajeLogrado.Value.ToString("F2")%
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                        <td>
+                            @if (evaluacion.EstadoEvaluacion != null && evaluacion.EstadoEvaluacion.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@evaluacion.EstadoEvaluacion
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge inactive">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@evaluacion.EstadoEvaluacion
+                                </span>
+                            }
+                        </td>
+                        <td>@(evaluacion.FechaEvaluacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-info" onclick="verDetalleEvaluacion(@evaluacion.IdEvaluacionAlumno)" title="Ver detalle">
+                                <i class="fas fa-eye"></i> Detalle
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-clipboard-check"></i>
+        <h3>No hay evaluaciones registradas</h3>
+        <p>El docente no tiene evaluaciones realizadas.</p>
+    </div>
+}
+
+<script>
+    $(document).ready(function() {
+        $('#searchEvaluaciones').on('input', function() {
+            var searchText = $(this).val().toLowerCase();
+            $('#tablaEvaluaciones tbody tr').each(function() {
+                var rowText = $(this).text().toLowerCase();
+                $(this).toggle(rowText.includes(searchText));
+            });
+        });
+    });
+</script>
+

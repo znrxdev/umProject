@@ -1,0 +1,351 @@
+@{
+    ViewData["Title"] = "Mi Historial";
+    ViewData["Subtitle"] = "Consulta tu historial académico";
+    var activeTab = ViewBag.ActiveTab ?? "sanciones";
+    var sanciones = ViewBag.Sanciones as List<UmProject.Entities.SancionAcademica> ?? new List<UmProject.Entities.SancionAcademica>();
+    var evaluaciones = ViewBag.Evaluaciones as List<UmProject.Entities.EstudianteEvaluacion> ?? new List<UmProject.Entities.EstudianteEvaluacion>();
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Mi Historial</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Mi Historial</h1>
+            <p class="page-subtitle">Consulta tu historial académico completo</p>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs mb-4" id="historialTabs" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "sanciones" ? "active" : "")" id="sanciones-tab" data-bs-toggle="tab" data-bs-target="#sanciones" type="button" role="tab" aria-controls="sanciones" aria-selected="@(activeTab == "sanciones" ? "true" : "false")" onclick="window.location.href='@Url.Action("Index", "MiHistorial", new { tab = "sanciones" })'">
+                <i class="fas fa-exclamation-triangle me-2"></i>Sanciones Académicas
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "evaluaciones" ? "active" : "")" id="evaluaciones-tab" data-bs-toggle="tab" data-bs-target="#evaluaciones" type="button" role="tab" aria-controls="evaluaciones" aria-selected="@(activeTab == "evaluaciones" ? "true" : "false")" onclick="window.location.href='@Url.Action("Index", "MiHistorial", new { tab = "evaluaciones" })'">
+                <i class="fas fa-clipboard-check me-2"></i>Evaluaciones
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(activeTab == "becas" ? "active" : "")" id="becas-tab" data-bs-toggle="tab" data-bs-target="#becas" type="button" role="tab" aria-controls="becas" aria-selected="@(activeTab == "becas" ? "true" : "false")" onclick="window.location.href='@Url.Action("Index", "MiHistorial", new { tab = "becas" })'">
+                <i class="fas fa-hand-holding-usd me-2"></i>Becas
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="historialTabContent">
+        <!-- Tab: Sanciones Académicas -->
+        <div class="tab-pane fade @(activeTab == "sanciones" ? "show active" : "")" id="sanciones" role="tabpanel" aria-labelledby="sanciones-tab">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (sanciones != null && sanciones.Any())
+            {
+                <div class="modern-table-container">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo Sanción</th>
+                                <th>Tipo Falta</th>
+                                <th>Severidad</th>
+                                <th>Estado</th>
+                                <th>Fecha Registro</th>
+                                <th>Motivo</th>
+                                <th>Apelable</th>
+                                <th style="text-align: right;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sancion in sanciones)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong style="color: var(--primary-color);">@sancion.CodigoSancion</strong>
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(sancion.NombreTipoSancion))
+                                        {
+                                            <span class="badge bg-danger">@sancion.NombreTipoSancion</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(sancion.NombreTipoFalta))
+                                        {
+                                            <span class="badge bg-warning">@sancion.NombreTipoFalta</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(sancion.NombreSeveridad))
+                                        {
+                                            <span class="badge bg-info">@sancion.NombreSeveridad</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(sancion.NombreEstado))
+                                        {
+                                            <span class="badge bg-secondary">@sancion.NombreEstado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                    </td>
+                                    <td>@(sancion.FechaRegistro?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                    <td>
+                                        <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="@sancion.Motivo">
+                                            @(sancion.Motivo ?? "N/A")
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (sancion.EsApelable)
+                                        {
+                                            <span class="badge bg-success">Sí</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <div class="action-buttons">
+                                            @if (sancion.EsApelable && sancion.FechaApelacion == null)
+                                            {
+                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#apelarModal_@sancion.IdSancion" title="Apelar sanción">
+                                                    <i class="fas fa-gavel"></i> Apelar
+                                                </button>
+                                            }
+                                            @if (sancion.FechaApelacion != null)
+                                            {
+                                                <span class="badge bg-info" title="Apelación enviada el @sancion.FechaApelacion?.ToString("dd/MM/yyyy")">
+                                                    <i class="fas fa-check"></i> Apelada
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Modal para Apelar Sanción -->
+                                <div class="modal fade" id="apelarModal_@sancion.IdSancion" tabindex="-1" aria-labelledby="apelarModalLabel_@sancion.IdSancion" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="apelarModalLabel_@sancion.IdSancion">
+                                                    <i class="fas fa-gavel me-2"></i>Apelar Sanción Académica
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form asp-action="ApelarSancion" method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="idSancion" value="@sancion.IdSancion" />
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><strong>Código de Sanción:</strong></label>
+                                                        <p>@sancion.CodigoSancion</p>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><strong>Tipo de Sanción:</strong></label>
+                                                        <p>@(sancion.NombreTipoSancion ?? "N/A")</p>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label class="form-label"><strong>Motivo de la Sanción:</strong></label>
+                                                        <p>@(sancion.Motivo ?? "N/A")</p>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <label for="observacionesApelacion_@sancion.IdSancion" class="form-label">
+                                                            <strong>Comentarios de Apelación <span class="text-danger">*</span></strong>
+                                                        </label>
+                                                        <textarea class="form-control" id="observacionesApelacion_@sancion.IdSancion" name="observacionesApelacion" rows="5" required placeholder="Ingrese los motivos por los cuales considera que esta sanción debe ser revisada..."></textarea>
+                                                        <small class="form-text text-muted">Máximo 500 caracteres</small>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-warning">
+                                                        <i class="fas fa-paper-plane me-2"></i>Enviar Apelación
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3" style="color: var(--text-secondary);"></i>
+                    <h4>No tienes sanciones académicas</h4>
+                    <p class="text-muted">No se encontraron registros de sanciones académicas en tu historial.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Tab: Evaluaciones -->
+        <div class="tab-pane fade @(activeTab == "evaluaciones" ? "show active" : "")" id="evaluaciones" role="tabpanel" aria-labelledby="evaluaciones-tab">
+            @if (TempData["ErrorMessage"] != null && activeTab == "evaluaciones")
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (evaluaciones != null && evaluaciones.Any())
+            {
+                <div class="modern-table-container">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Código Instancia</th>
+                                <th>Evaluación</th>
+                                <th>Materia / Sección</th>
+                                <th>Período</th>
+                                <th>Puntaje</th>
+                                <th>% Logrado</th>
+                                <th>Estado</th>
+                                <th>Publicación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ev in evaluaciones)
+                            {
+                                <tr>
+                                    <td><strong style="color: var(--primary-color);">@ev.CodigoInstancia</strong></td>
+                                    <td>
+                                        <div style="font-weight:600;">@ev.NombreEvaluacion</div>
+                                        <small class="text-muted">@ev.CodigoModelo</small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight:600;">@ev.NombreMateria</div>
+                                        <small class="text-muted">@ev.CodigoSeccion</small>
+                                    </td>
+                                    <td>
+                                        <div>@ev.NombrePeriodo</div>
+                                        <small class="text-muted">@ev.CodigoPeriodo</small>
+                                    </td>
+                                    <td>
+                                        <div><strong>@ev.PuntajeObtenido.ToString("N2")</strong> / @ev.CalificacionMaxima.ToString("N2")</div>
+                                    </td>
+                                    <td>@(ev.PorcentajeLogrado?.ToString("N2") ?? "N/A") %</td>
+                                    <td>
+                                        <span class="badge bg-secondary">@ev.EstadoEvaluacion</span>
+                                    </td>
+                                    <td>@(ev.FechaPublicacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-clipboard-check fa-3x mb-3" style="color: var(--text-secondary);"></i>
+                    <h4>No hay evaluaciones publicadas</h4>
+                    <p class="text-muted">Solo se muestran evaluaciones cuya fecha de publicación sea anterior o igual a hoy y que te pertenecen.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Tab: Becas -->
+        <div class="tab-pane fade @(activeTab == "becas" ? "show active" : "")" id="becas" role="tabpanel" aria-labelledby="becas-tab">
+            <div class="empty-state">
+                <i class="fas fa-hand-holding-usd fa-3x mb-3" style="color: var(--text-secondary);"></i>
+                <h4>Becas</h4>
+                <p class="text-muted">Esta funcionalidad estará disponible próximamente.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: var(--text-secondary);
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        background-color: transparent;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--card-background);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.25rem;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-footer {
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 1.25rem;
+    }
+</style>
+

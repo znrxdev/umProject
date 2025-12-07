@@ -1,0 +1,568 @@
+@model UmProject.Entities.EvaluacionAlumno
+
+@{
+    ViewData["Title"] = "Nueva Evaluación";
+    ViewData["Subtitle"] = "Registrar nueva evaluación académica";
+    var rolesUsuario = ViewBag.RolesUsuario as List<int> ?? new List<int>();
+    var usuarioActual = ViewBag.UsuarioActual as UmProject.Entities.Usuario;
+    var tieneSoloDocente = rolesUsuario.Count == 1 && rolesUsuario.Contains(3); // Asumiendo 3 es DOCENTE
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Evaluaciones" asp-action="Index">Evaluaciones</a>
+        <span class="separator">/</span>
+        <span>Nueva</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Nueva Evaluación</h1>
+            <p class="page-subtitle">Registre una nueva evaluación académica</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-clipboard-check me-2"></i>Información de la Evaluación</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" id="formEvaluacion">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Flujo en cascada: Período → Materia → Sección → Grupo → Estudiante -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Período Académico <span class="text-danger">*</span></label>
+                        <select id="selectPeriodo" class="form-select" required>
+                            <option value="">Seleccione un período académico</option>
+                            @if (ViewBag.PeriodosEnCurso != null)
+                            {
+                                @foreach (var periodo in ViewBag.PeriodosEnCurso as List<UmProject.Entities.PeriodoAcademico>)
+                                {
+                                    <option value="@periodo.IdPeriodo">@(periodo.NombrePeriodo ?? "") (@(periodo.CodigoPeriodo ?? ""))</option>
+                                }
+                            }
+                        </select>
+                        <small class="form-text text-muted">Solo se muestran períodos en curso</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Materia <span class="text-danger">*</span></label>
+                        <select id="selectMateriaPeriodo" class="form-select" required disabled>
+                            <option value="">Primero seleccione un período</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Sección <span class="text-danger">*</span></label>
+                        <select id="selectSeccion" class="form-select" required disabled>
+                            <option value="">Primero seleccione una materia</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Grupo <span class="text-danger">*</span></label>
+                        <select id="selectGrupo" class="form-select" required disabled>
+                            <option value="">Primero seleccione una sección</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdInscripcion" class="form-label">Estudiante <span class="text-danger">*</span></label>
+                        <select asp-for="IdInscripcion" id="selectEstudiante" class="form-select" required disabled>
+                            <option value="">Primero seleccione un grupo</option>
+                        </select>
+                        <span asp-validation-for="IdInscripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEvaluacionInstancia" class="form-label">Instancia de Evaluación <span class="text-danger">*</span></label>
+                        <select asp-for="IdEvaluacionInstancia" id="selectInstanciaEvaluacion" class="form-select" required disabled>
+                            <option value="">Primero seleccione una sección</option>
+                        </select>
+                        <span asp-validation-for="IdEvaluacionInstancia" class="text-danger"></span>
+                        <small class="form-text text-muted">Solo se muestran instancias ACTIVAS de la sección seleccionada</small>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Información del modelo y puntajes -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Puntaje Máximo</label>
+                        <input type="number" id="inputPuntajeMaximo" class="form-control" readonly />
+                        <small class="form-text text-muted">Se obtiene del modelo de evaluación</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PuntajeObtenido" class="form-label">Puntaje Obtenido <span class="text-danger">*</span></label>
+                        <input asp-for="PuntajeObtenido" type="number" step="0.01" min="0" id="inputPuntajeObtenido" class="form-control" value="0" required />
+                        <span asp-validation-for="PuntajeObtenido" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PorcentajeLogrado" class="form-label">Porcentaje Logrado</label>
+                        <input asp-for="PorcentajeLogrado" type="number" step="0.01" min="0" max="100" id="inputPorcentajeLogrado" class="form-control" readonly />
+                        <span asp-validation-for="PorcentajeLogrado" class="text-danger"></span>
+                        <small class="form-text text-muted">Se calcula automáticamente</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstado" id="selectEstado" class="form-select" required>
+                            <option value="">Seleccione un estado</option>
+                            @if (ViewBag.Estados != null)
+                            {
+                                @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                                {
+                                    <option value="@estado.IdEstado" data-nombre="@estado.NombreEstado">@estado.NombreEstado</option>
+                                }
+                            }
+                        </select>
+                        <!-- Mantener sincronizado el valor real de IdEstado -->
+                        <input type="hidden" asp-for="IdEstado" id="hiddenIdEstado" />
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                        <small class="form-text text-muted" id="helpEstado"></small>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Evaluador y Validador -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdUsuarioEvaluador" class="form-label">Evaluador <span class="text-danger">*</span></label>
+                        <select asp-for="IdUsuarioEvaluador" id="selectEvaluador" class="form-select" required>
+                            <option value="">Cargando...</option>
+                        </select>
+                        <!-- Valor real enviado siempre = Id_Sesion -->
+                        <input type="hidden" asp-for="IdUsuarioEvaluador" value="@(ViewBag.UsuarioActual?.IdUsuario ?? 0)" />
+                        <span asp-validation-for="IdUsuarioEvaluador" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdUsuarioValidador" class="form-label">Validador</label>
+                        <select asp-for="IdUsuarioValidador" id="selectValidador" class="form-select" disabled>
+                            <option value="">Seleccione un validador</option>
+                            @if (ViewBag.Validadores != null)
+                            {
+                                @foreach (var validador in ViewBag.Validadores as List<UmProject.Entities.Usuario>)
+                                {
+                                    <option value="@validador.IdUsuario">@(validador.NombreCompleto ?? "") - @(validador.UsuarioNombre ?? "")</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdUsuarioValidador" class="text-danger"></span>
+                        <small class="form-text text-muted" id="helpValidador"></small>
+                    </div>
+                </div>
+
+                <!-- Fechas -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaValidacion" class="form-label">Fecha de Validación</label>
+                        <input asp-for="FechaValidacion" type="datetime-local" id="inputFechaValidacion" class="form-control" disabled />
+                        <span asp-validation-for="FechaValidacion" class="text-danger"></span>
+                        <small class="form-text text-muted">Se establece automáticamente al guardar si está EN REVISIÓN</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaPublicacion" class="form-label">Fecha de Publicación</label>
+                        <input asp-for="FechaPublicacion" type="datetime-local" id="inputFechaPublicacion" class="form-control" />
+                        <span asp-validation-for="FechaPublicacion" class="text-danger"></span>
+                        <small class="form-text text-muted" id="helpFechaPublicacion"></small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3" placeholder="Observaciones adicionales..." maxlength="255"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Evaluación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Variables globales
+        const usuarioActualId = @(usuarioActual?.IdUsuario ?? 0);
+        const usuarioActualNombre = '@(usuarioActual?.NombreCompleto ?? "")';
+        const rolesUsuario = @Html.Raw(Json.Serialize(rolesUsuario));
+        const tieneSoloDocente = @(tieneSoloDocente.ToString().ToLower());
+        const tieneAdminOCoordinador = rolesUsuario.some(r => r === 1 || r === 4); // 1=ADMIN, 4=COORDINADOR
+        
+        let requiereRevisionInterna = false;
+        let puntajeMaximo = 0;
+
+        // Inicializar evaluador según roles
+        $(document).ready(function() {
+            inicializarEvaluador();
+        });
+
+        function inicializarEvaluador() {
+            const selectEvaluador = $('#selectEvaluador');
+            selectEvaluador.empty();
+            // Evaluador siempre es el usuario en sesión (YO)
+            selectEvaluador.append(`<option value="${usuarioActualId}" selected>YO</option>`);
+            selectEvaluador.prop('disabled', true);
+        }
+
+        // Cascada: Período → Materia → Sección → Grupo → Estudiante → Instancia
+        $('#selectPeriodo').change(function() {
+            const idPeriodo = $(this).val();
+            if (!idPeriodo) {
+                resetearCascada(['selectMateriaPeriodo', 'selectSeccion', 'selectGrupo', 'selectEstudiante', 'selectInstanciaEvaluacion']);
+                return;
+            }
+
+            cargarMateriasPorPeriodo(idPeriodo);
+            resetearCascada(['selectSeccion', 'selectGrupo', 'selectEstudiante', 'selectInstanciaEvaluacion']);
+        });
+
+        $('#selectMateriaPeriodo').change(function() {
+            const idMateriaPeriodo = $(this).val();
+            if (!idMateriaPeriodo) {
+                resetearCascada(['selectSeccion', 'selectGrupo', 'selectEstudiante', 'selectInstanciaEvaluacion']);
+                return;
+            }
+
+            cargarSeccionesPorMateriaPeriodo(idMateriaPeriodo);
+            resetearCascada(['selectGrupo', 'selectEstudiante', 'selectInstanciaEvaluacion']);
+        });
+
+        $('#selectSeccion').change(function() {
+            const idSeccion = $(this).val();
+            if (!idSeccion) {
+                resetearCascada(['selectGrupo', 'selectEstudiante', 'selectInstanciaEvaluacion']);
+                return;
+            }
+
+            cargarGruposPorSeccion(idSeccion);
+            cargarInstanciasEvaluacionPorSeccion(idSeccion);
+            resetearCascada(['selectGrupo', 'selectEstudiante']);
+        });
+
+        $('#selectGrupo').change(function() {
+            const idGrupo = $(this).val();
+            const idSeccion = $('#selectSeccion').val();
+            
+            if (!idGrupo || !idSeccion) {
+                resetearCascada(['selectEstudiante']);
+                return;
+            }
+
+            cargarEstudiantesPorGrupo(idGrupo, idSeccion);
+        });
+
+        $('#selectInstanciaEvaluacion').change(function() {
+            const idInstancia = $(this).val();
+            if (!idInstancia) {
+                resetearModeloEvaluacion();
+                return;
+            }
+
+            cargarModeloEvaluacion(idInstancia);
+        });
+
+        // Cálculo automático de porcentaje logrado
+        $('#inputPuntajeObtenido').on('input', function() {
+            calcularPorcentajeLogrado();
+        });
+
+        $('#selectEstado').change(function() {
+            actualizarCamposSegunEstado();
+        });
+
+        // Funciones AJAX
+        function cargarMateriasPorPeriodo(idPeriodo) {
+            $.get('/Evaluaciones/ObtenerMateriasPorPeriodo', { idPeriodo: idPeriodo })
+                .done(function(response) {
+                    if (response.success) {
+                        const select = $('#selectMateriaPeriodo');
+                        select.empty().append('<option value="">Seleccione una materia</option>');
+                        
+                        response.data.forEach(function(materia) {
+                            select.append(`<option value="${materia.idMateriaPeriodo}">${materia.nombreMateria || ''}</option>`);
+                        });
+                        
+                        select.prop('disabled', false);
+                    } else {
+                        mostrarError('Error al cargar materias: ' + response.message);
+                    }
+                })
+                .fail(function() {
+                    mostrarError('Error al conectar con el servidor');
+                });
+        }
+
+        function cargarSeccionesPorMateriaPeriodo(idMateriaPeriodo) {
+            $.get('/Evaluaciones/ObtenerSeccionesPorMateriaPeriodo', { idMateriaPeriodo: idMateriaPeriodo })
+                .done(function(response) {
+                    if (response.success) {
+                        const select = $('#selectSeccion');
+                        select.empty().append('<option value="">Seleccione una sección</option>');
+                        
+                        response.data.forEach(function(seccion) {
+                            select.append(`<option value="${seccion.idSeccion}">${seccion.codigoSeccion || ''} - ${seccion.nombreMateria || ''}</option>`);
+                        });
+                        
+                        select.prop('disabled', false);
+                    } else {
+                        mostrarError('Error al cargar secciones: ' + response.message);
+                    }
+                });
+        }
+
+        function cargarGruposPorSeccion(idSeccion) {
+            $.get('/Evaluaciones/ObtenerGruposPorSeccion', { idSeccion: idSeccion })
+                .done(function(response) {
+                    if (response.success) {
+                        const select = $('#selectGrupo');
+                        select.empty().append('<option value="">Seleccione un grupo</option>');
+                        
+                        response.data.forEach(function(grupo) {
+                            select.append(`<option value="${grupo.idGrupo}">${grupo.nombreGrupo || ''} (${grupo.codigoGrupo || ''})</option>`);
+                        });
+                        
+                        select.prop('disabled', false);
+                    }
+                });
+        }
+
+        function cargarEstudiantesPorGrupo(idGrupo, idSeccion) {
+            $.get('/Evaluaciones/ObtenerEstudiantesPorGrupo', { idGrupo: idGrupo, idSeccion: idSeccion })
+                .done(function(response) {
+                    if (response.success) {
+                        const select = $('#selectEstudiante');
+                        select.empty().append('<option value="">Seleccione un estudiante</option>');
+                        
+                        response.data.forEach(function(estudiante) {
+                            select.append(`<option value="${estudiante.idInscripcion}">${estudiante.estudianteNombre || ''} - ${estudiante.codigoInscripcion || ''}</option>`);
+                        });
+                        
+                        select.prop('disabled', false);
+                    }
+                });
+        }
+
+        function cargarInstanciasEvaluacionPorSeccion(idSeccion) {
+            $.get('/Evaluaciones/ObtenerInstanciasEvaluacionPorSeccion', { idSeccion: idSeccion })
+                .done(function(response) {
+                    if (response.success) {
+                        const select = $('#selectInstanciaEvaluacion');
+                        select.empty().append('<option value="">Seleccione una instancia de evaluación</option>');
+                        
+                        response.data.forEach(function(instancia) {
+                            select.append(`<option value="${instancia.idEvaluacionInstancia}">${instancia.codigoInstancia || ''} - ${instancia.nombreModeloEvaluacion || ''}</option>`);
+                        });
+                        
+                        select.prop('disabled', false);
+                    }
+                });
+        }
+
+        function cargarModeloEvaluacion(idInstancia) {
+            $.get('/Evaluaciones/ObtenerModeloEvaluacion', { idEvaluacionInstancia: idInstancia })
+                .done(function(response) {
+                    if (response.success) {
+                        const modelo = response.data;
+                        requiereRevisionInterna = response.requiereRevisionInterna;
+                        puntajeMaximo = modelo.calificacionMaxima || 0;
+                        
+                        $('#inputPuntajeMaximo').val(puntajeMaximo);
+                        $('#inputPuntajeObtenido').attr('max', puntajeMaximo);
+                        
+                        actualizarEstadoSegunRevision();
+                        calcularPorcentajeLogrado();
+                    } else {
+                        mostrarError('Error al cargar modelo: ' + response.message);
+                        resetearModeloEvaluacion();
+                    }
+                });
+        }
+
+        function calcularPorcentajeLogrado() {
+            const puntajeObtenido = parseFloat($('#inputPuntajeObtenido').val()) || 0;
+            
+            if (puntajeMaximo > 0) {
+                const porcentaje = (puntajeObtenido / puntajeMaximo) * 100;
+                $('#inputPorcentajeLogrado').val(porcentaje.toFixed(2));
+                
+                if (puntajeObtenido > puntajeMaximo) {
+                    $('#inputPuntajeObtenido').addClass('is-invalid');
+                    mostrarError('El puntaje obtenido no puede ser mayor al puntaje máximo (' + puntajeMaximo + ')');
+                } else {
+                    $('#inputPuntajeObtenido').removeClass('is-invalid');
+                }
+            }
+        }
+
+        function actualizarEstadoSegunRevision() {
+            const selectEstado = $('#selectEstado');
+            const helpEstado = $('#helpEstado');
+            
+            if (requiereRevisionInterna) {
+                // Buscar y seleccionar "EN REVISION" (ID 4)
+                selectEstado.find('option').each(function() {
+                    if ($(this).data('nombre') === 'EN REVISION' || $(this).val() === '4') {
+                        $(this).prop('selected', true);
+                        selectEstado.prop('disabled', true);
+                        helpEstado.text('El estado está bloqueado en "EN REVISIÓN" porque la instancia requiere revisión interna.');
+                        $('#hiddenIdEstado').val(4);
+                        actualizarCamposSegunEstado();
+                        return false;
+                    }
+                });
+            } else {
+                selectEstado.prop('disabled', false);
+                helpEstado.text('Estados disponibles: ACTIVO, PENDIENTE, EN REVISIÓN');
+            }
+        }
+
+        function actualizarCamposSegunEstado() {
+            const estadoSeleccionado = $('#selectEstado option:selected').data('nombre') || '';
+            const estaEnRevision = estadoSeleccionado === 'EN REVISION' || $('#selectEstado').val() === '4';
+            const estaActivo = estadoSeleccionado === 'ACTIVO';
+            const estaPendiente = estadoSeleccionado === 'PENDIENTE';
+
+            // Sincronizar hidden con el valor actual
+            $('#hiddenIdEstado').val($('#selectEstado').val());
+            
+            // Validador
+            if (estaEnRevision) {
+                $('#selectValidador').prop('disabled', true).val('');
+                $('#helpValidador').text('El validador está bloqueado porque el estado está EN REVISIÓN');
+            } else {
+                $('#selectValidador').prop('disabled', false);
+                $('#helpValidador').text('');
+            }
+            
+            // Fecha de validación
+            if (estaEnRevision) {
+                $('#inputFechaValidacion').prop('disabled', true).val('');
+            } else {
+                $('#inputFechaValidacion').prop('disabled', false);
+            }
+            
+            // Fecha de publicación
+            if (estaEnRevision) {
+                $('#inputFechaPublicacion').prop('disabled', true).val('');
+                $('#helpFechaPublicacion').text('La fecha de publicación será NULL si no hay validador al guardar');
+            } else if (estaActivo) {
+                const hoy = new Date().toISOString().slice(0, 16);
+                $('#inputFechaPublicacion').val(hoy);
+                $('#helpFechaPublicacion').text('Si está ACTIVO, la fecha de publicación será hoy');
+            } else if (estaPendiente) {
+                const manana = new Date();
+                manana.setDate(manana.getDate() + 1);
+                const mananaStr = manana.toISOString().slice(0, 16);
+                $('#inputFechaPublicacion').attr('min', mananaStr);
+                $('#helpFechaPublicacion').text('Si está PENDIENTE, la fecha debe ser mayor al día actual');
+            } else {
+                $('#inputFechaPublicacion').prop('disabled', false);
+                $('#helpFechaPublicacion').text('');
+            }
+        }
+
+        function resetearModeloEvaluacion() {
+            requiereRevisionInterna = false;
+            puntajeMaximo = 0;
+            $('#inputPuntajeMaximo').val('');
+            $('#inputPuntajeObtenido').val(0).attr('max', '');
+            $('#inputPorcentajeLogrado').val('');
+            $('#selectEstado').prop('disabled', false);
+            $('#helpEstado').text('');
+        }
+
+        function resetearCascada(selectores) {
+            selectores.forEach(function(selector) {
+                $('#' + selector).empty().append('<option value="">Seleccione...</option>').prop('disabled', true);
+            });
+        }
+
+        function mostrarError(mensaje) {
+            // Implementar notificación de error
+            console.error(mensaje);
+            alert(mensaje);
+        }
+
+        // Validación del formulario antes de enviar
+        $('#formEvaluacion').submit(function(e) {
+            const estadoSeleccionado = $('#selectEstado option:selected').data('nombre') || '';
+            const estaEnRevision = estadoSeleccionado === 'EN REVISION' || $('#selectEstado').val() === '4';
+            const tieneValidador = $('#selectValidador').val() && $('#selectValidador').val() !== '';
+            
+            // Si está EN REVISIÓN, establecer fecha de validación automáticamente
+            if (estaEnRevision) {
+                const ahora = new Date().toISOString().slice(0, 16);
+                $('#inputFechaValidacion').val(ahora);
+                
+                // Si no tiene validador, fecha de publicación = NULL
+                if (!tieneValidador) {
+                    $('#inputFechaPublicacion').val('');
+                }
+            }
+            
+            // Si está ACTIVO, fecha de publicación = hoy
+            if (estadoSeleccionado === 'ACTIVO') {
+                const hoy = new Date().toISOString().slice(0, 16);
+                $('#inputFechaPublicacion').val(hoy);
+            }
+            
+            // Validar que puntaje obtenido no sea mayor al máximo
+            const puntajeObtenido = parseFloat($('#inputPuntajeObtenido').val()) || 0;
+            if (puntajeMaximo > 0 && puntajeObtenido > puntajeMaximo) {
+                e.preventDefault();
+                mostrarError('El puntaje obtenido no puede ser mayor al puntaje máximo (' + puntajeMaximo + ')');
+                return false;
+            }
+            
+            // Validar fecha de publicación si está PENDIENTE
+            if (estadoSeleccionado === 'PENDIENTE') {
+                const fechaPublicacion = $('#inputFechaPublicacion').val();
+                if (fechaPublicacion) {
+                    const fecha = new Date(fechaPublicacion);
+                    const hoy = new Date();
+                    hoy.setHours(0, 0, 0, 0);
+                    
+                    if (fecha <= hoy) {
+                        e.preventDefault();
+                        mostrarError('La fecha de publicación debe ser mayor al día actual');
+                        return false;
+                    }
+                }
+            }
+        });
+    </script>
+}

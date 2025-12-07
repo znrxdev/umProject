@@ -1,0 +1,147 @@
+@model List<UmProject.Entities.ErrorSql>
+
+@{
+    ViewData["Title"] = "Auditoría";
+    ViewData["Subtitle"] = "Registro de transacciones y errores del sistema";
+    var tab = ViewBag.Tab as string ?? "errores";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Auditoría</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Auditoría del Sistema</h1>
+            <p class="page-subtitle">Registro completo de transacciones y errores del sistema</p>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="auditoriaTabs" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @(tab == "transacciones" ? "active" : "")" id="transacciones-tab" 
+           asp-action="Index" asp-route-tab="transacciones" 
+           asp-route-fechaInicio="@ViewBag.FechaInicio" 
+           asp-route-fechaFin="@ViewBag.FechaFin"
+           style="color: var(--text-primary); border: none; border-bottom: @(tab == "transacciones" ? "2px solid var(--primary-color)" : "none"); padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-list-alt me-2"></i>Transacciones
+        </a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @(tab == "errores" ? "active" : "")" id="errores-tab" 
+           asp-action="Index" asp-route-tab="errores" 
+           asp-route-fechaInicio="@ViewBag.FechaInicio" 
+           asp-route-fechaFin="@ViewBag.FechaFin"
+           style="color: var(--text-primary); border: none; border-bottom: @(tab == "errores" ? "2px solid var(--primary-color)" : "none"); padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-exclamation-triangle me-2"></i>Errores del Sistema
+        </a>
+    </li>
+</ul>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <form asp-action="Index" method="get" class="d-flex gap-3 align-items-end" style="flex-wrap: wrap;">
+        <input type="hidden" name="tab" value="errores" />
+        <div style="flex: 1; min-width: 200px;">
+            <label for="fechaInicio" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem;">Fecha Inicio</label>
+            @{
+                var fechaMaximaErrores = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            <input type="date" id="fechaInicio" name="fechaInicio" value="@(ViewBag.FechaInicio?.ToString("yyyy-MM-dd"))" class="form-control" style="border: 1px solid var(--border-color);" max="@fechaMaximaErrores">
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <label for="fechaFin" class="form-label" style="font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem;">Fecha Fin</label>
+            <input type="date" id="fechaFin" name="fechaFin" value="@(ViewBag.FechaFin?.ToString("yyyy-MM-dd"))" class="form-control" style="border: 1px solid var(--border-color);" max="@fechaMaximaErrores">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-filter me-2"></i>Filtrar
+            </button>
+        </div>
+        @if (ViewBag.FechaInicio != null || ViewBag.FechaFin != null)
+        {
+            <div>
+                <a asp-action="Index" asp-route-tab="errores" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                    <i class="fas fa-times me-2"></i>Limpiar
+                </a>
+            </div>
+        }
+    </form>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha/Hora</th>
+                        <th>Origen</th>
+                        <th>Línea</th>
+                        <th>Número Error</th>
+                        <th>Mensaje de Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var error in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight: 600; color: var(--text-primary);">#@error.IdError</div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem; color: var(--text-primary);">
+                                    @if (!string.IsNullOrEmpty(error.FechaError))
+                                    {
+                                        @DateTime.Parse(error.FechaError).ToString("dd/MM/yyyy HH:mm:ss")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500; color: var(--text-primary);">
+                                    @(error.OrigenError ?? "N/A")
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem; color: var(--text-primary);">
+                                    @(error.LineaError?.ToString() ?? "N/A")
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge inactive" style="background: #fee2e2; color: #dc2626;">
+                                    @(error.NumeroError?.ToString() ?? "N/A")
+                                </span>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.875rem; color: var(--text-primary); max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="@error.MensajeError">
+                                    @(error.MensajeError ?? "N/A")
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                <h3>No hay errores registrados</h3>
+                <p>@(ViewBag.FechaInicio != null || ViewBag.FechaFin != null ? "No se encontraron errores en el rango de fechas seleccionado." : "El sistema no ha registrado errores SQL.")</p>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,166 @@
+@model UmProject.Entities.Usuario
+
+@{
+    ViewData["Title"] = "Gestión de Roles";
+    ViewData["Subtitle"] = "Administrar roles del usuario";
+    var roles = ViewBag.Roles as List<UmProject.Entities.Rol> ?? new List<UmProject.Entities.Rol>();
+    var rolesUsuario = ViewBag.RolesUsuario as List<UmProject.Entities.UsuarioRol> ?? new List<UmProject.Entities.UsuarioRol>();
+    var idUsuario = ViewBag.IdUsuario as int? ?? 0;
+}
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0">
+            <i class="fas fa-user-shield me-2"></i>Roles del Usuario: <strong>@Model.UsuarioNombre</strong>
+        </h6>
+        <a asp-action="Index" class="btn btn-sm btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="mb-3"><i class="fas fa-plus-circle me-2"></i>Asignar Nuevo Rol</h6>
+                <form id="formUsuarioRol">
+                    <input type="hidden" id="idUsuario" value="@idUsuario" />
+                    <input type="hidden" id="idUsuarioRol" value="0" />
+                    
+                    <div class="mb-3">
+                        <label for="idRol" class="form-label">Rol</label>
+                        <select id="idRol" class="form-select" required>
+                            <option value="">Seleccione un rol...</option>
+                            @foreach (var rol in roles)
+                            {
+                                <option value="@rol.IdRol">@rol.NombreRol</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="activo" checked>
+                            <label class="form-check-label" for="activo">
+                                Activo
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary" id="btnGuardarRol">
+                            <i class="fas fa-save me-1"></i>Guardar
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnLimpiarRol">
+                            <i class="fas fa-eraser me-1"></i>Limpiar Selección
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="col-md-6">
+                <h6 class="mb-3"><i class="fas fa-list me-2"></i>Roles Asignados</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="tablaRolesUsuario">
+                        <thead>
+                            <tr>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyRolesUsuario">
+                            @foreach (var usuarioRol in rolesUsuario)
+                            {
+                                var rol = roles.FirstOrDefault(r => r.IdRol == usuarioRol.IdRol);
+                                <tr data-id-usuario-rol="@usuarioRol.IdUsuarioRol">
+                                    <td>@(rol?.NombreRol ?? "N/A")</td>
+                                    <td>
+                                        @if (usuarioRol.Activo == true)
+                                        {
+                                            <span class="badge bg-success">Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactivo</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning btnSeleccionarRol" 
+                                                data-id-usuario-rol="@usuarioRol.IdUsuarioRol"
+                                                data-id-rol="@usuarioRol.IdRol"
+                                                data-activo="@(usuarioRol.Activo == true ? "true" : "false")">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var idUsuario = $('#idUsuario').val();
+            
+            // Guardar rol
+            $('#btnGuardarRol').on('click', function() {
+                var idRol = $('#idRol').val();
+                var idUsuarioRol = $('#idUsuarioRol').val();
+                var activo = $('#activo').is(':checked');
+                
+                if (!idRol) {
+                    alert('Debe seleccionar un rol');
+                    return;
+                }
+                
+                $.ajax({
+                    url: '@Url.Action("GuardarUsuarioRol", "Usuarios")',
+                    type: 'POST',
+                    data: {
+                        idUsuario: idUsuario,
+                        idRol: idRol,
+                        idUsuarioRol: idUsuarioRol || 0,
+                        activo: activo
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            location.reload();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al guardar el rol');
+                    }
+                });
+            });
+            
+            // Limpiar selección
+            $('#btnLimpiarRol').on('click', function() {
+                $('#idUsuarioRol').val(0);
+                $('#idRol').val('');
+                $('#activo').prop('checked', true);
+            });
+            
+            // Seleccionar rol para editar
+            $('.btnSeleccionarRol').on('click', function() {
+                var idUsuarioRol = $(this).data('id-usuario-rol');
+                var idRol = $(this).data('id-rol');
+                var activo = $(this).data('activo');
+                
+                // Convertir a booleano correctamente (data-activo puede venir como string "True"/"False" o booleano)
+                var activoBool = activo === true || activo === 'True' || activo === 'true' || activo === 1;
+                
+                $('#idUsuarioRol').val(idUsuarioRol);
+                $('#idRol').val(idRol);
+                $('#activo').prop('checked', activoBool);
+            });
+        });
+    </script>
+}
+

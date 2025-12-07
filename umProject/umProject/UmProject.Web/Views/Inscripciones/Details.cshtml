@@ -1,0 +1,163 @@
+@model UmProject.Entities.Inscripcion
+
+@{
+    ViewData["Title"] = "Detalles de Inscripción";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Inscripciones" asp-action="Index">Inscripciones</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoInscripcion</h1>
+            <p class="page-subtitle">@(Model.EstudianteNombre ?? "N/A")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdInscripcion" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Detalles de la Inscripción</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 detail-label">Código:</dt>
+                        <dd class="col-sm-8 detail-value"><strong>@Model.CodigoInscripcion</strong></dd>
+
+                        <dt class="col-sm-4 detail-label">Estudiante:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.EstudianteNombre ?? "N/A")</div>
+                            <small class="text-muted">@(Model.EstudianteUsuario ?? "")</small>
+                        </dd>
+
+
+                        <dt class="col-sm-4 detail-label">Tipo de Inscripción:</dt>
+                        <dd class="col-sm-8 detail-value">@(Model.TipoInscripcionNombre ?? "N/A")</dd>
+
+                        <dt class="col-sm-4 detail-label">Estado:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @{
+                                ViewData["IdEstado"] = Model.IdEstado;
+                                ViewData["NombreEstado"] = Model.EstadoNombre;
+                            }
+                            @await Html.PartialAsync("_EstadoBadge", Model)
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información Adicional</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6 detail-label">Validador:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.ValidadorUsuario))
+                            {
+                                <div>@(Model.ValidadorUsuario ?? "")</div>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin asignar</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración y Auditoría -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-cogs me-2"></i>Configuración y Auditoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Información Adicional</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">ID Inscripción:</dt>
+                                <dd class="col-sm-7 detail-value">@Model.IdInscripcion</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Validación:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaValidacion.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-success"></i>@Model.FechaValidacion.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No validada</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Retiro:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaRetiro.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-times me-1 text-danger"></i>@Model.FechaRetiro.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No retirado</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Creación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaCreacion ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Modificación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaModificacion ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Estado del Sistema</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">Estado:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @{
+                                        ViewData["IdEstado"] = Model.IdEstado;
+                                        ViewData["NombreEstado"] = Model.EstadoNombre;
+                                    }
+                                    @await Html.PartialAsync("_EstadoBadge", Model)
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.MotivoRetiro))
+                    {
+                        <h6 class="text-primary mt-4 mb-3">Motivo de Retiro</h6>
+                        <p class="detail-value">@Model.MotivoRetiro</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

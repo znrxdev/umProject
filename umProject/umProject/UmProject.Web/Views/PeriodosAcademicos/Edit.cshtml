@@ -1,0 +1,600 @@
+@model UmProject.Entities.PeriodoAcademico
+
+@{
+    ViewData["Title"] = "Editar Período Académico";
+    ViewData["Subtitle"] = "Modificar información de período académico";
+    var activeTab = ViewBag.ActiveTab as string ?? "informacion";
+}
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="periodoTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link @(activeTab == "informacion" ? "active" : "")" id="informacion-tab" data-bs-toggle="tab" data-bs-target="#informacion" type="button" role="tab" aria-controls="informacion" aria-selected="@(activeTab == "informacion" ? "true" : "false")">
+            <i class="fas fa-info-circle me-2"></i>Información General
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link @(activeTab == "materias" ? "active" : "")" id="materias-tab" data-bs-toggle="tab" data-bs-target="#materias" type="button" role="tab" aria-controls="materias" aria-selected="@(activeTab == "materias" ? "true" : "false")">
+            <i class="fas fa-book me-2"></i>Materias
+        </button>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="periodoTabsContent">
+    <!-- Tab Información General -->
+    <div class="tab-pane fade @(activeTab == "informacion" ? "show active" : "")" id="informacion" role="tabpanel" aria-labelledby="informacion-tab">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-edit me-2"></i>Información del Período Académico</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdPeriodo" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CodigoPeriodo" class="form-label">Código de Período <span class="text-danger">*</span></label>
+                    <input asp-for="CodigoPeriodo" class="form-control" placeholder="Ej: 2024-I" maxlength="20" pattern="^\d{4}-(I|II|III)$" title="Formato: AÑO-I, AÑO-II o AÑO-III (ejemplo: 2024-I)" />
+                    <small class="form-text text-muted">Formato: AÑO-I, AÑO-II o AÑO-III (ejemplo: 2024-I)</small>
+                    <span asp-validation-for="CodigoPeriodo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="NombrePeriodo" class="form-label">Nombre del Período <span class="text-danger">*</span></label>
+                    <input asp-for="NombrePeriodo" class="form-control" placeholder="Ej: Primer Cuatrimestre 2024" maxlength="100" />
+                    <span asp-validation-for="NombrePeriodo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdTipoPeriodo" class="form-label">Tipo de Período</label>
+                    <select asp-for="IdTipoPeriodo" class="form-select">
+                        <option value="">Seleccione un tipo</option>
+                        @if (ViewBag.TiposPeriodo != null)
+                        {
+                            @foreach (var tipo in ViewBag.TiposPeriodo as List<UmProject.Entities.Catalogo>)
+                            {
+                                <option value="@tipo.IdCatalogo" selected="@(Model.IdTipoPeriodo == tipo.IdCatalogo)">@tipo.NombreCatalogo</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="IdTipoPeriodo" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                    <select asp-for="IdEstado" class="form-select" required id="IdEstado">
+                        <option value="">Seleccione un estado</option>
+                        @if (ViewBag.Estados != null)
+                        {
+                            @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                            {
+                                <option value="@estado.IdEstado">@estado.NombreEstado</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="IdEstado" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaInicio" class="form-label">Fecha de Inicio <span class="text-danger">*</span></label>
+                    <input asp-for="FechaInicio" type="date" class="form-control" id="FechaInicio" readonly style="background-color: #e9ecef; cursor: not-allowed;" />
+                    <small class="form-text text-muted">Las fechas no pueden ser modificadas</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaFin" class="form-label">Fecha de Fin <span class="text-danger">*</span></label>
+                    <input asp-for="FechaFin" type="date" class="form-control" id="FechaFin" readonly style="background-color: #e9ecef; cursor: not-allowed;" />
+                    <small class="form-text text-muted">Las fechas no pueden ser modificadas</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaCierreCalificaciones" class="form-label">Fecha Cierre Calificaciones</label>
+                    <input asp-for="FechaCierreCalificaciones" type="date" class="form-control" id="FechaCierreCalificaciones" readonly style="background-color: #e9ecef; cursor: not-allowed;" />
+                    <small class="form-text text-muted">Las fechas no pueden ser modificadas</small>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" name="EsPeriodoActual" id="EsPeriodoActual" value="true" @(Model.EsPeriodoActual == true ? "checked" : "") />
+                        <input type="hidden" name="EsPeriodoActual" value="false" />
+                        <label class="form-check-label" for="EsPeriodoActual">Es Período Actual</label>
+                    </div>
+                    <small class="form-text text-muted">Si el estado es ACTIVO, este campo debe estar activado. Solo puede haber un período con este campo activado.</small>
+                    <span asp-validation-for="EsPeriodoActual" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="CodigoIntegracion" class="form-label">Código de Integración</label>
+                    <input asp-for="CodigoIntegracion" class="form-control" placeholder="Ej: PER-2024-I" maxlength="30" />
+                    <span asp-validation-for="CodigoIntegracion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="3" maxlength="255" placeholder="Observaciones adicionales sobre el período académico"></textarea>
+                    <span asp-validation-for="Observaciones" class="text-danger"></span>
+                </div>
+            </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Guardar Cambios
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tab Materias -->
+    <div class="tab-pane fade @(activeTab == "materias" ? "show active" : "")" id="materias" role="tabpanel" aria-labelledby="materias-tab">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-title-section">
+                <div>
+                    <h1 class="page-title">Materias del Período</h1>
+                    <p class="page-subtitle">Gestione las materias asignadas a este período académico</p>
+                </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarMateria" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Agregar Materia
+                </button>
+            </div>
+        </div>
+        
+        <!-- Content Container -->
+        <div class="content-container">
+            <div class="modern-table-container" id="materiasList">
+                <p class="text-muted">Cargando materias...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar materia -->
+<div class="modal fade" id="modalAgregarMateria" tabindex="-1" aria-labelledby="modalAgregarMateriaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarMateriaLabel">
+                    <i class="fas fa-book me-2"></i>Agregar Materia al Período
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAgregarMateria">
+                    <input type="hidden" id="IdPeriodoAcademico" value="@Model.IdPeriodo" />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="IdMateria" class="form-label">Materia <span class="text-danger">*</span></label>
+                            <select id="IdMateria" class="form-select" required>
+                                <option value="">Seleccione una materia</option>
+                            </select>
+                            <span class="text-danger" id="errorIdMateria"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="CodigoPlan" class="form-label">Código de Plan</label>
+                            <input type="text" id="CodigoPlan" class="form-control" readonly />
+                            <small class="form-text text-muted">Se genera automáticamente como PLAN-AÑO ACTUAL</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="PorcentajeAsistenciaMinima" class="form-label">% Asistencia Mínima <span class="text-danger">*</span></label>
+                            <input type="number" id="PorcentajeAsistenciaMinima" class="form-control" min="0" max="100" step="0.01" value="75.00" required />
+                            <small class="form-text text-muted">Valor por defecto: 75%. Rango permitido: 0% - 100%. Mínimo requerido para guardar: 50%</small>
+                            <span class="text-danger" id="errorPorcentajeAsistencia"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="ObservacionesMateria" class="form-label">Observaciones</label>
+                            <textarea id="ObservacionesMateria" class="form-control" rows="3" maxlength="255"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnGuardarMateria">
+                    <i class="fas fa-save me-1"></i>Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            // Eliminar cualquier atributo min/max de los campos de fecha para evitar validaciones HTML5
+            $('#FechaInicio').removeAttr('min').removeAttr('max');
+            $('#FechaFin').removeAttr('min').removeAttr('max');
+            $('#FechaCierreCalificaciones').removeAttr('min').removeAttr('max');
+            
+            // Asegurar que no se agreguen atributos min/max dinámicamente
+            $('#FechaInicio, #FechaFin, #FechaCierreCalificaciones').on('focus', function() {
+                $(this).removeAttr('min').removeAttr('max');
+            });
+            
+            // Validar formato del código de período
+            $('#CodigoPeriodo').on('blur', function() {
+                var codigo = $(this).val().trim().toUpperCase();
+                var pattern = /^(\d{4})-(I|II|III)$/;
+                
+                if (codigo && !pattern.test(codigo)) {
+                    $(this).addClass('is-invalid');
+                    if ($(this).next('.text-danger').length === 0) {
+                        $(this).after('<span class="text-danger">El código debe tener el formato: AÑO-I, AÑO-II o AÑO-III (ejemplo: 2024-I)</span>');
+                    }
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).next('.text-danger').remove();
+                    
+                    // Convertir a mayúsculas si es válido
+                    if (pattern.test(codigo)) {
+                        $(this).val(codigo);
+                    }
+                }
+            });
+
+            // Controlar Es_Periodo_Actual según el estado
+            // Estados permitidos: PENDIENTE (3), ACTIVO (1), INACTIVO (2)
+            $('#IdEstado').on('change', function() {
+                var estadoId = parseInt($(this).val());
+                var esPeriodoActualCheckbox = $('#EsPeriodoActual');
+                
+                // Validar que se haya seleccionado un estado válido
+                if (!estadoId || estadoId === 0 || estadoId === '') {
+                    // Si no hay estado seleccionado, resetear los checkboxes
+                    esPeriodoActualCheckbox.prop('checked', false).prop('disabled', false);
+                    $('input[name="EsPeriodoActual"][type="hidden"]').val('false');
+                    return;
+                }
+                
+                // Solo permitir estados: PENDIENTE (3), ACTIVO (1), INACTIVO (2)
+                if (![1, 2, 3].includes(estadoId)) {
+                    alert('Al actualizar un período académico solo se permiten los estados: PENDIENTE, ACTIVO o INACTIVO (FINALIZADO)');
+                    $(this).val('');
+                    return;
+                }
+                
+                // Si el estado es ACTIVO (1)
+                if (estadoId === 1) {
+                    // Es_Periodo_Actual debe estar activado y readonly
+                    esPeriodoActualCheckbox.prop('checked', true).prop('disabled', true);
+                    $('input[name="EsPeriodoActual"][type="hidden"]').val('true');
+                }
+                // Si el estado es PENDIENTE (3)
+                else if (estadoId === 3) {
+                    // Es_Periodo_Actual debe estar desactivado
+                    esPeriodoActualCheckbox.prop('checked', false).prop('disabled', false);
+                    $('input[name="EsPeriodoActual"][type="hidden"]').val('false');
+                }
+                // Si el estado es INACTIVO (2)
+                else if (estadoId === 2) {
+                    // Es_Periodo_Actual debe estar desactivado
+                    esPeriodoActualCheckbox.prop('checked', false).prop('disabled', false);
+                    $('input[name="EsPeriodoActual"][type="hidden"]').val('false');
+                }
+            });
+
+            // Validación de fechas solo al guardar (coherencia básica)
+
+            // Validar antes de enviar el formulario
+            $('form').on('submit', function(e) {
+                var codigo = $('#CodigoPeriodo').val().trim().toUpperCase();
+                var pattern = /^(\d{4})-(I|II|III)$/;
+                
+                if (!pattern.test(codigo)) {
+                    e.preventDefault();
+                    alert('El código del período debe tener el formato: AÑO-I, AÑO-II o AÑO-III (ejemplo: 2024-I)');
+                    $('#CodigoPeriodo').focus();
+                    return false;
+                }
+
+                var estadoId = parseInt($('#IdEstado').val());
+                if (estadoId !== 0 && estadoId !== '' && ![1, 2, 3].includes(estadoId)) {
+                    e.preventDefault();
+                    alert('Al actualizar un período académico solo se permiten los estados: PENDIENTE, ACTIVO o INACTIVO (FINALIZADO)');
+                    return false;
+                }
+
+                // Validar que se haya seleccionado un estado
+                if (!estadoId || estadoId === 0 || estadoId === '') {
+                    e.preventDefault();
+                    alert('Debe seleccionar un estado');
+                    $('#IdEstado').focus();
+                    return false;
+                }
+                
+                // Validar que el estado sea válido
+                if (![1, 2, 3].includes(estadoId)) {
+                    e.preventDefault();
+                    alert('Al actualizar un período académico solo se permiten los estados: PENDIENTE, ACTIVO o INACTIVO (FINALIZADO)');
+                    return false;
+                }
+                
+                // Si el estado es ACTIVO, Es_Periodo_Actual debe estar activado
+                if (estadoId === 1 && !$('#EsPeriodoActual').is(':checked')) {
+                    e.preventDefault();
+                    alert('Si el estado es ACTIVO, el campo "Es Período Actual" debe estar activado');
+                    return false;
+                }
+                
+            });
+
+            // ============================================
+            // Gestión de Materias del Período
+            // ============================================
+            var idPeriodo = @Model.IdPeriodo;
+            
+            // Cargar materias del período al abrir el tab
+            $('#materias-tab').on('shown.bs.tab', function() {
+                cargarMateriasPeriodo();
+            });
+            
+            // Si el tab de materias está activo al cargar la página, cargar las materias
+            if ('@activeTab' === 'materias') {
+                cargarMateriasPeriodo();
+            }
+            
+            // Función para cargar las materias asignadas al período
+            function cargarMateriasPeriodo() {
+                $('#materiasList').html('<p class="text-muted"><i class="fas fa-spinner fa-spin me-2"></i>Cargando materias...</p>');
+                
+                $.ajax({
+                    url: '@Url.Action("GetMateriasPeriodo", "PeriodosAcademicos")',
+                    type: 'GET',
+                    data: { idPeriodo: idPeriodo },
+                    success: function(response) {
+                        if (response.success) {
+                            mostrarMaterias(response.materias);
+                        } else {
+                            $('#materiasList').html('<div class="alert alert-danger">' + response.message + '</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#materiasList').html('<div class="alert alert-danger">Error al cargar las materias del período</div>');
+                    }
+                });
+            }
+            
+            // Función para mostrar las materias en una tabla con diseño modern-table
+            function mostrarMaterias(materias) {
+                if (!materias || materias.length === 0) {
+                    $('#materiasList').html('<div class="empty-state"><i class="fas fa-book fa-3x mb-3 text-muted"></i><h5>No hay materias asignadas</h5><p class="text-muted">Agregue materias a este período académico usando el botón "Agregar Materia"</p></div>');
+                    return;
+                }
+                
+                var html = '<table class="modern-table"><thead><tr><th>Código</th><th>Nombre</th><th>Plan</th><th>% Asistencia Mínima</th><th>Estado</th><th style="text-align: right;">Acciones</th></tr></thead><tbody>';
+                
+                materias.forEach(function(materia) {
+                    html += '<tr>';
+                    html += '<td><div style="font-size: 0.875rem; color: var(--text-primary); font-weight: 600;">' + (materia.codigoMateria || 'N/A') + '</div></td>';
+                    html += '<td><div style="font-size: 0.875rem; color: var(--text-primary);">' + (materia.nombreMateria || 'N/A') + '</div></td>';
+                    html += '<td><div style="font-size: 0.875rem; color: var(--text-primary);">' + (materia.codigoPlan || 'N/A') + '</div></td>';
+                    html += '<td><div style="font-size: 0.875rem; color: var(--text-primary);">' + (materia.porcentajeAsistenciaMinima != null ? materia.porcentajeAsistenciaMinima + '%' : 'N/A') + '</div></td>';
+                    html += '<td>';
+                    if (materia.activo) {
+                        html += '<span class="status-badge active"><i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Activo</span>';
+                    } else {
+                        html += '<span class="status-badge inactive"><i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Inactivo</span>';
+                    }
+                    html += '</td>';
+                    html += '<td style="text-align: right;">';
+                    html += '<div class="form-check form-switch d-inline-block">';
+                    html += '<input class="form-check-input switch-activar-materia" type="checkbox" role="switch" id="switchMateria' + materia.idMateriaPeriodo + '" data-id-materia-periodo="' + materia.idMateriaPeriodo + '" ' + (materia.activo ? 'checked' : '') + '>';
+                    html += '<label class="form-check-label" for="switchMateria' + materia.idMateriaPeriodo + '" style="display: none;"></label>';
+                    html += '</div>';
+                    html += '</td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table>';
+                $('#materiasList').html(html);
+                
+                // Adjuntar event handlers a los switches
+                $('.switch-activar-materia').off('change').on('change', function() {
+                    var idMateriaPeriodo = $(this).data('id-materia-periodo');
+                    var activo = $(this).is(':checked');
+                    actualizarEstadoMateria(idMateriaPeriodo, activo);
+                });
+            }
+            
+            // Función para actualizar el estado activo/inactivo de una materia
+            function actualizarEstadoMateria(idMateriaPeriodo, activo) {
+                $.ajax({
+                    url: '@Url.Action("ActualizarEstadoMateriaPeriodo", "PeriodosAcademicos")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        IdMateriaPeriodo: idMateriaPeriodo,
+                        Activo: activo
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            // Recargar la tabla para reflejar el cambio
+                            cargarMateriasPeriodo();
+                            // Mostrar notificación de éxito
+                            if (typeof mostrarToast !== 'undefined') {
+                                mostrarToast('success', response.message || 'Estado actualizado exitosamente');
+                            } else {
+                                console.log(response.message || 'Estado actualizado exitosamente');
+                            }
+                        } else {
+                            // Revertir el switch si hubo error
+                            $('#switchMateria' + idMateriaPeriodo).prop('checked', !activo);
+                            alert('Error: ' + (response.message || 'No se pudo actualizar el estado'));
+                        }
+                    },
+                    error: function() {
+                        // Revertir el switch si hubo error
+                        $('#switchMateria' + idMateriaPeriodo).prop('checked', !activo);
+                        alert('Error al actualizar el estado de la materia');
+                    }
+                });
+            }
+            
+            // Manejar el submit del formulario de agregar materia
+            $('#btnGuardarMateria').on('click', function() {
+                var idMateriaVal = $('#IdMateria').val();
+                var porcentajeAsistenciaVal = $('#PorcentajeAsistenciaMinima').val();
+                
+                // Validar porcentaje de asistencia mínima
+                if (!porcentajeAsistenciaVal || porcentajeAsistenciaVal === '') {
+                    $('#errorPorcentajeAsistencia').text('Debe ingresar un porcentaje de asistencia mínima');
+                    return;
+                }
+                
+                var porcentajeNum = parseFloat(porcentajeAsistenciaVal);
+                
+                if (porcentajeNum < 0 || porcentajeNum > 100) {
+                    $('#errorPorcentajeAsistencia').text('El porcentaje de asistencia mínima debe estar entre 0 y 100');
+                    return;
+                }
+                
+                if (porcentajeNum < 50) {
+                    $('#errorPorcentajeAsistencia').text('El porcentaje de asistencia mínima debe ser al menos 50%');
+                    return;
+                }
+                
+                // Limpiar error de porcentaje
+                $('#errorPorcentajeAsistencia').text('');
+                
+                var materiaPeriodo = {
+                    IdPeriodoAcademico: parseInt(idPeriodo),
+                    IdMateria: idMateriaVal ? parseInt(idMateriaVal) : null,
+                    CodigoPlan: $('#CodigoPlan').val() || '', // Se genera automáticamente en el servidor
+                    Modalidad: 'Hibrida', // Siempre enviar como Hibrida
+                    HorasTeoricas: 0, // Siempre 0
+                    HorasPracticas: 0, // Siempre 0
+                    PorcentajeAsistenciaMinima: porcentajeAsistenciaVal ? parseFloat(porcentajeAsistenciaVal) : 75.00,
+                    Observaciones: $('#ObservacionesMateria').val() || null
+                };
+                
+                // Validaciones
+                if (!materiaPeriodo.IdMateria) {
+                    $('#errorIdMateria').text('Debe seleccionar una materia');
+                    return;
+                }
+                
+                // Limpiar errores
+                $('#errorIdMateria').text('');
+                $('#errorPorcentajeAsistencia').text('');
+                
+                // Enviar datos
+                $.ajax({
+                    url: '@Url.Action("AgregarMateriaPeriodo", "PeriodosAcademicos")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(materiaPeriodo),
+                    success: function(response) {
+                        if (response.success) {
+                            $('#modalAgregarMateria').modal('hide');
+                            $('#formAgregarMateria')[0].reset();
+                            cargarMateriasPeriodo();
+                            // Mostrar mensaje de éxito
+                            alert('Materia agregada exitosamente');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al agregar la materia al período');
+                    }
+                });
+            });
+            
+            // Validación en tiempo real del porcentaje de asistencia mínima
+            $('#PorcentajeAsistenciaMinima').on('blur', function() {
+                var valor = parseFloat($(this).val());
+                var errorSpan = $('#errorPorcentajeAsistencia');
+                
+                if (isNaN(valor)) {
+                    errorSpan.text('Debe ingresar un valor numérico');
+                    $(this).addClass('is-invalid');
+                    return;
+                }
+                
+                if (valor < 0 || valor > 100) {
+                    errorSpan.text('El porcentaje debe estar entre 0 y 100');
+                    $(this).addClass('is-invalid');
+                    return;
+                }
+                
+                if (valor < 50) {
+                    errorSpan.text('El porcentaje de asistencia mínima debe ser al menos 50%');
+                    $(this).addClass('is-invalid');
+                    return;
+                }
+                
+                errorSpan.text('');
+                $(this).removeClass('is-invalid');
+            });
+            
+            // Cargar materias disponibles al abrir el modal y establecer Codigo_Plan
+            $('#modalAgregarMateria').on('show.bs.modal', function() {
+                cargarMateriasDisponibles();
+                // Generar Codigo_Plan automáticamente
+                var anioActual = new Date().getFullYear();
+                $('#CodigoPlan').val('PLAN-' + anioActual);
+                // Limpiar errores al abrir el modal
+                $('#errorPorcentajeAsistencia').text('');
+                $('#errorIdMateria').text('');
+                $('#PorcentajeAsistenciaMinima').removeClass('is-invalid');
+                $('#IdMateria').val('').removeClass('is-invalid');
+            });
+            
+            // Función para cargar materias disponibles (excluyendo las ya asignadas al período)
+            function cargarMateriasDisponibles() {
+                $.ajax({
+                    url: '@Url.Action("GetMateriasDisponibles", "PeriodosAcademicos")',
+                    type: 'GET',
+                    data: { idPeriodo: idPeriodo },
+                    success: function(response) {
+                        if (response.success) {
+                            var select = $('#IdMateria');
+                            select.empty();
+                            select.append('<option value="">Seleccione una materia</option>');
+                            
+                            if (response.materias && response.materias.length > 0) {
+                                response.materias.forEach(function(materia) {
+                                    select.append('<option value="' + materia.idMateria + '">' + materia.codigoMateria + ' - ' + materia.nombreMateria + '</option>');
+                                });
+                            } else {
+                                select.append('<option value="" disabled>No hay materias disponibles para agregar</option>');
+                            }
+                        } else {
+                            var select = $('#IdMateria');
+                            select.empty();
+                            select.append('<option value="">Error al cargar materias</option>');
+                        }
+                    },
+                    error: function() {
+                        console.error('Error al cargar materias disponibles');
+                        var select = $('#IdMateria');
+                        select.empty();
+                        select.append('<option value="">Error al cargar materias</option>');
+                    }
+                });
+            }
+        });
+    </script>
+}
+

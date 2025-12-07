@@ -1,0 +1,140 @@
+@model UmProject.Entities.Persona
+@{
+    ViewData["Title"] = "Nueva Persona";
+    ViewData["Subtitle"] = "Registrar nueva persona";
+    var tiposDocumento = ViewBag.TiposDocumento as List<UmProject.Entities.Catalogo> ?? new List<UmProject.Entities.Catalogo>();
+    var generos = ViewBag.Generos as List<UmProject.Entities.Catalogo> ?? new List<UmProject.Entities.Catalogo>();
+    var nacionalidades = ViewBag.Nacionalidades as List<UmProject.Entities.Catalogo> ?? new List<UmProject.Entities.Catalogo>();
+    var estadosCiviles = ViewBag.EstadosCiviles as List<UmProject.Entities.Catalogo> ?? new List<UmProject.Entities.Catalogo>();
+}
+
+<div class="card">
+    <div class="card-header">
+        <h6 class="mb-0"><i class="fas fa-user-plus me-2"></i>Información Personal</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            @if (ViewBag.CrearUsuario == true)
+            {
+                <input type="hidden" name="crearUsuario" value="true" />
+            }
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <h6 class="mb-3 text-primary">Datos Personales</h6>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PrimerNombre" class="form-label">Primer Nombre <span class="text-danger">*</span></label>
+                    <input asp-for="PrimerNombre" class="form-control" placeholder="Primer nombre" />
+                    <span asp-validation-for="PrimerNombre" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="SegundoNombre" class="form-label">Segundo Nombre</label>
+                    <input asp-for="SegundoNombre" class="form-control" placeholder="Segundo nombre (opcional)" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PrimerApellido" class="form-label">Primer Apellido <span class="text-danger">*</span></label>
+                    <input asp-for="PrimerApellido" class="form-control" placeholder="Primer apellido" />
+                    <span asp-validation-for="PrimerApellido" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="SegundoApellido" class="form-label">Segundo Apellido</label>
+                    <input asp-for="SegundoApellido" class="form-control" placeholder="Segundo apellido (opcional)" />
+                </div>
+            </div>
+
+            <h6 class="mb-3 mt-4 text-primary">Documentación</h6>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdTipoDocumento" class="form-label">Tipo de Documento <span class="text-danger">*</span></label>
+                    <select asp-for="IdTipoDocumento" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        @foreach (var tipo in tiposDocumento)
+                        {
+                            <option value="@tipo.IdCatalogo">@tipo.NombreCatalogo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdTipoDocumento" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ValorDocumento" class="form-label">Número de Documento <span class="text-danger">*</span></label>
+                    <input asp-for="ValorDocumento" class="form-control" placeholder="Número de documento" />
+                    <span asp-validation-for="ValorDocumento" class="text-danger"></span>
+                </div>
+            </div>
+
+            <h6 class="mb-3 mt-4 text-primary">Información Adicional</h6>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento <span class="text-danger">*</span></label>
+                    @{
+                        var fechaMaximaNacimiento = DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd");
+                    }
+                    <input asp-for="FechaNacimiento" type="date" class="form-control" max="@fechaMaximaNacimiento" />
+                    <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="IdGeneroPersona" class="form-label">Género <span class="text-danger">*</span></label>
+                    <select asp-for="IdGeneroPersona" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        @foreach (var genero in generos)
+                        {
+                            <option value="@genero.IdCatalogo">@genero.NombreCatalogo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdGeneroPersona" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="IdNacionalidad" class="form-label">Nacionalidad <span class="text-danger">*</span></label>
+                    <select asp-for="IdNacionalidad" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        @foreach (var nacionalidad in nacionalidades)
+                        {
+                            <option value="@nacionalidad.IdCatalogo">@nacionalidad.NombreCatalogo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdNacionalidad" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="IdEstadoCivil" class="form-label">Estado Civil <span class="text-danger">*</span></label>
+                    <select asp-for="IdEstadoCivil" class="form-select" required>
+                        <option value="">Seleccione...</option>
+                        @foreach (var estadoCivil in estadosCiviles)
+                        {
+                            <option value="@estadoCivil.IdCatalogo">@estadoCivil.NombreCatalogo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="IdEstadoCivil" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Guardar
+                </button>
+                @if (ViewBag.CrearUsuario == true)
+                {
+                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

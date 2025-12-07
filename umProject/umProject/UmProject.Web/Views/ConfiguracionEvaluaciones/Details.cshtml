@@ -1,0 +1,219 @@
+@model UmProject.Entities.EvaluacionInstancia
+
+@{
+    ViewData["Title"] = "Detalles de Instancia de Evaluación";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="ConfiguracionEvaluaciones" asp-action="Index">Configuración de Evaluaciones</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoInstancia</h1>
+            <p class="page-subtitle">@(Model.NombreModeloEvaluacion ?? "Instancia de Evaluación")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.IdEvaluacionInstancia" class="btn btn-warning" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-edit me-2"></i>Editar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-arrow-left me-2"></i>Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información Principal</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Código de Instancia</label>
+                                <div class="info-value">
+                                    <strong style="font-size: 1.125rem; color: var(--primary-color);">@Model.CodigoInstancia</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Sección</label>
+                                <div class="info-value">
+                                    <strong>@(Model.NombreMateria ?? "N/A")</strong>
+                                    @if (!string.IsNullOrEmpty(Model.CodigoSeccion))
+                                    {
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary);">@Model.CodigoSeccion</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Modelo de Evaluación</label>
+                                <div class="info-value">
+                                    <strong>@(Model.NombreModeloEvaluacion ?? "N/A")</strong>
+                                    @if (!string.IsNullOrEmpty(Model.CodigoModelo))
+                                    {
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary);">@Model.CodigoModelo</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Período Académico</label>
+                                <div class="info-value">
+                                    @(Model.NombrePeriodo ?? "N/A")
+                                    @if (!string.IsNullOrEmpty(Model.CodigoPeriodo))
+                                    {
+                                        <div style="font-size: 0.875rem; color: var(--text-secondary);">@Model.CodigoPeriodo</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Fecha Programada</label>
+                                <div class="info-value">@(Model.FechaProgramada?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Fecha Límite</label>
+                                <div class="info-value">@(Model.FechaLimite?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="info-label">Estado</label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.NombreEstado))
+                                    {
+                                        <span class="badge bg-secondary">@Model.NombreEstado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ObservacionesRevision))
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Observaciones de Revisión</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" style="color: var(--text-primary); line-height: 1.6;">@Model.ObservacionesRevision</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info me-2"></i>Información Adicional</h6>
+                </div>
+                <div class="card-body">
+                    <div class="info-item mb-3">
+                        <label class="info-label">ID de la Instancia</label>
+                        <div class="info-value">
+                            <span class="badge bg-secondary">#@Model.IdEvaluacionInstancia</span>
+                        </div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <label class="info-label">Requiere Revisión Interna</label>
+                        <div class="info-value">
+                            @if (Model.RequiereRevisionInterna)
+                            {
+                                <span class="badge bg-success">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <label class="info-label">Número de Versión</label>
+                        <div class="info-value">@Model.NumeroVersion</div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <label class="info-label">Calificación Máxima</label>
+                        <div class="info-value">@Model.CalificacionMaxima.ToString("N2")</div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <label class="info-label">Fecha de Creación</label>
+                        <div class="info-value" style="font-size: 0.875rem;">
+                            @(Model.FechaCreacion ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Última Modificación</label>
+                        <div class="info-value" style="font-size: 0.875rem;">
+                            @(Model.FechaModificacion ?? "N/A")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .info-item {
+        margin-bottom: 1rem;
+    }
+
+    .info-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+        margin-bottom: 0.375rem;
+    }
+
+    .info-value {
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .card {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+    }
+</style>
+

@@ -1,0 +1,15 @@
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\bin\Release\net8.0\UmProject.Data.deps.json
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\bin\Release\net8.0\UmProject.Data.dll
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\bin\Release\net8.0\UmProject.Data.pdb
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\bin\Release\net8.0\UmProject.Entities.dll
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\bin\Release\net8.0\UmProject.Entities.pdb
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.csproj.AssemblyReference.cache
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.AssemblyInfoInputs.cache
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.AssemblyInfo.cs
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.csproj.CoreCompileInputs.cache
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProjec.DD8A4F6D.Up2Date
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.dll
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\refint\UmProject.Data.dll
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\UmProject.Data.pdb
+C:\Users\justi\Desktop\umProject\umProject\UmProject.Data\obj\Release\net8.0\ref\UmProject.Data.dll

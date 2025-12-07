@@ -1,0 +1,438 @@
+@model UmProject.Entities.EstudianteDetalle
+
+@{
+    ViewData["Title"] = "Detalles del Estudiante";
+    ViewData["Subtitle"] = "Información completa del estudiante";
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show m-3" role="alert" style="border-radius: 8px;">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Estudiantes" asp-action="Index">Estudiantes</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.NombreCompleto</h1>
+            <p class="page-subtitle">@Model.Usuario - @Model.ValorDocumento</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="estudianteTabs" role="tablist" style="border-bottom: 2px solid var(--border-color);">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" 
+                style="color: var(--text-primary); border: none; border-bottom: 2px solid var(--primary-color); padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-info-circle me-2"></i>Información General
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="inscripciones-tab" data-bs-toggle="tab" data-bs-target="#inscripciones" type="button" role="tab"
+                onclick="cargarInscripciones(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-clipboard-list me-2"></i>Inscripciones
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="grupos-tab" data-bs-toggle="tab" data-bs-target="#grupos" type="button" role="tab"
+                onclick="cargarGrupos(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-users-cog me-2"></i>Grupos
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="secciones-tab" data-bs-toggle="tab" data-bs-target="#secciones" type="button" role="tab"
+                onclick="cargarSecciones(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-layer-group me-2"></i>Secciones
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="periodos-tab" data-bs-toggle="tab" data-bs-target="#periodos" type="button" role="tab"
+                onclick="cargarPeriodos(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-calendar-alt me-2"></i>Períodos
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="evaluaciones-tab" data-bs-toggle="tab" data-bs-target="#evaluaciones" type="button" role="tab"
+                onclick="cargarEvaluaciones(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-clipboard-check me-2"></i>Evaluaciones
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="desempeno-tab" data-bs-toggle="tab" data-bs-target="#desempeno" type="button" role="tab"
+                onclick="cargarDesempeno(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-chart-line me-2"></i>Desempeño
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="sanciones-tab" data-bs-toggle="tab" data-bs-target="#sanciones" type="button" role="tab"
+                onclick="cargarSanciones(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-exclamation-triangle me-2"></i>Sanciones
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="becas-tab" data-bs-toggle="tab" data-bs-target="#becas" type="button" role="tab"
+                onclick="cargarSolicitudesBecas(@Model.IdUsuario)"
+                style="color: var(--text-primary); border: none; padding: 0.75rem 1.5rem; font-weight: 500;">
+            <i class="fas fa-hand-holding-usd me-2"></i>Solicitudes de Becas
+        </button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="estudianteTabContent">
+    <!-- Información General -->
+    <div class="tab-pane fade show active" id="general" role="tabpanel">
+        <div class="content-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-user me-2"></i>Datos Personales</h6>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nombre Completo:</dt>
+                                <dd class="col-sm-8">@Model.NombreCompleto</dd>
+                                
+                                <dt class="col-sm-4">Usuario:</dt>
+                                <dd class="col-sm-8">@Model.Usuario</dd>
+                                
+                                <dt class="col-sm-4">Documento:</dt>
+                                <dd class="col-sm-8">@Model.ValorDocumento</dd>
+                                
+                                <dt class="col-sm-4">Fecha de Nacimiento:</dt>
+                                <dd class="col-sm-8">@(Model.FechaNacimiento?.ToString("dd/MM/yyyy") ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-4">Estado:</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.EstadoUsuario != null && Model.EstadoUsuario.Trim().Equals("ACTIVO", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="status-badge active">
+                                            <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #10b981;"></i>@Model.EstadoUsuario
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge inactive">
+                                            <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem; color: #ef4444;"></i>@Model.EstadoUsuario
+                                        </span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Resumen Académico</h6>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-6">Inscripciones Activas:</dt>
+                                <dd class="col-sm-6"><span class="badge bg-primary">@Model.TotalInscripcionesActivas</span></dd>
+                                
+                                <dt class="col-sm-6">Grupos:</dt>
+                                <dd class="col-sm-6"><span class="badge bg-info">@Model.TotalGrupos</span></dd>
+                                
+                                <dt class="col-sm-6">Evaluaciones:</dt>
+                                <dd class="col-sm-6"><span class="badge bg-success">@Model.TotalEvaluaciones</span></dd>
+                                
+                                <dt class="col-sm-6">Promedio General:</dt>
+                                <dd class="col-sm-6">
+                                    @if (Model.PromedioGeneral.HasValue)
+                                    {
+                                        <span class="badge @(Model.PromedioGeneral >= 60 ? "bg-success" : "bg-danger")">
+                                            @Model.PromedioGeneral.Value.ToString("F2")%
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">N/A</span>
+                                    }
+                                </dd>
+                                
+                                <dt class="col-sm-6">Sanciones Activas:</dt>
+                                <dd class="col-sm-6">
+                                    @if (Model.TotalSancionesActivas > 0)
+                                    {
+                                        <span class="badge bg-danger">@Model.TotalSancionesActivas</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">0</span>
+                                    }
+                                </dd>
+                                
+                                <dt class="col-sm-6">Período Actual:</dt>
+                                <dd class="col-sm-6">@(Model.PeriodoActual ?? "N/A")</dd>
+                                
+                                <dt class="col-sm-6">Última Sesión:</dt>
+                                <dd class="col-sm-6">@(Model.UltimaSesion?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inscripciones -->
+    <div class="tab-pane fade" id="inscripciones" role="tabpanel">
+        <div class="content-container" id="inscripcionesContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grupos -->
+    <div class="tab-pane fade" id="grupos" role="tabpanel">
+        <div class="content-container" id="gruposContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secciones -->
+    <div class="tab-pane fade" id="secciones" role="tabpanel">
+        <div class="content-container" id="seccionesContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Períodos -->
+    <div class="tab-pane fade" id="periodos" role="tabpanel">
+        <div class="content-container" id="periodosContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evaluaciones -->
+    <div class="tab-pane fade" id="evaluaciones" role="tabpanel">
+        <div class="content-container" id="evaluacionesContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desempeño -->
+    <div class="tab-pane fade" id="desempeno" role="tabpanel">
+        <div class="content-container" id="desempenoContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sanciones -->
+    <div class="tab-pane fade" id="sanciones" role="tabpanel">
+        <div class="content-container" id="sancionesContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solicitudes de Becas -->
+    <div class="tab-pane fade" id="becas" role="tabpanel">
+        <div class="content-container" id="becasContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function cargarInscripciones(idUsuario) {
+            if ($('#inscripcionesContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Inscripciones", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#inscripcionesContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#inscripcionesContainer').html('<div class="alert alert-danger">Error al cargar inscripciones</div>');
+                }
+            });
+        }
+
+        function cargarGrupos(idUsuario) {
+            if ($('#gruposContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Grupos", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#gruposContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#gruposContainer').html('<div class="alert alert-danger">Error al cargar grupos</div>');
+                }
+            });
+        }
+
+        function cargarSecciones(idUsuario) {
+            if ($('#seccionesContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Secciones", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#seccionesContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#seccionesContainer').html('<div class="alert alert-danger">Error al cargar secciones</div>');
+                }
+            });
+        }
+
+        function cargarPeriodos(idUsuario) {
+            if ($('#periodosContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Periodos", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#periodosContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#periodosContainer').html('<div class="alert alert-danger">Error al cargar períodos</div>');
+                }
+            });
+        }
+
+        function cargarEvaluaciones(idUsuario) {
+            if ($('#evaluacionesContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Evaluaciones", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario, soloActuales: false },
+                success: function(data) {
+                    $('#evaluacionesContainer').html(data).data('loaded', true);
+                    $('#evaluacionesContainer').data('estudianteId', idUsuario);
+                },
+                error: function() {
+                    $('#evaluacionesContainer').html('<div class="alert alert-danger">Error al cargar evaluaciones</div>');
+                }
+            });
+        }
+
+        function cargarDesempeno(idUsuario) {
+            if ($('#desempenoContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Desempeno", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#desempenoContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#desempenoContainer').html('<div class="alert alert-danger">Error al cargar desempeño</div>');
+                }
+            });
+        }
+
+        function cargarSanciones(idUsuario) {
+            if ($('#sancionesContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("Sanciones", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario, soloActivas: false },
+                success: function(data) {
+                    $('#sancionesContainer').html(data).data('loaded', true);
+                    $('#sancionesContainer').data('estudianteId', idUsuario);
+                },
+                error: function() {
+                    $('#sancionesContainer').html('<div class="alert alert-danger">Error al cargar sanciones</div>');
+                }
+            });
+        }
+
+        function cargarSolicitudesBecas(idUsuario) {
+            if ($('#becasContainer').data('loaded')) return;
+            
+            $.ajax({
+                url: '@Url.Action("SolicitudesBecas", "Estudiantes")',
+                type: 'GET',
+                data: { id: idUsuario },
+                success: function(data) {
+                    $('#becasContainer').html(data).data('loaded', true);
+                },
+                error: function() {
+                    $('#becasContainer').html('<div class="alert alert-danger">Error al cargar solicitudes de becas</div>');
+                }
+            });
+        }
+
+        // Manejar cambio de tabs
+        $('#estudianteTabs button').on('shown.bs.tab', function (e) {
+            var target = $(e.target).data('bs-target');
+            var idUsuario = @Model.IdUsuario;
+            
+            if (target === '#inscripciones') cargarInscripciones(idUsuario);
+            else if (target === '#grupos') cargarGrupos(idUsuario);
+            else if (target === '#secciones') cargarSecciones(idUsuario);
+            else if (target === '#periodos') cargarPeriodos(idUsuario);
+            else if (target === '#evaluaciones') cargarEvaluaciones(idUsuario);
+            else if (target === '#desempeno') cargarDesempeno(idUsuario);
+            else if (target === '#sanciones') cargarSanciones(idUsuario);
+            else if (target === '#becas') cargarSolicitudesBecas(idUsuario);
+        });
+    </script>
+}
+

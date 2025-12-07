@@ -1,0 +1,75 @@
+@model List<object>
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var grupoObj in Model)
+    {
+        var grupo = (dynamic)grupoObj;
+        var inscripciones = (List<UmProject.Entities.GrupoInscripcion>)grupo.inscripciones;
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-users me-2"></i>@grupo.nombreGrupo
+                    <span class="badge bg-primary ms-2">@grupo.codigoGrupo</span>
+                    <span class="badge bg-info ms-2">@(inscripciones?.Count ?? 0) inscripciones</span>
+                </h6>
+            </div>
+            <div class="card-body">
+                @if (inscripciones != null && inscripciones.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Código Inscripción</th>
+                                    <th>Estudiante</th>
+                                    <th>Documento</th>
+                                    <th>Usuario</th>
+                                    <th>Fecha Asignación</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var grupoInscripcion in inscripciones)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong style="color: var(--primary-color);">@grupoInscripcion.CodigoInscripcion</strong>
+                                        </td>
+                                        <td>@grupoInscripcion.EstudianteNombreCompleto</td>
+                                        <td>@grupoInscripcion.EstudianteDocumento</td>
+                                        <td>@grupoInscripcion.EstudianteUsuario</td>
+                                        <td>@(grupoInscripcion.FechaAsignacion?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                                        <td>
+                                            @{
+                                                ViewData["IdEstado"] = grupoInscripcion.IdEstado;
+                                                ViewData["NombreEstado"] = grupoInscripcion.EstadoNombre;
+                                            }
+                                            @await Html.PartialAsync("_EstadoBadge", grupoInscripcion)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Este grupo no tiene inscripciones asignadas.
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-users-slash"></i>
+        <h3>No hay grupos asignados</h3>
+        <p>No se encontraron grupos asignados a esta sección.</p>
+    </div>
+}
+

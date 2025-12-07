@@ -1,0 +1,90 @@
+@model List<UmProject.Entities.EstudianteSancion>
+
+@if (Model != null && Model.Any())
+{
+    <div class="modern-table-container">
+        <div class="mb-3">
+            <label class="form-check-label">
+                <input type="checkbox" id="soloActivas" class="form-check-input" onchange="filtrarSanciones()">
+                Mostrar solo sanciones activas
+            </label>
+        </div>
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>Tipo Falta</th>
+                    <th>Severidad</th>
+                    <th>Estado</th>
+                    <th>Fecha Registro</th>
+                    <th>Fecha Fin</th>
+                    <th>Motivo</th>
+                    <th>Es Apelable</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sancion in Model)
+                {
+                    <tr>
+                        <td>@sancion.CodigoSancion</td>
+                        <td>@sancion.TipoSancion</td>
+                        <td>@sancion.TipoFalta</td>
+                        <td>@sancion.Severidad</td>
+                        <td>
+                            @{
+                                ViewData["NombreEstado"] = sancion.EstadoSancion;
+                            }
+                            @await Html.PartialAsync("_EstadoBadge", sancion)
+                        </td>
+                        <td>@(sancion.FechaRegistro?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@(sancion.FechaFin?.ToString("dd/MM/yyyy") ?? "N/A")</td>
+                        <td>@sancion.Motivo</td>
+                        <td>
+                            @if (sancion.EsApelable)
+                            {
+                                <span class="badge bg-warning">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3>No hay sanciones</h3>
+        <p>El estudiante no tiene sanciones académicas registradas.</p>
+    </div>
+}
+
+<script>
+    function filtrarSanciones() {
+        var soloActivas = $('#soloActivas').is(':checked');
+        // Obtener el ID del estudiante desde data del contenedor o desde la URL
+        var estudianteId = $('#sancionesContainer').data('estudianteId');
+        if (!estudianteId) {
+            var urlPath = window.location.pathname;
+            var match = urlPath.match(/\/Estudiantes\/Details\/(\d+)/);
+            estudianteId = match ? match[1] : 0;
+        }
+        
+        $.ajax({
+            url: '@Url.Action("Sanciones", "Estudiantes")',
+            type: 'GET',
+            data: { id: estudianteId, soloActivas: soloActivas },
+            success: function(data) {
+                $('#sancionesContainer').html(data);
+                $('#sancionesContainer').data('estudianteId', estudianteId);
+            }
+        });
+    }
+</script>
+

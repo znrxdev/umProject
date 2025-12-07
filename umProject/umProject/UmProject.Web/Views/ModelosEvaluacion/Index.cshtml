@@ -1,0 +1,132 @@
+@model List<UmProject.Entities.EvaluacionModelo>
+
+@{
+    ViewData["Title"] = "Modelos de Evaluación";
+    ViewData["Subtitle"] = "Gestión de modelos de evaluación";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <span>Modelos de Evaluación</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Modelos de Evaluación</h1>
+            <p class="page-subtitle">Administre y controle los modelos de evaluación del sistema</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-plus me-2"></i>Nuevo Modelo
+        </a>
+    </div>
+</div>
+
+<!-- Filter Toolbar -->
+<div class="filter-toolbar">
+    <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por código, nombre, materia o tipo..." class="form-control" style="border: 1px solid var(--border-color);">
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="modern-table-container">
+        @if (Model != null && Model.Any())
+        {
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Materia</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var modelo in Model)
+                    {
+                        <tr>
+                            <td>@modelo.IdEvaluacionModelo</td>
+                            <td>
+                                <strong style="color: var(--primary-color);">@modelo.CodigoModelo</strong>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500;">@modelo.NombreEvaluacion</div>
+                                @if (!string.IsNullOrEmpty(modelo.Concepto))
+                                {
+                                    <small class="text-muted">@(modelo.Concepto.Length > 50 ? modelo.Concepto.Substring(0, 50) + "..." : modelo.Concepto)</small>
+                                }
+                            </td>
+                            <td>@(modelo.NombreMateria ?? "N/A")</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(modelo.NombreTipoEvaluacion))
+                                {
+                                    <span class="badge bg-info">@modelo.NombreTipoEvaluacion</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                @if (modelo.Activo)
+                                {
+                                    <span class="status-badge active">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Activo
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge inactive">
+                                        <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>Inactivo
+                                    </span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons">
+                                    <a asp-action="Details" asp-route-id="@modelo.IdEvaluacionModelo" class="btn-icon btn-view" title="Ver detalles">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@modelo.IdEvaluacionModelo" class="btn-icon btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-clipboard-list fa-3x mb-3" style="color: var(--text-secondary); opacity: 0.5;"></i>
+                <h3>No hay modelos de evaluación registrados</h3>
+                <p>Comience agregando un nuevo modelo de evaluación.</p>
+                <a asp-action="Create" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus me-2"></i>Nuevo Modelo
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    // Búsqueda en tiempo real
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('.modern-table tbody tr');
+        
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
+</script>
+

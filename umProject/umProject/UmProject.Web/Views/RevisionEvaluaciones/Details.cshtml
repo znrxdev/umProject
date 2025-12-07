@@ -1,0 +1,362 @@
+@model UmProject.Entities.EvaluacionAlumno
+
+@{
+    ViewData["Title"] = "Detalles de Evaluación";
+    ViewData["Subtitle"] = "Información detallada";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="RevisionEvaluaciones" asp-action="Index">Revisión de Evaluaciones</a>
+        <span class="separator">/</span>
+        <span>Detalles</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">@Model.CodigoRegistro</h1>
+            <p class="page-subtitle">@(Model.EstudianteNombre ?? "N/A") - @(Model.NombreMateria ?? "N/A")</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAprobar" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-check-circle me-2"></i>Aprobar
+            </button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalRechazar" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                <i class="fas fa-times-circle me-2"></i>Rechazar
+            </button>
+            <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver a la Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="row g-4">
+        <!-- Información Principal -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Detalles de la Evaluación</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 detail-label">Código:</dt>
+                        <dd class="col-sm-8 detail-value"><strong>@Model.CodigoRegistro</strong></dd>
+
+                        <dt class="col-sm-4 detail-label">Estudiante:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.EstudianteNombre ?? "N/A")</div>
+                            <small class="text-muted">@(Model.EstudianteUsuario ?? "")</small>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Materia:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            <div>@(Model.NombreMateria ?? "N/A")</div>
+                            <small class="text-muted">@(Model.CodigoMateria ?? "")</small>
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Período Académico:</dt>
+                        <dd class="col-sm-8 detail-value">
+                            @(Model.NombrePeriodo ?? "N/A") (@(Model.CodigoPeriodo ?? ""))
+                        </dd>
+
+                        <dt class="col-sm-4 detail-label">Sección:</dt>
+                        <dd class="col-sm-8 detail-value">@(Model.CodigoSeccion ?? "N/A")</dd>
+
+                        <dt class="col-sm-4 detail-label">Evaluación:</dt>
+                        <dd class="col-sm-8 detail-value">@(Model.NombreModeloEvaluacion ?? "N/A")</dd>
+
+                        <dt class="col-sm-4 detail-label">Instancia:</dt>
+                        <dd class="col-sm-8 detail-value">@(Model.CodigoInstancia ?? "N/A")</dd>
+
+                        <dt class="col-sm-4 detail-label">Inscripción:</dt>
+                        <dd class="col-sm-8 detail-value">@(Model.CodigoInscripcion ?? "N/A")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Académica -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Resultados</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6 detail-label">Puntaje:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            <span class="badge bg-info" style="font-size: 1rem;">@Model.PuntajeObtenido.ToString("F2")</span>
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Porcentaje:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.PorcentajeLogrado.HasValue)
+                            {
+                                <span class="badge bg-success" style="font-size: 1rem;">@Model.PorcentajeLogrado.Value.ToString("F2")%</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Puntaje Normalizado:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.PuntajeNormalizado.HasValue)
+                            {
+                                <span class="badge bg-primary">@Model.PuntajeNormalizado.Value.ToString("F4")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Es Recálculo:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.EsRecalculo)
+                            {
+                                <span class="badge bg-warning">Sí (@Model.NumeroRecalculo)</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">No</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Estado:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (!string.IsNullOrEmpty(Model.EstadoNombre))
+                            {
+                                <span class="status-badge active">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem; margin-right: 0.375rem;"></i>@Model.EstadoNombre
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-6 detail-label">Firmado:</dt>
+                        <dd class="col-sm-6 detail-value">
+                            @if (Model.FirmadoPorEstudiante)
+                            {
+                                <span class="badge bg-success">Sí</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración y Auditoría -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-cogs me-2"></i>Configuración y Auditoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Información Adicional</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">ID Evaluación:</dt>
+                                <dd class="col-sm-7 detail-value">@Model.IdEvaluacionAlumno</dd>
+
+                                <dt class="col-sm-5 detail-label">Evaluador:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (!string.IsNullOrEmpty(Model.EvaluadorUsuario))
+                                    {
+                                        <div>@(Model.EvaluadorUsuario ?? "")</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin asignar</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Validador:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (!string.IsNullOrEmpty(Model.ValidadorUsuario))
+                                    {
+                                        <div>@(Model.ValidadorUsuario ?? "")</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin asignar</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Validación:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaValidacion.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-success"></i>@Model.FechaValidacion.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No validada</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Publicación:</dt>
+                                <dd class="col-sm-7 detail-value">
+                                    @if (Model.FechaPublicacion.HasValue)
+                                    {
+                                        <i class="fas fa-calendar-check me-1 text-info"></i>@Model.FechaPublicacion.Value.ToString("dd/MM/yyyy HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No publicada</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Creación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaCreacion ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Fecha Modificación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.FechaModificacion ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Estado del Sistema</h6>
+                            <dl class="row">
+                                <dt class="col-sm-5 detail-label">Estado:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.EstadoNombre ?? "N/A")</dd>
+
+                                <dt class="col-sm-5 detail-label">Estado Publicación:</dt>
+                                <dd class="col-sm-7 detail-value">@(Model.EstadoPublicacionNombre ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.MotivoAjuste))
+                    {
+                        <h6 class="text-primary mt-4 mb-3">Motivo de Ajuste</h6>
+                        <p class="detail-value">@Model.MotivoAjuste</p>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Observaciones))
+                    {
+                        <h6 class="text-primary mt-4 mb-3">Observaciones</h6>
+                        <p class="detail-value">@Model.Observaciones</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Aprobar -->
+<div class="modal fade" id="modalAprobar" tabindex="-1" aria-labelledby="modalAprobarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
+                <h5 class="modal-title" id="modalAprobarLabel">
+                    <i class="fas fa-check-circle me-2"></i>Aprobar Evaluación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Aprobar" method="post" asp-route-id="@Model.IdEvaluacionAlumno">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea aprobar esta evaluación?</p>
+                    <div class="mb-3">
+                        <label for="fechaPublicacion" class="form-label">Fecha de Publicación <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="fechaPublicacion" name="fechaPublicacion" required />
+                        <small class="form-text text-muted">La validación de rango se realiza al confirmar.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="motivoAjusteAprobar" class="form-label">Motivo de Ajuste <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="motivoAjusteAprobar" name="motivoAjuste" rows="3" maxlength="500" required placeholder="Describa el motivo de ajuste para la aprobación"></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Nota:</strong> Usted será registrado como el validador de esta evaluación.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check-circle me-2"></i>Confirmar Aprobación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rechazar -->
+<div class="modal fade" id="modalRechazar" tabindex="-1" aria-labelledby="modalRechazarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+                <h5 class="modal-title" id="modalRechazarLabel">
+                    <i class="fas fa-times-circle me-2"></i>Rechazar Evaluación
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Rechazar" method="post" asp-route-id="@Model.IdEvaluacionAlumno">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <p>¿Está seguro de que desea rechazar esta evaluación?</p>
+                    <div class="mb-3">
+                        <label for="motivoAjuste" class="form-label">Motivo de Ajuste <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="motivoAjuste" name="motivoAjuste" rows="4" maxlength="500" required placeholder="Ingrese el motivo por el cual se rechaza esta evaluación..."></textarea>
+                        <small class="form-text text-muted">Máximo 500 caracteres.</small>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Advertencia:</strong> Esta acción registrará el motivo de ajuste y la evaluación permanecerá en estado de revisión.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times-circle me-2"></i>Confirmar Rechazo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Asegurar que el control de fecha no tenga restricciones de min/max
+            $('#fechaPublicacion').removeAttr('min').removeAttr('max');
+
+            // Validación del formulario de aprobar
+            $('#modalAprobar form').on('submit', function(e) {
+                var fechaPublicacion = $('#fechaPublicacion').val();
+                var motivo = $('#motivoAjusteAprobar').val();
+                
+                if (!fechaPublicacion) {
+                    e.preventDefault();
+                    alert('Debe proporcionar una fecha de publicación.');
+                    return false;
+                }
+
+                if (!motivo || motivo.trim().length === 0) {
+                    e.preventDefault();
+                    alert('Debe ingresar un motivo de ajuste.');
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,124 @@
+@model UmProject.Entities.Inscripcion
+
+@{
+    ViewData["Title"] = "Editar Inscripción";
+    ViewData["Subtitle"] = "Modificar información de inscripción académica";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <nav class="breadcrumb-modern">
+        <a asp-controller="Home" asp-action="Index">Dashboard</a>
+        <span class="separator">/</span>
+        <a asp-controller="Inscripciones" asp-action="Index">Inscripciones</a>
+        <span class="separator">/</span>
+        <span>Editar</span>
+    </nav>
+    <div class="page-title-section">
+        <div>
+            <h1 class="page-title">Editar Inscripción</h1>
+            <p class="page-subtitle">Modifique la información de la inscripción académica</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+            <i class="fas fa-arrow-left me-2"></i>Volver
+        </a>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Información de la Inscripción</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="IdInscripcion" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Código de Inscripción</label>
+                        <input type="text" class="form-control" value="@Model.CodigoInscripcion" readonly />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="IdEstado" class="form-label">Estado <span class="text-danger">*</span></label>
+                        <select asp-for="IdEstado" class="form-select" required>
+                            <option value="">Seleccione un estado</option>
+                            @if (ViewBag.Estados != null)
+                            {
+                                @foreach (var estado in ViewBag.Estados as List<UmProject.Entities.Estado>)
+                                {
+                                    <option value="@estado.IdEstado" selected="@(estado.IdEstado == Model.IdEstado)">@estado.NombreEstado</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="IdEstado" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estudiante</label>
+                        <input type="text" class="form-control" value="@(Model.EstudianteNombre ?? "")" readonly />
+                        <input type="hidden" asp-for="IdEstudiante" />
+                    </div>
+                </div>
+
+                @if (ViewBag.EsEstadoRevision == true)
+                {
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Validador</label>
+                            <input type="text" class="form-control" value="Usuario en sesión" readonly />
+                            <input type="hidden" asp-for="IdUsuarioValidador" value="@ViewBag.IdUsuarioSesion" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FechaValidacion" class="form-label">Fecha de Validación <span class="text-danger">*</span></label>
+                            @{
+                                var fechaValidacionValue = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+                            }
+                            <input asp-for="FechaValidacion" type="datetime-local" class="form-control" value="@fechaValidacionValue" readonly />
+                            <input type="hidden" asp-for="FechaValidacion" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="FechaValidacion" class="text-danger"></span>
+                            <small class="form-text text-muted">Se establece automáticamente con la fecha y hora actual cuando el estado está en REVISION.</small>
+                        </div>
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FechaRetiro" class="form-label">Fecha de Retiro</label>
+                        <input asp-for="FechaRetiro" type="date" class="form-control" value="@(Model.FechaRetiro?.ToString("yyyy-MM-dd"))" 
+                               max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="FechaRetiro" class="text-danger"></span>
+                        <small class="form-text text-muted">No puede ser mayor a la fecha actual.</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="MotivoRetiro" class="form-label">Motivo de Retiro</label>
+                        <textarea asp-for="MotivoRetiro" class="form-control" rows="3" placeholder="Motivo del retiro (si aplica)..." maxlength="500">@Model.MotivoRetiro</textarea>
+                        <span asp-validation-for="MotivoRetiro" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-secondary" style="padding: 0.625rem 1.25rem; border-radius: 8px;">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 600;">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
